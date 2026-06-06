@@ -1,0 +1,35 @@
+scan:
+  name: Scan TV auto schedule rules
+  description: Scan EPG sensors against the CSV rule file and log matching programmes.
+  fields:
+    rules_file:
+      name: Rules file
+      description: Path to the CSV rules file.
+      required: false
+      example: /config/tv_auto_scheduler/rules.csv
+      selector:
+        text:
+
+    dry_run:
+      name: Dry run
+      description: Only log matches, do not create or change calendar events.
+      required: false
+      default: true
+      selector:
+        boolean:
+
+    pre_calendar:
+      name: Pre calendar
+      required: false
+      example: calendar.pre_tv
+      selector:
+        entity:
+          domain: calendar
+
+    tv_calendar:
+      name: TV calendar
+      required: false
+      example: calendar.televisie
+      selector:
+        entity:
+          domain: calendar
