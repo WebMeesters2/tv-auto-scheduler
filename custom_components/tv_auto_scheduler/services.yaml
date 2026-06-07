@@ -33,3 +33,11 @@ scan:
       selector:
         entity:
           domain: calendar
+
+    show_missing_epg:
+      name: Show missing EPG entities
+      description: Log every channel whose configured EPG entity is missing.
+      required: false
+      default: false
+      selector:
+        boolean:

@@ -34,3 +34,6 @@ tv_auto_scheduler/rules.csv
 
 # Logs
 *.log
+
+# ye olde scripts (ps1)
+oldscripts/

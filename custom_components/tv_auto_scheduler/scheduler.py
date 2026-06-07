@@ -4,10 +4,12 @@ import csv
 import logging
 import re
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 from homeassistant.core import HomeAssistant
+from homeassistant.util import dt as dt_util
 
 from .const import (
     CHANNEL_DATABASE_ENTITY,
@@ -18,12 +20,7 @@ from .const import (
     CSV_TV,
 )
 
-from datetime import datetime, timedelta
-
-from homeassistant.util import dt as dt_util
-
 _LOGGER = logging.getLogger(__name__)
-
 
 @dataclass(frozen=True)
 class ScheduleRule:
@@ -86,7 +83,11 @@ def load_rules(rules_file: str) -> list[ScheduleRule]:
     return rules
 
 
-def scan_epg(hass: HomeAssistant) -> list[EpgProgramme]:
+def scan_epg(
+    hass: HomeAssistant,
+    show_missing_epg: bool = False,
+) -> list[EpgProgramme]:
+
     state = hass.states.get(CHANNEL_DATABASE_ENTITY)
 
     if not state:
@@ -100,6 +101,7 @@ def scan_epg(hass: HomeAssistant) -> list[EpgProgramme]:
         return []
 
     programmes: list[EpgProgramme] = []
+    missing_epg_entities: list[str] = []
 
     for channel_key, channel_data in channels.items():
         if not isinstance(channel_data, dict):
@@ -113,7 +115,7 @@ def scan_epg(hass: HomeAssistant) -> list[EpgProgramme]:
         epg_state = hass.states.get(epg_entity)
 
         if not epg_state:
-            _LOGGER.debug("EPG entity not found: %s", epg_entity)
+            missing_epg_entities.append(epg_entity)
             continue
 
         channel_name = _first_alias(channel_key, channel_data)
@@ -157,6 +159,16 @@ def scan_epg(hass: HomeAssistant) -> list[EpgProgramme]:
                         end_datetime=end_datetime,
                     )
                 )
+
+    if missing_epg_entities:
+        if show_missing_epg:
+            for epg_entity in missing_epg_entities:
+                _LOGGER.debug("EPG entity not found: %s", epg_entity)
+        else:
+            _LOGGER.debug(
+                "Skipped %s channel(s) with missing EPG entities",
+                len(missing_epg_entities),
+            )
 
     return programmes
 
@@ -300,22 +312,34 @@ def log_matches(matches: list[tuple[ScheduleRule, EpgProgramme]]) -> None:
 
 
 def _matches_channel(rule: ScheduleRule, programme: EpgProgramme) -> bool:
-    candidates = [
-        programme.channel_key,
-        programme.channel_name,
-        programme.epg_entity,
-    ]
+    normalized_pattern = _normalize_channel(rule.channel_pattern)
+    normalized_channel = _normalize_channel(programme.channel_key)
 
-    return any(
-        re.search(rule.channel_pattern, candidate, re.IGNORECASE)
-        for candidate in candidates
-        if candidate
-    )
+    try:
+        return bool(
+            re.search(
+                normalized_pattern,
+                normalized_channel,
+                re.IGNORECASE,
+            )
+        )
+    except re.error:
+        _LOGGER.warning("Invalid channel regex pattern in rule: %s", rule.channel_pattern)
+        return False
 
 
 def _matches_programme(rule: ScheduleRule, programme: EpgProgramme) -> bool:
-    return rule.programme.lower() in programme.title.lower()
-
+    try:
+        return bool(
+            re.search(
+                rule.programme,
+                programme.title,
+                re.IGNORECASE,
+            )
+        )
+    except re.error:
+        _LOGGER.warning("Invalid regex pattern in rule: %s", rule.programme)
+        return False
 
 def _first_alias(channel_key: str, channel_data: dict[str, Any]) -> str:
     aliases = channel_data.get("aliases")
@@ -355,6 +379,8 @@ def _as_bool(value: Any, default: bool = False) -> bool:
 
     return str(value).strip().lower() in {"1", "true", "yes", "y", "ja", "j"}
 
+def _normalize_channel(value: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", value.lower())
 
 def _clean(value: Any) -> str:
     return "" if value is None else str(value).strip()

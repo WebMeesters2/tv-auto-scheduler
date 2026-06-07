@@ -16,6 +16,7 @@ from .const import (
     DEFAULT_TV_CALENDAR,
     DOMAIN,
     SERVICE_SCAN,
+    CONF_SHOW_MISSING_EPG,
 )
 from .scheduler import (
     calendar_event_exists,
@@ -34,6 +35,7 @@ SERVICE_SCAN_SCHEMA = vol.Schema(
         vol.Optional(CONF_DRY_RUN, default=True): cv.boolean,
         vol.Optional(CONF_PRE_CALENDAR, default=DEFAULT_PRE_CALENDAR): cv.entity_id,
         vol.Optional(CONF_TV_CALENDAR, default=DEFAULT_TV_CALENDAR): cv.entity_id,
+        vol.Optional(CONF_SHOW_MISSING_EPG, default=False): cv.boolean,
     }
 )
 
@@ -46,7 +48,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
         dry_run = call.data[CONF_DRY_RUN]
         pre_calendar = call.data[CONF_PRE_CALENDAR]
         tv_calendar = call.data[CONF_TV_CALENDAR]
-
+        show_missing_epg = call.data[CONF_SHOW_MISSING_EPG]
         _LOGGER.debug(
             "Starting scan (rules_file=%s, dry_run=%s)",
             rules_file,
@@ -61,7 +63,10 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
             _LOGGER.debug("Loaded %s rules", len(rules))
 
-            programmes = scan_epg(hass)
+            programmes = scan_epg(
+                hass,
+                show_missing_epg=show_missing_epg,
+            )
 
             _LOGGER.debug("Found %s EPG programmes", len(programmes))
 

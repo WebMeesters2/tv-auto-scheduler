@@ -1,8 +1,10 @@
 param(
-    [string]$SourceRoot = "P:\Projects\HA\tv-auto-scheduler",
+    [string]$SourceRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
     [string]$HaConfigRoot = "J:\",
     [switch]$RestartHA,
-    [switch]$DryRun
+    [switch]$DryRun,
+    [string]$HaUrl = "https://jeeves:8123",
+    [string]$Token = $env:HA_TOKEN
 )
 
 $ErrorActionPreference = "Stop"
@@ -30,7 +32,10 @@ if (-not (Test-Path $HaConfigRoot)) {
 
 function Copy-Folder {
     param(
+        [Parameter(Mandatory = $true)]
         [string]$Source,
+
+        [Parameter(Mandatory = $true)]
         [string]$Target
     )
 
@@ -59,7 +64,6 @@ function Copy-Folder {
 
 Copy-Folder -Source $SourceIntegration -Target $TargetIntegration
 
-# Copy example rules only if no rules file exists yet.
 $ExampleRules = Join-Path $SourceExamples "tv-rules.csv"
 $TargetRules = Join-Path $TargetRulesDir "rules.csv"
 
@@ -84,15 +88,26 @@ if (Test-Path $ExampleRules) {
 
 Write-Host ""
 Write-Host "Deploy complete." -ForegroundColor Green
-Write-Host "Restart Home Assistant or reload custom integrations if applicable."
 
 if ($RestartHA) {
-    Write-Host "Restarting Home Assistant..."
+    if ([string]::IsNullOrWhiteSpace($Token)) {
+        throw "RestartHA requested, but no token was supplied. Use -Token or set HA_TOKEN."
+    }
 
-    Invoke-RestMethod `
-        -Method Post `
-        -Uri "https://jeeves:8123/api/services/homeassistant/restart" `
-        -Headers @{
-            Authorization = "Bearer $Token"
-        }
+    if ($DryRun) {
+        Write-Host "DRY-RUN: Home Assistant restart skipped" -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "Restarting Home Assistant..." -ForegroundColor Cyan
+
+        Invoke-RestMethod `
+            -Method Post `
+            -Uri "$HaUrl/api/services/homeassistant/restart" `
+            -Headers @{
+                Authorization = "Bearer $Token"
+            }
+    }
+}
+else {
+    Write-Host "Restart Home Assistant or reload custom integrations if applicable."
 }

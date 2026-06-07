@@ -10,6 +10,7 @@ CONF_RULES_FILE = "rules_file"
 CONF_DRY_RUN = "dry_run"
 CONF_PRE_CALENDAR = "pre_calendar"
 CONF_TV_CALENDAR = "tv_calendar"
+CONF_SHOW_MISSING_EPG = "show_missing_epg"
 
 SERVICE_SCAN = "scan"
 
