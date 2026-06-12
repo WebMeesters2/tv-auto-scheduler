@@ -1,0 +1,328 @@
+from __future__ import annotations
+
+import importlib.util
+import tempfile
+import sys
+import types
+import unittest
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+PACKAGE_DIR = REPO_ROOT / "custom_components" / "tv_auto_scheduler"
+
+
+def _install_homeassistant_stubs() -> None:
+    homeassistant = types.ModuleType("homeassistant")
+    core = types.ModuleType("homeassistant.core")
+    util = types.ModuleType("homeassistant.util")
+    dt = types.ModuleType("homeassistant.util.dt")
+
+    class HomeAssistant:
+        pass
+
+    dt.now = lambda: datetime(2026, 6, 8, 12, 0, tzinfo=timezone.utc)
+    core.HomeAssistant = HomeAssistant
+    util.dt = dt
+    homeassistant.core = core
+    homeassistant.util = util
+
+    sys.modules["homeassistant"] = homeassistant
+    sys.modules["homeassistant.core"] = core
+    sys.modules["homeassistant.util"] = util
+    sys.modules["homeassistant.util.dt"] = dt
+
+
+def _load_module(module_name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Unable to load module {module_name} from {path}")
+
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_scheduler_module():
+    _install_homeassistant_stubs()
+
+    custom_components = sys.modules.setdefault(
+        "custom_components",
+        types.ModuleType("custom_components"),
+    )
+    custom_components.__path__ = [str(REPO_ROOT / "custom_components")]
+
+    package = sys.modules.setdefault(
+        "custom_components.tv_auto_scheduler",
+        types.ModuleType("custom_components.tv_auto_scheduler"),
+    )
+    package.__path__ = [str(PACKAGE_DIR)]
+
+    sys.modules.pop("custom_components.tv_auto_scheduler.const", None)
+    sys.modules.pop("custom_components.tv_auto_scheduler.scheduler", None)
+
+    _load_module(
+        "custom_components.tv_auto_scheduler.const",
+        PACKAGE_DIR / "const.py",
+    )
+    return _load_module(
+        "custom_components.tv_auto_scheduler.scheduler",
+        PACKAGE_DIR / "scheduler.py",
+    )
+
+
+class FakeState:
+    def __init__(self, attributes: dict):
+        self.attributes = attributes
+
+
+class FakeStateMachine:
+    def __init__(self, states: dict[str, FakeState]):
+        self._states = states
+
+    def get(self, entity_id: str):
+        return self._states.get(entity_id)
+
+
+class FakeHass:
+    def __init__(self, states: dict[str, FakeState]):
+        self.states = FakeStateMachine(states)
+        self.services = types.SimpleNamespace(async_call=self._async_call)
+        self.service_calls: list[tuple[str, str, dict, bool, bool]] = []
+
+    async def _async_call(
+        self,
+        domain: str,
+        service: str,
+        data: dict,
+        blocking: bool = False,
+        return_response: bool = False,
+    ):
+        self.service_calls.append(
+            (domain, service, data, blocking, return_response)
+        )
+        return {}
+
+
+class SchedulerTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.scheduler = load_scheduler_module()
+
+    def test_channel_patterns_use_real_regex_matching(self) -> None:
+        rule = self.scheduler.ScheduleRule(
+            enabled=True,
+            channel_pattern=r"BBC1|BBC2",
+            programme="Bargain Hunt",
+            pre=False,
+            tv=True,
+        )
+        programme = self.scheduler.EpgProgramme(
+            channel_key="BBC2",
+            channel_name="BBC 2",
+            epg_entity="sensor.epg_bbc2",
+            title="Bargain Hunt",
+            description="A daytime antiques quiz.",
+            start="14:00",
+            end="15:00",
+            start_datetime=datetime(2026, 6, 8, 14, 0, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 8, 15, 0, tzinfo=timezone.utc),
+        )
+
+        self.assertTrue(self.scheduler._matches_channel(rule, programme))
+
+    def test_build_programme_datetimes_rolls_end_into_next_day(self) -> None:
+        start, end = self.scheduler._build_programme_datetimes(0, "23:55", "00:10")
+
+        self.assertEqual(start.isoformat(), "2026-06-08T23:55:00+00:00")
+        self.assertEqual(end.isoformat(), "2026-06-09T00:10:00+00:00")
+
+    def test_scan_epg_skips_invalid_time_values(self) -> None:
+        hass = FakeHass(
+            {
+                "sensor.tv_channel_database": FakeState(
+                    {
+                        "channels": {
+                            "bbc1": {
+                                "aliases": ["BBC1"],
+                                "epg": "sensor.epg_bbc1",
+                            }
+                        }
+                    }
+                ),
+                "sensor.epg_bbc1": FakeState(
+                    {
+                        "today": {
+                            "0": {
+                                "title": "Valid Show",
+                                "desc": "A valid description.",
+                                "start": "14:00",
+                                "end": "15:00",
+                            },
+                            "1": {
+                                "title": "Broken Show",
+                                "start": "bad",
+                                "end": "16:00",
+                            },
+                        }
+                    }
+                ),
+            }
+        )
+
+        programmes = self.scheduler.scan_epg(hass)
+
+        self.assertEqual(len(programmes), 1)
+        self.assertEqual(programmes[0].title, "Valid Show")
+        self.assertEqual(programmes[0].description, "A valid description.")
+        self.assertIsInstance(programmes[0].start_datetime, datetime)
+
+    def test_extract_calendar_events_response_supports_nested_shape(self) -> None:
+        response = {
+            "calendar.televisie": {
+                "events": [
+                    {
+                        "summary": "BBC1 | Bargain Hunt",
+                    }
+                ]
+            }
+        }
+
+        events = self.scheduler._extract_calendar_events_response(
+            response,
+            "calendar.televisie",
+        )
+
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0]["summary"], "BBC1 | Bargain Hunt")
+
+    def test_load_rules_supports_optional_delete_and_time_filters(self) -> None:
+        csv_content = "\n".join(
+            [
+                "enabled,channel,programme,pre,tv,flag-delete-after-use,filter-start-time,filter-end-time",
+                "y,BBC.*,Bargain Hunt,n,y,y,14:00,16:00",
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = Path(temp_dir) / "rules.csv"
+            rules_file.write_text(csv_content, encoding="utf-8")
+
+            rules = self.scheduler.load_rules(str(rules_file))
+
+        self.assertEqual(len(rules), 1)
+        self.assertTrue(rules[0].delete_after_use)
+        self.assertEqual(rules[0].filter_start_time.isoformat(), "14:00:00")
+        self.assertEqual(rules[0].filter_end_time.isoformat(), "16:00:00")
+        self.assertEqual(rules[0].row_number, 2)
+
+    def test_find_matches_applies_start_time_filter(self) -> None:
+        rule = self.scheduler.ScheduleRule(
+            enabled=True,
+            channel_pattern=r"BBC1",
+            programme="Bargain Hunt",
+            pre=False,
+            tv=True,
+            filter_start_time=self.scheduler._parse_time_value("14:00"),
+            filter_end_time=self.scheduler._parse_time_value("15:00"),
+        )
+        matching_programme = self.scheduler.EpgProgramme(
+            channel_key="BBC1",
+            channel_name="BBC 1",
+            epg_entity="sensor.epg_bbc1",
+            title="Bargain Hunt",
+            description="A daytime antiques quiz.",
+            start="14:30",
+            end="15:15",
+            start_datetime=datetime(2026, 6, 8, 14, 30, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 8, 15, 15, tzinfo=timezone.utc),
+        )
+        non_matching_programme = self.scheduler.EpgProgramme(
+            channel_key="BBC1",
+            channel_name="BBC 1",
+            epg_entity="sensor.epg_bbc1",
+            title="Bargain Hunt",
+            description="An evening repeat.",
+            start="16:00",
+            end="17:00",
+            start_datetime=datetime(2026, 6, 8, 16, 0, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 8, 17, 0, tzinfo=timezone.utc),
+        )
+
+        matches = self.scheduler.find_matches(
+            [rule],
+            [matching_programme, non_matching_programme],
+        )
+
+        self.assertEqual(matches, [(rule, matching_programme)])
+
+    def test_create_calendar_event_appends_epg_description(self) -> None:
+        hass = FakeHass({})
+        rule = self.scheduler.ScheduleRule(
+            enabled=True,
+            channel_pattern=r"BBC1",
+            programme="Bargain Hunt",
+            pre=False,
+            tv=True,
+        )
+        programme = self.scheduler.EpgProgramme(
+            channel_key="BBC1",
+            channel_name="BBC 1",
+            epg_entity="sensor.epg_bbc1",
+            title="Bargain Hunt",
+            description="A daytime antiques quiz.",
+            start="14:00",
+            end="15:00",
+            start_datetime=datetime(2026, 6, 8, 14, 0, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 8, 15, 0, tzinfo=timezone.utc),
+        )
+
+        import asyncio
+
+        asyncio.run(
+            self.scheduler.create_calendar_event(
+                hass,
+                "calendar.televisie",
+                rule,
+                programme,
+            )
+        )
+
+        self.assertEqual(len(hass.service_calls), 1)
+        _, _, data, _, _ = hass.service_calls[0]
+        self.assertEqual(data["summary"], "BBC 1 | Bargain Hunt")
+        self.assertIn("TV_AUTO_SCHEDULER: true", data["description"])
+        self.assertIn("Rule: Bargain Hunt", data["description"])
+        self.assertIn("Source: sensor.epg_bbc1", data["description"])
+        self.assertIn("Programme: A daytime antiques quiz.", data["description"])
+
+    def test_remove_rules_by_row_numbers_removes_only_selected_rows(self) -> None:
+        csv_content = "\n".join(
+            [
+                "enabled,channel,programme,pre,tv,flag-delete-after-use",
+                "y,BBC.*,Bargain Hunt,n,y,y",
+                "y,NPO.*,The Connection,y,y,n",
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = Path(temp_dir) / "rules.csv"
+            rules_file.write_text(csv_content, encoding="utf-8")
+
+            removed = self.scheduler.remove_rules_by_row_numbers(str(rules_file), {2})
+            updated = rules_file.read_text(encoding="utf-8").splitlines()
+
+        self.assertEqual(removed, 1)
+        self.assertEqual(
+            updated,
+            [
+                "enabled,channel,programme,pre,tv,flag-delete-after-use",
+                "y,NPO.*,The Connection,y,y,n",
+            ],
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

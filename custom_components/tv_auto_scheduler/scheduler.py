@@ -45,6 +45,7 @@ class EpgProgramme:
     channel_name: str
     epg_entity: str
     title: str
+    description: str
     start: str
     end: str
     start_datetime: datetime
@@ -183,6 +184,7 @@ def scan_epg(
                     continue
 
                 title = _clean(item.get("title"))
+                description = _clean(item.get("desc"))
 
                 if not title:
                     continue
@@ -215,6 +217,7 @@ def scan_epg(
                         channel_name=channel_name,
                         epg_entity=epg_entity,
                         title=title,
+                        description=description,
                         start=start_time,
                         end=end_time,
                         start_datetime=start_datetime,
@@ -248,6 +251,9 @@ async def create_calendar_event(
         f"Rule: {rule.programme}\n"
         f"Source: {programme.epg_entity}\n"
     )
+
+    if programme.description:
+        description = f"{description}Programme: {programme.description}\n"
 
     await hass.services.async_call(
         "calendar",

@@ -200,7 +200,7 @@ You may want to start with `dry_run: true` until the rule file behaves the way y
 
 ## Duplicate Protection
 
-Created events are tagged in the event description using an internal marker. When the integration finds an existing event with the same summary and time range that it previously created, it skips creating a duplicate.
+Created events are tagged in the event description using an internal marker. The description also includes the matching rule, the source EPG entity, and the EPG programme description when one is available. When the integration finds an existing event with the same summary and time range that it previously created, it skips creating a duplicate.
 
 ## Repository Hygiene
 
