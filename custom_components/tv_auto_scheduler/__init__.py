@@ -5,18 +5,19 @@ import logging
 import voluptuous as vol
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.typing import ConfigType
 
 from .const import (
     CONF_DRY_RUN,
     CONF_PRE_CALENDAR,
     CONF_RULES_FILE,
+    CONF_SHOW_MISSING_EPG,
     CONF_TV_CALENDAR,
     DEFAULT_PRE_CALENDAR,
     DEFAULT_RULES_FILE,
     DEFAULT_TV_CALENDAR,
     DOMAIN,
     SERVICE_SCAN,
-    CONF_SHOW_MISSING_EPG,
 )
 from .scheduler import (
     calendar_event_exists,
@@ -24,6 +25,7 @@ from .scheduler import (
     find_matches,
     load_rules,
     log_matches,
+    remove_rules_by_row_numbers,
     scan_epg,
 )
 
@@ -31,7 +33,7 @@ _LOGGER = logging.getLogger(__name__)
 
 SERVICE_SCAN_SCHEMA = vol.Schema(
     {
-        vol.Optional(CONF_RULES_FILE, default=DEFAULT_RULES_FILE): cv.string,
+        vol.Optional(CONF_RULES_FILE, default=DEFAULT_RULES_FILE): cv.path,
         vol.Optional(CONF_DRY_RUN, default=True): cv.boolean,
         vol.Optional(CONF_PRE_CALENDAR, default=DEFAULT_PRE_CALENDAR): cv.entity_id,
         vol.Optional(CONF_TV_CALENDAR, default=DEFAULT_TV_CALENDAR): cv.entity_id,
@@ -40,7 +42,7 @@ SERVICE_SCAN_SCHEMA = vol.Schema(
 )
 
 
-async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     async def async_scan(call: ServiceCall) -> None:
         _LOGGER.debug("TV Auto Scheduler: scan service called")
 
@@ -92,9 +94,11 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
             else:
                 created = 0
                 skipped = 0
+                rules_to_delete: set[int] = set()
 
                 for rule, programme in matches:
                     targets = []
+                    created_for_match = False
 
                     if rule.pre:
                         targets.append(pre_calendar)
@@ -120,11 +124,28 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
                             programme,
                         )
                         created += 1
+                        created_for_match = True
+
+                    if (
+                        created_for_match
+                        and rule.delete_after_use
+                        and rule.row_number is not None
+                    ):
+                        rules_to_delete.add(rule.row_number)
+
+                removed_rules = 0
+                if rules_to_delete:
+                    removed_rules = await hass.async_add_executor_job(
+                        remove_rules_by_row_numbers,
+                        rules_file,
+                        rules_to_delete,
+                    )
 
                 _LOGGER.info(
-                    "TV Auto Scheduler: created %s event(s), skipped %s existing event(s)",
+                    "TV Auto Scheduler: created %s event(s), skipped %s existing event(s), removed %s used rule(s)",
                     created,
                     skipped,
+                    removed_rules,
                 )
 
         except Exception:

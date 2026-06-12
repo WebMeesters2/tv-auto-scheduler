@@ -37,3 +37,9 @@ tv_auto_scheduler/rules.csv
 
 # ye olde scripts (ps1)
 oldscripts/
+
+# Codex
+AGENTS.md
+
+# Auxiliary files
+UNCPath

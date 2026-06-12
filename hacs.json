@@ -1,0 +1,7 @@
+{
+  "name": "TV Auto Scheduler",
+  "content_in_root": false,
+  "domains": ["tv_auto_scheduler"],
+  "homeassistant": "2025.1.0",
+  "render_readme": true
+}

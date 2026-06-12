@@ -1,5 +1,5 @@
-enabled,channel,programme,pre,tv
-y,NPO.*,The Connection,y,y
-y,BBC.*,Bargain Hunt,n,y
-y,BBC.*,Celebrity Bridge of Lies,n,y
-y,BBC.*,Return to Paradise,n,y
+enabled,channel,programme,pre,tv,flag-delete-after-use,filter-start-time,filter-end-time
+y,NPO.*,The Connection,y,y,n,,
+y,BBC.*,Bargain Hunt,n,y,n,,
+y,BBC.*,Celebrity Bridge of Lies,n,y,y,20:00,23:30
+y,BBC.*,Return to Paradise,n,y,n,,

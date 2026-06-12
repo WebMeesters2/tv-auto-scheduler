@@ -2,12 +2,13 @@
 
 set -euo pipefail
 
-SOURCE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SOURCE_ROOT="$(dirname "$SCRIPT_DIR")"
 
 INTEGRATION_NAME="tv_auto_scheduler"
 
 HA_SSH_HOST="${HA_SSH_HOST:-jeeves}"
-HA_CONFIG_ROOT="${HA_CONFIG_ROOT:-/config}"
+HA_CONFIG_DIR="${HA_CONFIG_DIR:-/mnt/ha-config}"
 
 DRY_RUN=0
 RESTART_HA=0
@@ -30,10 +31,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 SOURCE_INTEGRATION="$SOURCE_ROOT/custom_components/$INTEGRATION_NAME"
-TARGET_INTEGRATION="$HA_CONFIG_ROOT/custom_components/$INTEGRATION_NAME"
+TARGET_CUSTOM_COMPONENTS_DIR="$HA_CONFIG_DIR/custom_components"
+TARGET_INTEGRATION="$TARGET_CUSTOM_COMPONENTS_DIR/$INTEGRATION_NAME"
 
 SOURCE_EXAMPLE_RULES="$SOURCE_ROOT/examples/tv-rules.csv"
-TARGET_RULES_DIR="$HA_CONFIG_ROOT/tv_auto_scheduler"
+TARGET_RULES_DIR="$HA_CONFIG_DIR/tv_auto_scheduler"
 TARGET_RULES="$TARGET_RULES_DIR/rules.csv"
 
 if [[ ! -d "$SOURCE_INTEGRATION" ]]; then
@@ -41,25 +43,27 @@ if [[ ! -d "$SOURCE_INTEGRATION" ]]; then
   exit 1
 fi
 
-echo "Deploying $INTEGRATION_NAME..."
-echo "Source: $SOURCE_ROOT"
-echo "Target: $HA_SSH_HOST:$HA_CONFIG_ROOT"
-echo
-
-RSYNC_FLAGS=(-av --delete --exclude '__pycache__' --exclude '.pytest_cache' --exclude '*.pyc')
-
-if [[ "$DRY_RUN" -eq 1 ]]; then
-  RSYNC_FLAGS+=(--dry-run)
+if [[ ! -d "$HA_CONFIG_DIR" ]]; then
+  echo "Home Assistant config mount not found: $HA_CONFIG_DIR" >&2
+  echo "Mount the Samba share first, for example at /mnt/ha-config." >&2
+  exit 1
 fi
 
-rsync "${RSYNC_FLAGS[@]}" \
-  "$SOURCE_INTEGRATION/" \
-  "$HA_SSH_HOST:$TARGET_INTEGRATION/"
-
+echo "Deploying $INTEGRATION_NAME..."
+echo "Source: $SOURCE_ROOT"
+echo "Target: $HA_CONFIG_DIR"
 echo
 
+if [[ "$DRY_RUN" -eq 1 ]]; then
+  echo "DRY-RUN: would recreate $TARGET_INTEGRATION"
+else
+  mkdir -p "$TARGET_CUSTOM_COMPONENTS_DIR"
+  rm -rf "$TARGET_INTEGRATION"
+  cp -a "$SOURCE_INTEGRATION" "$TARGET_CUSTOM_COMPONENTS_DIR/"
+fi
+
 if [[ -f "$SOURCE_EXAMPLE_RULES" ]]; then
-  if ssh "$HA_SSH_HOST" "test -f '$TARGET_RULES'"; then
+  if [[ -f "$TARGET_RULES" ]]; then
     echo "Rules file already exists, leaving it untouched:"
     echo "  $TARGET_RULES"
   else
@@ -69,8 +73,8 @@ if [[ -f "$SOURCE_EXAMPLE_RULES" ]]; then
     if [[ "$DRY_RUN" -eq 1 ]]; then
       echo "DRY-RUN: rules copy skipped"
     else
-      ssh "$HA_SSH_HOST" "mkdir -p '$TARGET_RULES_DIR'"
-      scp "$SOURCE_EXAMPLE_RULES" "$HA_SSH_HOST:$TARGET_RULES"
+      mkdir -p "$TARGET_RULES_DIR"
+      cp "$SOURCE_EXAMPLE_RULES" "$TARGET_RULES"
     fi
   fi
 fi
