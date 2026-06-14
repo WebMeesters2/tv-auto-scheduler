@@ -83,6 +83,22 @@ Default location:
 /config/tv_auto_scheduler/rules.csv
 ```
 
+If new rule columns are introduced in a future release, use the migration utility instead of editing larger files by hand:
+
+```bash
+python /config/tv_auto_scheduler/migrate_rules_csv.py /config/tv_auto_scheduler/rules.csv
+```
+
+The deployment scripts copy this utility to `/config/tv_auto_scheduler/migrate_rules_csv.py`. It inserts any missing known columns with safe defaults, preserves existing row values, keeps unknown extra columns, and writes a backup next to the original file as `rules.csv.bak`.
+
+To validate the current file without changing it:
+
+```bash
+python /config/tv_auto_scheduler/migrate_rules_csv.py --validate /config/tv_auto_scheduler/rules.csv
+```
+
+Validation checks the current header against the expected rule columns and flags obvious CSV structure problems such as extra values beyond the header on a row.
+
 Example:
 
 ```csv

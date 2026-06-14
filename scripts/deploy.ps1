@@ -15,7 +15,9 @@ $SourceIntegration = Join-Path $SourceRoot "custom_components\$IntegrationName"
 $TargetIntegration = Join-Path $HaConfigRoot "custom_components\$IntegrationName"
 
 $SourceExamples = Join-Path $SourceRoot "examples"
+$SourceRulesMigrator = Join-Path $SourceRoot "scripts\migrate_rules_csv.py"
 $TargetRulesDir = Join-Path $HaConfigRoot "tv_auto_scheduler"
+$TargetRulesMigrator = Join-Path $TargetRulesDir "migrate_rules_csv.py"
 
 Write-Host "Deploying $IntegrationName..." -ForegroundColor Cyan
 Write-Host "Source: $SourceRoot"
@@ -83,6 +85,18 @@ if (Test-Path $ExampleRules) {
         Write-Host ""
         Write-Host "Rules file already exists, leaving it untouched:" -ForegroundColor Green
         Write-Host "  $TargetRules"
+    }
+}
+
+if (Test-Path $SourceRulesMigrator) {
+    Write-Host ""
+    Write-Host "Deploying rules utility:"
+    Write-Host "  From: $SourceRulesMigrator"
+    Write-Host "  To:   $TargetRulesMigrator"
+
+    if (-not $DryRun) {
+        New-Item -ItemType Directory -Force -Path $TargetRulesDir | Out-Null
+        Copy-Item $SourceRulesMigrator $TargetRulesMigrator -Force
     }
 }
 
