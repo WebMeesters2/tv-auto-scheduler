@@ -5,7 +5,7 @@ import logging
 import re
 from dataclasses import dataclass
 from datetime import datetime, time, timedelta
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 from homeassistant.core import HomeAssistant
@@ -17,6 +17,7 @@ from .const import (
     CSV_DELETE_AFTER_USE,
     CSV_ENABLED,
     CSV_FILTER_END_TIME,
+    CSV_FILTER_START_DAY,
     CSV_FILTER_START_TIME,
     CSV_PRE,
     CSV_PROGRAMME,
@@ -24,6 +25,47 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+_WEEKDAY_ALIASES = {
+    "mon": 0,
+    "monday": 0,
+    "ma": 0,
+    "maa": 0,
+    "maandag": 0,
+    "tue": 1,
+    "tues": 1,
+    "tuesday": 1,
+    "di": 1,
+    "din": 1,
+    "dinsdag": 1,
+    "wed": 2,
+    "wednesday": 2,
+    "wo": 2,
+    "woe": 2,
+    "woensdag": 2,
+    "thu": 3,
+    "thur": 3,
+    "thurs": 3,
+    "thursday": 3,
+    "do": 3,
+    "don": 3,
+    "donderdag": 3,
+    "fri": 4,
+    "friday": 4,
+    "vr": 4,
+    "vrij": 4,
+    "vrijdag": 4,
+    "sat": 5,
+    "saturday": 5,
+    "za": 5,
+    "zat": 5,
+    "zaterdag": 5,
+    "sun": 6,
+    "sunday": 6,
+    "zo": 6,
+    "zon": 6,
+    "zondag": 6,
+}
 
 
 @dataclass(frozen=True)
@@ -34,6 +76,7 @@ class ScheduleRule:
     pre: bool
     tv: bool
     delete_after_use: bool = False
+    filter_start_days: frozenset[int] | None = None
     filter_start_time: time | None = None
     filter_end_time: time | None = None
     row_number: int | None = None
@@ -50,6 +93,15 @@ class EpgProgramme:
     end: str
     start_datetime: datetime
     end_datetime: datetime
+
+
+@dataclass(frozen=True)
+class ChangeLogEntry:
+    change_type: str
+    run_datetime: datetime
+    calendar_entity: str
+    programme: EpgProgramme
+    rule: ScheduleRule
 
 
 def load_rules(rules_file: str) -> list[ScheduleRule]:
@@ -79,6 +131,10 @@ def load_rules(rules_file: str) -> list[ScheduleRule]:
                 )
                 continue
 
+            filter_start_days = _parse_start_day_filter(row, row_number)
+            if _clean(row.get(CSV_FILTER_START_DAY)) and filter_start_days is None:
+                continue
+
             filter_start_time, filter_end_time = _parse_time_filter(row, row_number)
             if (
                 _clean(row.get(CSV_FILTER_START_TIME))
@@ -97,6 +153,7 @@ def load_rules(rules_file: str) -> list[ScheduleRule]:
                         row.get(CSV_DELETE_AFTER_USE),
                         default=False,
                     ),
+                    filter_start_days=filter_start_days,
                     filter_start_time=filter_start_time,
                     filter_end_time=filter_end_time,
                     row_number=row_number,
@@ -135,6 +192,55 @@ def remove_rules_by_row_numbers(rules_file: str, row_numbers: set[int]) -> int:
         writer.writerows(kept_rows)
 
     return removed
+
+
+def build_change_log_path(rules_file: str) -> str:
+    if "/" in rules_file and "\\" not in rules_file:
+        return str(PurePosixPath(rules_file).with_name("tv_auto_scheduler_changes.csv"))
+
+    return str(Path(rules_file).with_name("tv_auto_scheduler_changes.csv"))
+
+
+def resolve_change_log_path(rules_file: str, change_log_file: str | None) -> str:
+    if change_log_file:
+        return change_log_file
+
+    return build_change_log_path(rules_file)
+
+
+def append_change_log(log_file: str, entries: list[ChangeLogEntry]) -> int:
+    if not entries:
+        return 0
+
+    path = Path(log_file)
+    fieldnames = [
+        "type",
+        "run_at",
+        "start_at",
+        "end_at",
+        "timezone",
+        "calendar",
+        "channel",
+        "channel_name",
+        "programme",
+        "rule",
+        "rule_row",
+        "source_epg",
+        "programme_description",
+    ]
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    write_header = not path.exists() or path.stat().st_size == 0
+
+    with path.open("a", newline="", encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        if write_header:
+            writer.writeheader()
+
+        for entry in entries:
+            writer.writerow(_build_change_log_row(entry))
+
+    return len(entries)
 
 
 def scan_epg(
@@ -355,6 +461,9 @@ def find_matches(
             if not _matches_start_time_filter(rule, programme):
                 continue
 
+            if not _matches_start_day_filter(rule, programme):
+                continue
+
             matches.append((rule, programme))
 
     return matches
@@ -427,6 +536,13 @@ def _matches_start_time_filter(rule: ScheduleRule, programme: EpgProgramme) -> b
     )
 
 
+def _matches_start_day_filter(rule: ScheduleRule, programme: EpgProgramme) -> bool:
+    if not rule.filter_start_days:
+        return True
+
+    return programme.start_datetime.weekday() in rule.filter_start_days
+
+
 def _first_alias(channel_key: str, channel_data: dict[str, Any]) -> str:
     aliases = channel_data.get("aliases")
 
@@ -489,9 +605,98 @@ def _parse_time_filter(
         return None, None
 
 
+def _parse_start_day_filter(
+    row: dict[str, Any],
+    row_number: int,
+) -> frozenset[int] | None:
+    value = _clean(row.get(CSV_FILTER_START_DAY))
+
+    if not value:
+        return None
+
+    days: set[int] = set()
+
+    for token in re.split(r"[|,;/]+", value):
+        normalized = token.strip().lower()
+        if not normalized:
+            continue
+
+        day_range = _parse_weekday_range(normalized)
+        if day_range is not None:
+            days.update(day_range)
+            continue
+
+        weekday = _WEEKDAY_ALIASES.get(normalized)
+        if weekday is None:
+            _LOGGER.warning(
+                "Skipping invalid rule on row %s: invalid filter-start-day value (%s)",
+                row_number,
+                value,
+            )
+            return None
+
+        days.add(weekday)
+
+    if not days:
+        _LOGGER.warning(
+            "Skipping invalid rule on row %s: invalid filter-start-day value (%s)",
+            row_number,
+            value,
+        )
+        return None
+
+    return frozenset(days)
+
+
+def _parse_weekday_range(value: str) -> set[int] | None:
+    if "-" not in value:
+        return None
+
+    start_name, end_name = [part.strip() for part in value.split("-", maxsplit=1)]
+    start_day = _WEEKDAY_ALIASES.get(start_name)
+    end_day = _WEEKDAY_ALIASES.get(end_name)
+
+    if start_day is None or end_day is None:
+        return None
+
+    if start_day <= end_day:
+        return set(range(start_day, end_day + 1))
+
+    return set(range(start_day, 7)) | set(range(0, end_day + 1))
+
+
 def _parse_time_value(value: str) -> time:
     hours, minutes = [int(part) for part in value.split(":", maxsplit=1)]
     return time(hour=hours, minute=minutes)
+
+
+def _build_change_log_row(entry: ChangeLogEntry) -> dict[str, str]:
+    programme_timezone = (
+        entry.programme.start_datetime.tzname()
+        or entry.programme.end_datetime.tzname()
+        or entry.run_datetime.tzname()
+        or ""
+    )
+
+    return {
+        "type": entry.change_type,
+        "run_at": _format_change_log_datetime(entry.run_datetime),
+        "start_at": _format_change_log_datetime(entry.programme.start_datetime),
+        "end_at": _format_change_log_datetime(entry.programme.end_datetime),
+        "timezone": programme_timezone,
+        "calendar": entry.calendar_entity,
+        "channel": entry.programme.channel_key,
+        "channel_name": entry.programme.channel_name,
+        "programme": entry.programme.title,
+        "rule": entry.rule.programme,
+        "rule_row": "" if entry.rule.row_number is None else str(entry.rule.row_number),
+        "source_epg": entry.programme.epg_entity,
+        "programme_description": entry.programme.description,
+    }
+
+
+def _format_change_log_datetime(value: datetime) -> str:
+    return value.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def _as_bool(value: Any, default: bool = False) -> bool:

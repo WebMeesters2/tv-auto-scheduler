@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import importlib.util
 import tempfile
 import sys
@@ -201,8 +202,8 @@ class SchedulerTests(unittest.TestCase):
     def test_load_rules_supports_optional_delete_and_time_filters(self) -> None:
         csv_content = "\n".join(
             [
-                "enabled,channel,programme,pre,tv,flag-delete-after-use,filter-start-time,filter-end-time",
-                "y,BBC.*,Bargain Hunt,n,y,y,14:00,16:00",
+                "enabled,channel,programme,pre,tv,flag-delete-after-use,filter-start-day,filter-start-time,filter-end-time",
+                "y,BBC.*,Bargain Hunt,n,y,y,mon|wed,14:00,16:00",
             ]
         )
 
@@ -214,6 +215,7 @@ class SchedulerTests(unittest.TestCase):
 
         self.assertEqual(len(rules), 1)
         self.assertTrue(rules[0].delete_after_use)
+        self.assertEqual(rules[0].filter_start_days, frozenset({0, 2}))
         self.assertEqual(rules[0].filter_start_time.isoformat(), "14:00:00")
         self.assertEqual(rules[0].filter_end_time.isoformat(), "16:00:00")
         self.assertEqual(rules[0].row_number, 2)
@@ -258,6 +260,66 @@ class SchedulerTests(unittest.TestCase):
 
         self.assertEqual(matches, [(rule, matching_programme)])
 
+    def test_find_matches_applies_start_day_filter(self) -> None:
+        rule = self.scheduler.ScheduleRule(
+            enabled=True,
+            channel_pattern=r"BBC1",
+            programme="Bargain Hunt",
+            pre=False,
+            tv=True,
+            filter_start_days=frozenset({0, 2}),
+        )
+        monday_programme = self.scheduler.EpgProgramme(
+            channel_key="BBC1",
+            channel_name="BBC 1",
+            epg_entity="sensor.epg_bbc1",
+            title="Bargain Hunt",
+            description="A daytime antiques quiz.",
+            start="14:30",
+            end="15:15",
+            start_datetime=datetime(2026, 6, 8, 14, 30, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 8, 15, 15, tzinfo=timezone.utc),
+        )
+        tuesday_programme = self.scheduler.EpgProgramme(
+            channel_key="BBC1",
+            channel_name="BBC 1",
+            epg_entity="sensor.epg_bbc1",
+            title="Bargain Hunt",
+            description="A daytime antiques quiz.",
+            start="14:30",
+            end="15:15",
+            start_datetime=datetime(2026, 6, 9, 14, 30, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 9, 15, 15, tzinfo=timezone.utc),
+        )
+
+        matches = self.scheduler.find_matches(
+            [rule],
+            [monday_programme, tuesday_programme],
+        )
+
+        self.assertEqual(matches, [(rule, monday_programme)])
+
+    def test_parse_start_day_filter_supports_dutch_and_english_names(self) -> None:
+        row = {"filter-start-day": "maandag|wed|vrijdag"}
+
+        result = self.scheduler._parse_start_day_filter(row, 2)
+
+        self.assertEqual(result, frozenset({0, 2, 4}))
+
+    def test_parse_start_day_filter_supports_ranges(self) -> None:
+        row = {"filter-start-day": "mon-fri|sun"}
+
+        result = self.scheduler._parse_start_day_filter(row, 2)
+
+        self.assertEqual(result, frozenset({0, 1, 2, 3, 4, 6}))
+
+    def test_parse_start_day_filter_supports_wraparound_ranges(self) -> None:
+        row = {"filter-start-day": "fri-mon"}
+
+        result = self.scheduler._parse_start_day_filter(row, 2)
+
+        self.assertEqual(result, frozenset({4, 5, 6, 0}))
+
     def test_create_calendar_event_appends_epg_description(self) -> None:
         hass = FakeHass({})
         rule = self.scheduler.ScheduleRule(
@@ -297,6 +359,76 @@ class SchedulerTests(unittest.TestCase):
         self.assertIn("Rule: Bargain Hunt", data["description"])
         self.assertIn("Source: sensor.epg_bbc1", data["description"])
         self.assertIn("Programme: A daytime antiques quiz.", data["description"])
+
+    def test_build_change_log_path_uses_rules_directory(self) -> None:
+        rules_file = "/config/tv_auto_scheduler/rules.csv"
+
+        change_log = self.scheduler.build_change_log_path(rules_file)
+
+        self.assertEqual(
+            change_log,
+            "/config/tv_auto_scheduler/tv_auto_scheduler_changes.csv",
+        )
+
+    def test_resolve_change_log_path_prefers_explicit_value(self) -> None:
+        resolved = self.scheduler.resolve_change_log_path(
+            "/config/tv_auto_scheduler/rules.csv",
+            "/config/logs/custom_changes.csv",
+        )
+
+        self.assertEqual(resolved, "/config/logs/custom_changes.csv")
+
+    def test_append_change_log_writes_excel_friendly_csv(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            log_file = Path(temp_dir) / "tv_auto_scheduler_changes.csv"
+            rule = self.scheduler.ScheduleRule(
+                enabled=True,
+                channel_pattern=r"npo[12]",
+                programme="NOS Journaal",
+                pre=False,
+                tv=True,
+                row_number=7,
+            )
+            programme = self.scheduler.EpgProgramme(
+                channel_key="npo1",
+                channel_name="NPO 1",
+                epg_entity="sensor.epg_npo1",
+                title="NOS Journaal",
+                description="Het laatste nieuws.",
+                start="20:00",
+                end="20:30",
+                start_datetime=datetime(2026, 6, 10, 20, 0, tzinfo=timezone.utc),
+                end_datetime=datetime(2026, 6, 10, 20, 30, tzinfo=timezone.utc),
+            )
+            entry = self.scheduler.ChangeLogEntry(
+                change_type="Add",
+                run_datetime=datetime(2026, 6, 9, 6, 0, tzinfo=timezone.utc),
+                calendar_entity="calendar.televisie",
+                programme=programme,
+                rule=rule,
+            )
+
+            written = self.scheduler.append_change_log(str(log_file), [entry])
+
+            with log_file.open("r", newline="", encoding="utf-8") as file:
+                rows = list(csv.DictReader(file))
+
+        self.assertEqual(written, 1)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["type"], "Add")
+        self.assertEqual(rows[0]["run_at"], "2026-06-09 06:00:00")
+        self.assertEqual(rows[0]["start_at"], "2026-06-10 20:00:00")
+        self.assertEqual(rows[0]["end_at"], "2026-06-10 20:30:00")
+        self.assertEqual(rows[0]["timezone"], "UTC")
+        self.assertEqual(rows[0]["calendar"], "calendar.televisie")
+        self.assertEqual(rows[0]["channel"], "npo1")
+        self.assertEqual(rows[0]["channel_name"], "NPO 1")
+        self.assertEqual(rows[0]["programme"], "NOS Journaal")
+        self.assertEqual(rows[0]["rule"], "NOS Journaal")
+        self.assertEqual(rows[0]["rule_row"], "7")
+        self.assertEqual(rows[0]["source_epg"], "sensor.epg_npo1")
+        self.assertEqual(rows[0]["programme_description"], "Het laatste nieuws.")
+
 
     def test_remove_rules_by_row_numbers_removes_only_selected_rows(self) -> None:
         csv_content = "\n".join(

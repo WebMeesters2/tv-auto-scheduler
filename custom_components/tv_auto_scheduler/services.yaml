@@ -41,3 +41,19 @@ scan:
       default: false
       selector:
         boolean:
+
+    change_log:
+      name: Change log
+      description: Append created calendar changes to a CSV file.
+      required: false
+      default: false
+      selector:
+        boolean:
+
+    change_log_file:
+      name: Change log file
+      description: Optional CSV file path for the change log. When omitted, the file is created next to the rules file.
+      required: false
+      example: /config/tv_auto_scheduler/tv_auto_scheduler_changes.csv
+      selector:
+        text:

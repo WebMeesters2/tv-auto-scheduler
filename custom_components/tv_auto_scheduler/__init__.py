@@ -6,8 +6,11 @@ import voluptuous as vol
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.util import dt as dt_util
 
 from .const import (
+    CONF_CHANGE_LOG,
+    CONF_CHANGE_LOG_FILE,
     CONF_DRY_RUN,
     CONF_PRE_CALENDAR,
     CONF_RULES_FILE,
@@ -20,6 +23,9 @@ from .const import (
     SERVICE_SCAN,
 )
 from .scheduler import (
+    ChangeLogEntry,
+    append_change_log,
+    resolve_change_log_path,
     calendar_event_exists,
     create_calendar_event,
     find_matches,
@@ -38,6 +44,8 @@ SERVICE_SCAN_SCHEMA = vol.Schema(
         vol.Optional(CONF_PRE_CALENDAR, default=DEFAULT_PRE_CALENDAR): cv.entity_id,
         vol.Optional(CONF_TV_CALENDAR, default=DEFAULT_TV_CALENDAR): cv.entity_id,
         vol.Optional(CONF_SHOW_MISSING_EPG, default=False): cv.boolean,
+        vol.Optional(CONF_CHANGE_LOG, default=False): cv.boolean,
+        vol.Optional(CONF_CHANGE_LOG_FILE): cv.path,
     }
 )
 
@@ -51,6 +59,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         pre_calendar = call.data[CONF_PRE_CALENDAR]
         tv_calendar = call.data[CONF_TV_CALENDAR]
         show_missing_epg = call.data[CONF_SHOW_MISSING_EPG]
+        change_log = call.data[CONF_CHANGE_LOG]
+        change_log_file = call.data.get(CONF_CHANGE_LOG_FILE)
+        run_started_at = dt_util.now()
         _LOGGER.debug(
             "Starting scan (rules_file=%s, dry_run=%s)",
             rules_file,
@@ -95,6 +106,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 created = 0
                 skipped = 0
                 rules_to_delete: set[int] = set()
+                change_log_entries: list[ChangeLogEntry] = []
 
                 for rule, programme in matches:
                     targets = []
@@ -126,6 +138,17 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                         created += 1
                         created_for_match = True
 
+                        if change_log:
+                            change_log_entries.append(
+                                ChangeLogEntry(
+                                    change_type="Add",
+                                    run_datetime=run_started_at,
+                                    calendar_entity=calendar_entity,
+                                    programme=programme,
+                                    rule=rule,
+                                )
+                            )
+
                     if (
                         created_for_match
                         and rule.delete_after_use
@@ -141,11 +164,29 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                         rules_to_delete,
                     )
 
+                logged_changes = 0
+                if change_log and change_log_entries:
+                    resolved_change_log_file = resolve_change_log_path(
+                        rules_file,
+                        change_log_file,
+                    )
+                    logged_changes = await hass.async_add_executor_job(
+                        append_change_log,
+                        resolved_change_log_file,
+                        change_log_entries,
+                    )
+                    _LOGGER.debug(
+                        "TV Auto Scheduler: wrote %s change log row(s) to %s",
+                        logged_changes,
+                        resolved_change_log_file,
+                    )
+
                 _LOGGER.info(
-                    "TV Auto Scheduler: created %s event(s), skipped %s existing event(s), removed %s used rule(s)",
+                    "TV Auto Scheduler: created %s event(s), skipped %s existing event(s), removed %s used rule(s), logged %s change(s)",
                     created,
                     skipped,
                     removed_rules,
+                    logged_changes,
                 )
 
         except Exception:
