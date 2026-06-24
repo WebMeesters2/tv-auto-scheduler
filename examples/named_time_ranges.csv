@@ -1,0 +1,4 @@
+key,filter-start-day,filter-start-time,filter-end-time
+primetime,,20:00,22:00
+primetime_week,mon-fri,20:00,22:00
+late_night_weekend,sat-sun,22:30,01:30

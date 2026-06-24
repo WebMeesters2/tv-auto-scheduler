@@ -16,8 +16,10 @@ $TargetIntegration = Join-Path $HaConfigRoot "custom_components\$IntegrationName
 
 $SourceExamples = Join-Path $SourceRoot "examples"
 $SourceRulesMigrator = Join-Path $SourceRoot "scripts\migrate_rules_csv.py"
+$SourceNamedTimeRangesTemplate = Join-Path $SourceRoot "scripts\create_named_time_ranges_template.py"
 $TargetRulesDir = Join-Path $HaConfigRoot "tv_auto_scheduler"
 $TargetRulesMigrator = Join-Path $TargetRulesDir "migrate_rules_csv.py"
+$TargetNamedTimeRangesTemplate = Join-Path $TargetRulesDir "create_named_time_ranges_template.py"
 
 Write-Host "Deploying $IntegrationName..." -ForegroundColor Cyan
 Write-Host "Source: $SourceRoot"
@@ -67,7 +69,9 @@ function Copy-Folder {
 Copy-Folder -Source $SourceIntegration -Target $TargetIntegration
 
 $ExampleRules = Join-Path $SourceExamples "tv-rules.csv"
+$ExampleNamedTimeRanges = Join-Path $SourceExamples "named_time_ranges.csv"
 $TargetRules = Join-Path $TargetRulesDir "rules.csv"
+$TargetNamedTimeRanges = Join-Path $TargetRulesDir "named_time_ranges.csv"
 
 if (Test-Path $ExampleRules) {
     if (-not (Test-Path $TargetRules)) {
@@ -88,6 +92,25 @@ if (Test-Path $ExampleRules) {
     }
 }
 
+if (Test-Path $ExampleNamedTimeRanges) {
+    if (-not (Test-Path $TargetNamedTimeRanges)) {
+        Write-Host ""
+        Write-Host "Installing initial named time ranges file:"
+        Write-Host "  From: $ExampleNamedTimeRanges"
+        Write-Host "  To:   $TargetNamedTimeRanges"
+
+        if (-not $DryRun) {
+            New-Item -ItemType Directory -Force -Path $TargetRulesDir | Out-Null
+            Copy-Item $ExampleNamedTimeRanges $TargetNamedTimeRanges
+        }
+    }
+    else {
+        Write-Host ""
+        Write-Host "Named time ranges file already exists, leaving it untouched:" -ForegroundColor Green
+        Write-Host "  $TargetNamedTimeRanges"
+    }
+}
+
 if (Test-Path $SourceRulesMigrator) {
     Write-Host ""
     Write-Host "Deploying rules utility:"
@@ -97,6 +120,18 @@ if (Test-Path $SourceRulesMigrator) {
     if (-not $DryRun) {
         New-Item -ItemType Directory -Force -Path $TargetRulesDir | Out-Null
         Copy-Item $SourceRulesMigrator $TargetRulesMigrator -Force
+    }
+}
+
+if (Test-Path $SourceNamedTimeRangesTemplate) {
+    Write-Host ""
+    Write-Host "Deploying named time ranges utility:"
+    Write-Host "  From: $SourceNamedTimeRangesTemplate"
+    Write-Host "  To:   $TargetNamedTimeRangesTemplate"
+
+    if (-not $DryRun) {
+        New-Item -ItemType Directory -Force -Path $TargetRulesDir | Out-Null
+        Copy-Item $SourceNamedTimeRangesTemplate $TargetNamedTimeRangesTemplate -Force
     }
 }
 

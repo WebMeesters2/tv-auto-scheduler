@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import csv
 import importlib.util
-import tempfile
 import sys
+import tempfile
 import types
 import unittest
 from datetime import datetime, timezone
@@ -16,21 +16,51 @@ PACKAGE_DIR = REPO_ROOT / "custom_components" / "tv_auto_scheduler"
 
 def _install_homeassistant_stubs() -> None:
     homeassistant = types.ModuleType("homeassistant")
+    components = types.ModuleType("homeassistant.components")
+    calendar = types.ModuleType("homeassistant.components.calendar")
+    calendar_const = types.ModuleType("homeassistant.components.calendar.const")
     core = types.ModuleType("homeassistant.core")
+    exceptions = types.ModuleType("homeassistant.exceptions")
     util = types.ModuleType("homeassistant.util")
     dt = types.ModuleType("homeassistant.util.dt")
 
     class HomeAssistant:
         pass
 
+    class HomeAssistantError(Exception):
+        pass
+
+    class CalendarEntityFeature:
+        CREATE_EVENT = 1
+        DELETE_EVENT = 2
+        UPDATE_EVENT = 4
+
     dt.now = lambda: datetime(2026, 6, 8, 12, 0, tzinfo=timezone.utc)
+    dt.as_local = lambda value: value.astimezone(timezone.utc)
+    dt.start_of_local_day = lambda value: value.replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    )
+    calendar_const.CalendarEntityFeature = CalendarEntityFeature
+    calendar_const.DATA_COMPONENT = "calendar_component"
     core.HomeAssistant = HomeAssistant
+    exceptions.HomeAssistantError = HomeAssistantError
+    calendar.const = calendar_const
+    components.calendar = calendar
     util.dt = dt
     homeassistant.core = core
+    homeassistant.components = components
+    homeassistant.exceptions = exceptions
     homeassistant.util = util
 
     sys.modules["homeassistant"] = homeassistant
+    sys.modules["homeassistant.components"] = components
+    sys.modules["homeassistant.components.calendar"] = calendar
+    sys.modules["homeassistant.components.calendar.const"] = calendar_const
     sys.modules["homeassistant.core"] = core
+    sys.modules["homeassistant.exceptions"] = exceptions
     sys.modules["homeassistant.util"] = util
     sys.modules["homeassistant.util.dt"] = dt
 
@@ -92,6 +122,7 @@ class FakeHass:
         self.states = FakeStateMachine(states)
         self.services = types.SimpleNamespace(async_call=self._async_call)
         self.service_calls: list[tuple[str, str, dict, bool, bool]] = []
+        self.data: dict[str, object] = {}
 
     async def _async_call(
         self,
@@ -105,6 +136,52 @@ class FakeHass:
             (domain, service, data, blocking, return_response)
         )
         return {}
+
+
+class FakeCalendarEvent:
+    def __init__(
+        self,
+        *,
+        uid: str,
+        summary: str,
+        description: str,
+        start_datetime: datetime,
+        end_datetime: datetime,
+        recurrence_id: str | None = None,
+    ):
+        self.uid = uid
+        self.summary = summary
+        self.description = description
+        self.start_datetime_local = start_datetime
+        self.end_datetime_local = end_datetime
+        self.recurrence_id = recurrence_id
+
+
+class FakeCalendarEntity:
+    def __init__(self, events: list[FakeCalendarEvent], supported_features: int):
+        self.events = list(events)
+        self.supported_features = supported_features
+        self.deleted: list[tuple[str, str | None]] = []
+
+    async def async_get_events(self, hass, start_date, end_date):
+        return list(self.events)
+
+    async def async_delete_event(
+        self,
+        uid: str,
+        recurrence_id: str | None = None,
+        recurrence_range: str | None = None,
+    ) -> None:
+        self.deleted.append((uid, recurrence_id))
+        self.events = [event for event in self.events if event.uid != uid]
+
+
+class FakeCalendarComponent:
+    def __init__(self, entities: dict[str, FakeCalendarEntity]):
+        self.entities = entities
+
+    def get_entity(self, entity_id: str):
+        return self.entities.get(entity_id)
 
 
 class SchedulerTests(unittest.TestCase):
@@ -202,8 +279,8 @@ class SchedulerTests(unittest.TestCase):
     def test_load_rules_supports_optional_delete_and_time_filters(self) -> None:
         csv_content = "\n".join(
             [
-                "enabled,channel,programme,pre,tv,flag-delete-after-use,filter-start-day,filter-start-time,filter-end-time",
-                "y,BBC.*,Bargain Hunt,n,y,y,mon|wed,14:00,16:00",
+                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "12,y,BBC.*,Bargain Hunt,n,y,y,,mon|wed,14:00,16:00",
             ]
         )
 
@@ -215,10 +292,106 @@ class SchedulerTests(unittest.TestCase):
 
         self.assertEqual(len(rules), 1)
         self.assertTrue(rules[0].delete_after_use)
+        self.assertEqual(rules[0].rule_id, 12)
         self.assertEqual(rules[0].filter_start_days, frozenset({0, 2}))
         self.assertEqual(rules[0].filter_start_time.isoformat(), "14:00:00")
         self.assertEqual(rules[0].filter_end_time.isoformat(), "16:00:00")
         self.assertEqual(rules[0].row_number, 2)
+
+    def test_load_rules_supports_named_time_ranges(self) -> None:
+        csv_content = "\n".join(
+            [
+                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "8,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime,,,",
+            ]
+        )
+        named_time_ranges_content = "\n".join(
+            [
+                "key,filter-start-day,filter-start-time,filter-end-time",
+                "primetime,,20:00,22:00",
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = Path(temp_dir) / "rules.csv"
+            named_time_ranges_file = Path(temp_dir) / "named_time_ranges.csv"
+            rules_file.write_text(csv_content, encoding="utf-8")
+            named_time_ranges_file.write_text(named_time_ranges_content, encoding="utf-8")
+
+            rules = self.scheduler.load_rules(str(rules_file))
+
+        self.assertEqual(len(rules), 1)
+        self.assertEqual(rules[0].rule_id, 8)
+        self.assertIsNone(rules[0].filter_start_days)
+        self.assertEqual(rules[0].filter_start_time.isoformat(), "20:00:00")
+        self.assertEqual(rules[0].filter_end_time.isoformat(), "22:00:00")
+
+    def test_load_rules_accepts_rows_where_rule_id_column_was_omitted(self) -> None:
+        csv_content = "\n".join(
+            [
+                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "y,RTL4,Het Perfecte Plaatje,y,y,n,primetime,,,",
+            ]
+        )
+        named_time_ranges_content = "\n".join(
+            [
+                "key,filter-start-day,filter-start-time,filter-end-time",
+                "primetime,,20:00,22:00",
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = Path(temp_dir) / "rules.csv"
+            named_time_ranges_file = Path(temp_dir) / "named_time_ranges.csv"
+            rules_file.write_text(csv_content, encoding="utf-8")
+            named_time_ranges_file.write_text(named_time_ranges_content, encoding="utf-8")
+
+            rules = self.scheduler.load_rules(str(rules_file))
+
+        self.assertEqual(len(rules), 1)
+        self.assertTrue(rules[0].enabled)
+        self.assertEqual(rules[0].channel_pattern, "RTL4")
+        self.assertEqual(rules[0].programme, "Het Perfecte Plaatje")
+        self.assertEqual(rules[0].rule_id, 1)
+        self.assertEqual(rules[0].filter_start_time.isoformat(), "20:00:00")
+        self.assertEqual(rules[0].filter_end_time.isoformat(), "22:00:00")
+
+    def test_ensure_rules_file_schema_adds_columns_and_assigns_rule_ids(self) -> None:
+        csv_content = "\n".join(
+            [
+                "enabled,channel,programme,pre,tv,flag-delete-after-use",
+                "y,BBC.*,Bargain Hunt,n,y,y",
+                "y,NPO.*,The Connection,y,y,n",
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = Path(temp_dir) / "rules.csv"
+            rules_file.write_text(csv_content, encoding="utf-8")
+
+            changed = self.scheduler.ensure_rules_file_schema(str(rules_file))
+
+            with rules_file.open("r", newline="", encoding="utf-8") as file:
+                rows = list(csv.DictReader(file))
+
+        self.assertTrue(changed)
+        self.assertEqual(
+            list(rows[0].keys()),
+            [
+                "rule-id",
+                "enabled",
+                "channel",
+                "programme",
+                "pre",
+                "tv",
+                "flag-delete-after-use",
+                "named-time-range",
+                "filter-start-day",
+                "filter-start-time",
+                "filter-end-time",
+            ],
+        )
+        self.assertEqual([row["rule-id"] for row in rows], ["1", "2"])
 
     def test_find_matches_applies_start_time_filter(self) -> None:
         rule = self.scheduler.ScheduleRule(
@@ -370,6 +543,16 @@ class SchedulerTests(unittest.TestCase):
             "/config/tv_auto_scheduler/tv_auto_scheduler_changes.csv",
         )
 
+    def test_build_dry_run_log_path_uses_rules_directory(self) -> None:
+        dry_run_log = self.scheduler.build_dry_run_log_path(
+            "/config/tv_auto_scheduler/rules.csv"
+        )
+
+        self.assertEqual(
+            dry_run_log,
+            "/config/tv_auto_scheduler/tv_auto_scheduler_dry_run.csv",
+        )
+
     def test_resolve_change_log_path_prefers_explicit_value(self) -> None:
         resolved = self.scheduler.resolve_change_log_path(
             "/config/tv_auto_scheduler/rules.csv",
@@ -388,6 +571,7 @@ class SchedulerTests(unittest.TestCase):
                 pre=False,
                 tv=True,
                 row_number=7,
+                rule_id=7,
             )
             programme = self.scheduler.EpgProgramme(
                 channel_key="npo1",
@@ -425,7 +609,7 @@ class SchedulerTests(unittest.TestCase):
         self.assertEqual(rows[0]["channel_name"], "NPO 1")
         self.assertEqual(rows[0]["programme"], "NOS Journaal")
         self.assertEqual(rows[0]["rule"], "NOS Journaal")
-        self.assertEqual(rows[0]["rule_row"], "7")
+        self.assertEqual(rows[0]["rule_id"], "7")
         self.assertEqual(rows[0]["source_epg"], "sensor.epg_npo1")
         self.assertEqual(rows[0]["programme_description"], "Het laatste nieuws.")
 
@@ -454,6 +638,111 @@ class SchedulerTests(unittest.TestCase):
                 "y,NPO.*,The Connection,y,y,n",
             ],
         )
+
+    def test_find_existing_auto_calendar_events_detects_shifted_match(self) -> None:
+        hass = FakeHass({})
+        existing_event = FakeCalendarEvent(
+            uid="abc123",
+            summary="RTL 4 | Beste Kijkers",
+            description=(
+                "TV_AUTO_SCHEDULER: true\n"
+                "Rule: Beste Kijkers\n"
+                "Source: sensor.woonkamer_epg_fmqn5gzdfv_rtl_4\n"
+            ),
+            start_datetime=datetime(2026, 6, 20, 21, 35, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 20, 22, 45, tzinfo=timezone.utc),
+        )
+        hass.data["calendar_component"] = FakeCalendarComponent(
+            {"calendar.televisie": FakeCalendarEntity([existing_event], supported_features=2)}
+        )
+        programme = self.scheduler.EpgProgramme(
+            channel_key="rtl4",
+            channel_name="RTL 4",
+            epg_entity="sensor.woonkamer_epg_fmqn5gzdfv_rtl_4",
+            title="Beste Kijkers",
+            description="Beste kijkers",
+            start="21:37",
+            end="22:47",
+            start_datetime=datetime(2026, 6, 20, 21, 37, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 20, 22, 47, tzinfo=timezone.utc),
+        )
+
+        import asyncio
+
+        exact_match, shifted_matches = asyncio.run(
+            self.scheduler.find_existing_auto_calendar_events(
+                hass,
+                "calendar.televisie",
+                programme,
+            )
+        )
+
+        self.assertIsNone(exact_match)
+        self.assertEqual(len(shifted_matches), 1)
+        self.assertEqual(shifted_matches[0].uid, "abc123")
+
+    def test_replace_calendar_event_deletes_stale_event_before_creating_new_one(self) -> None:
+        hass = FakeHass({})
+        stale_event = FakeCalendarEvent(
+            uid="abc123",
+            summary="RTL 4 | Oh, wat een jaar!",
+            description=(
+                "TV_AUTO_SCHEDULER: true\n"
+                "Rule: Oh, wat een Jaar!\n"
+                "Source: sensor.woonkamer_epg_fmqn5gzdfv_rtl_4\n"
+            ),
+            start_datetime=datetime(2026, 6, 20, 20, 5, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 20, 21, 35, tzinfo=timezone.utc),
+        )
+        calendar_entity = FakeCalendarEntity([stale_event], supported_features=2)
+        hass.data["calendar_component"] = FakeCalendarComponent(
+            {"calendar.televisie": calendar_entity}
+        )
+        rule = self.scheduler.ScheduleRule(
+            enabled=True,
+            channel_pattern=r"rtl4",
+            programme=r"Oh, wat een Jaar!",
+            pre=False,
+            tv=True,
+        )
+        programme = self.scheduler.EpgProgramme(
+            channel_key="rtl4",
+            channel_name="RTL 4",
+            epg_entity="sensor.woonkamer_epg_fmqn5gzdfv_rtl_4",
+            title="Oh, wat een jaar!",
+            description="Oh, Wat een Jaar!",
+            start="20:08",
+            end="21:37",
+            start_datetime=datetime(2026, 6, 20, 20, 8, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 20, 21, 37, tzinfo=timezone.utc),
+        )
+        shifted_match = self.scheduler.ExistingAutoCalendarEvent(
+            uid="abc123",
+            recurrence_id=None,
+            summary="RTL 4 | Oh, wat een jaar!",
+            start_datetime=datetime(2026, 6, 20, 20, 5, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 20, 21, 35, tzinfo=timezone.utc),
+        )
+
+        import asyncio
+
+        removed = asyncio.run(
+            self.scheduler.replace_calendar_event(
+                hass,
+                "calendar.televisie",
+                rule,
+                programme,
+                [shifted_match],
+            )
+        )
+
+        self.assertEqual(removed, 1)
+        self.assertEqual(calendar_entity.deleted, [("abc123", None)])
+        self.assertEqual(len(hass.service_calls), 1)
+        _, _, data, _, _ = hass.service_calls[0]
+        self.assertEqual(data["summary"], "RTL 4 | Oh, wat een jaar!")
+        self.assertEqual(data["start_date_time"], "2026-06-20T20:08:00+00:00")
+        self.assertEqual(data["end_date_time"], "2026-06-20T21:37:00+00:00")
 
 
 if __name__ == "__main__":

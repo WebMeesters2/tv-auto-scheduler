@@ -4,11 +4,16 @@ import csv
 import logging
 import re
 from dataclasses import dataclass
-from datetime import datetime, time, timedelta
+from datetime import date, datetime, time, timedelta
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from homeassistant.components.calendar.const import (
+    CalendarEntityFeature,
+    DATA_COMPONENT as CALENDAR_COMPONENT,
+)
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.util import dt as dt_util
 
 from .const import (
@@ -19,8 +24,10 @@ from .const import (
     CSV_FILTER_END_TIME,
     CSV_FILTER_START_DAY,
     CSV_FILTER_START_TIME,
+    CSV_NAMED_TIME_RANGE,
     CSV_PRE,
     CSV_PROGRAMME,
+    CSV_RULE_ID,
     CSV_TV,
 )
 
@@ -80,6 +87,7 @@ class ScheduleRule:
     filter_start_time: time | None = None
     filter_end_time: time | None = None
     row_number: int | None = None
+    rule_id: int = 0
 
 
 @dataclass(frozen=True)
@@ -104,18 +112,83 @@ class ChangeLogEntry:
     rule: ScheduleRule
 
 
-def load_rules(rules_file: str) -> list[ScheduleRule]:
+@dataclass(frozen=True)
+class ExistingAutoCalendarEvent:
+    uid: str
+    recurrence_id: str | None
+    summary: str
+    start_datetime: datetime
+    end_datetime: datetime
+
+
+@dataclass(frozen=True)
+class NamedTimeRange:
+    key: str
+    filter_start_days: frozenset[int] | None
+    filter_start_time: time | None
+    filter_end_time: time | None
+
+
+RULES_CSV_FIELD_ORDER = [
+    CSV_RULE_ID,
+    CSV_ENABLED,
+    CSV_CHANNEL,
+    CSV_PROGRAMME,
+    CSV_PRE,
+    CSV_TV,
+    CSV_DELETE_AFTER_USE,
+    CSV_NAMED_TIME_RANGE,
+    CSV_FILTER_START_DAY,
+    CSV_FILTER_START_TIME,
+    CSV_FILTER_END_TIME,
+]
+
+
+RULES_CSV_FIELD_DEFAULTS = {
+    CSV_RULE_ID: "",
+    CSV_ENABLED: "y",
+    CSV_CHANNEL: "",
+    CSV_PROGRAMME: "",
+    CSV_PRE: "n",
+    CSV_TV: "n",
+    CSV_DELETE_AFTER_USE: "n",
+    CSV_NAMED_TIME_RANGE: "",
+    CSV_FILTER_START_DAY: "",
+    CSV_FILTER_START_TIME: "",
+    CSV_FILTER_END_TIME: "",
+}
+
+
+def load_rules(
+    rules_file: str,
+    named_time_ranges_file: str | None = None,
+) -> list[ScheduleRule]:
     path = Path(rules_file)
 
     if not path.exists():
         raise FileNotFoundError(f"Rules file not found: {rules_file}")
 
+    named_time_ranges = load_named_time_ranges(
+        rules_file,
+        named_time_ranges_file,
+    )
+
     rules: list[ScheduleRule] = []
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
         reader = csv.DictReader(file)
+        existing_fields = reader.fieldnames or []
+        next_rule_id = _determine_next_rule_id(reader)
+        file.seek(0)
+        reader = csv.DictReader(file)
 
         for row_number, row in enumerate(reader, start=2):
+            row = _normalize_rules_csv_row(row, existing_fields)
+            rule_id, next_rule_id = _parse_rule_id(
+                row.get(CSV_RULE_ID),
+                row_number,
+                next_rule_id,
+            )
             enabled = _as_bool(row.get(CSV_ENABLED), default=True)
 
             if not enabled:
@@ -131,11 +204,33 @@ def load_rules(rules_file: str) -> list[ScheduleRule]:
                 )
                 continue
 
-            filter_start_days = _parse_start_day_filter(row, row_number)
+            named_time_range_key = _clean(row.get(CSV_NAMED_TIME_RANGE))
+            named_time_range = _resolve_named_time_range(
+                named_time_ranges,
+                named_time_range_key,
+                row_number,
+            )
+            if named_time_range_key and named_time_range is None:
+                continue
+
+            filter_start_days = _parse_start_day_filter(
+                row,
+                row_number,
+                default=named_time_range.filter_start_days if named_time_range else None,
+            )
             if _clean(row.get(CSV_FILTER_START_DAY)) and filter_start_days is None:
                 continue
 
-            filter_start_time, filter_end_time = _parse_time_filter(row, row_number)
+            filter_start_time, filter_end_time = _parse_time_filter(
+                row,
+                row_number,
+                default_start_time=(
+                    named_time_range.filter_start_time if named_time_range else None
+                ),
+                default_end_time=(
+                    named_time_range.filter_end_time if named_time_range else None
+                ),
+            )
             if (
                 _clean(row.get(CSV_FILTER_START_TIME))
                 or _clean(row.get(CSV_FILTER_END_TIME))
@@ -144,6 +239,7 @@ def load_rules(rules_file: str) -> list[ScheduleRule]:
 
             rules.append(
                 ScheduleRule(
+                    rule_id=rule_id,
                     enabled=enabled,
                     channel_pattern=channel,
                     programme=programme,
@@ -194,6 +290,148 @@ def remove_rules_by_row_numbers(rules_file: str, row_numbers: set[int]) -> int:
     return removed
 
 
+def ensure_rules_file_schema(rules_file: str) -> bool:
+    path = Path(rules_file)
+
+    if not path.exists():
+        raise FileNotFoundError(f"Rules file not found: {rules_file}")
+
+    with path.open("r", newline="", encoding="utf-8-sig") as file:
+        reader = csv.DictReader(file)
+        existing_fields = reader.fieldnames or []
+        rows = list(reader)
+
+    extra_fields = [
+        field for field in existing_fields if field and field not in RULES_CSV_FIELD_ORDER
+    ]
+    final_fields = RULES_CSV_FIELD_ORDER + extra_fields
+
+    used_rule_ids: set[int] = set()
+    next_rule_id = 1
+    migrated_rows: list[dict[str, str]] = []
+
+    for row in rows:
+        migrated_row = _normalize_rules_csv_row(row, existing_fields)
+        for field in final_fields:
+            migrated_row.setdefault(field, _clean(row.get(field)))
+
+        for field, default in RULES_CSV_FIELD_DEFAULTS.items():
+            if migrated_row[field] == "":
+                if field in existing_fields:
+                    continue
+                migrated_row[field] = default
+
+        rule_id_text = migrated_row[CSV_RULE_ID]
+        parsed_rule_id = _try_parse_positive_int(rule_id_text)
+        if parsed_rule_id is None or parsed_rule_id in used_rule_ids:
+            parsed_rule_id = next_rule_id
+            while parsed_rule_id in used_rule_ids:
+                parsed_rule_id += 1
+            migrated_row[CSV_RULE_ID] = str(parsed_rule_id)
+
+        used_rule_ids.add(parsed_rule_id)
+        next_rule_id = max(next_rule_id, parsed_rule_id + 1)
+        migrated_rows.append(migrated_row)
+
+    changed = existing_fields != final_fields
+    if not changed:
+        for row, migrated_row in zip(rows, migrated_rows, strict=False):
+            for field in final_fields:
+                if _clean(row.get(field)) != migrated_row[field]:
+                    changed = True
+                    break
+            if changed:
+                break
+
+    if not changed:
+        return False
+
+    with path.open("w", newline="", encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=final_fields)
+        writer.writeheader()
+        writer.writerows(migrated_rows)
+
+    return True
+
+
+def resolve_named_time_ranges_path(
+    rules_file: str,
+    named_time_ranges_file: str | None = None,
+) -> str:
+    if named_time_ranges_file:
+        return named_time_ranges_file
+
+    if "/" in rules_file and "\\" not in rules_file:
+        return str(PurePosixPath(rules_file).with_name("named_time_ranges.csv"))
+
+    return str(Path(rules_file).with_name("named_time_ranges.csv"))
+
+
+def load_named_time_ranges(
+    rules_file: str,
+    named_time_ranges_file: str | None = None,
+) -> dict[str, NamedTimeRange]:
+    path = Path(resolve_named_time_ranges_path(rules_file, named_time_ranges_file))
+    if not path.exists():
+        return {}
+
+    named_time_ranges: dict[str, NamedTimeRange] = {}
+
+    with path.open("r", newline="", encoding="utf-8-sig") as file:
+        reader = csv.DictReader(file)
+
+        for row_number, row in enumerate(reader, start=2):
+            key = _clean(row.get("key") or row.get("KEY"))
+            if not key:
+                _LOGGER.warning(
+                    "Skipping invalid named time range on row %s: key is required",
+                    row_number,
+                )
+                continue
+
+            filter_start_days = _parse_start_day_filter(
+                row,
+                row_number,
+                source_name="named time range",
+            )
+            if _clean(row.get(CSV_FILTER_START_DAY)) and filter_start_days is None:
+                continue
+
+            filter_start_time, filter_end_time = _parse_time_filter(
+                row,
+                row_number,
+                source_name="named time range",
+            )
+            if (
+                _clean(row.get(CSV_FILTER_START_TIME))
+                or _clean(row.get(CSV_FILTER_END_TIME))
+            ) and (filter_start_time is None or filter_end_time is None):
+                continue
+
+            named_time_ranges[key.lower()] = NamedTimeRange(
+                key=key,
+                filter_start_days=filter_start_days,
+                filter_start_time=filter_start_time,
+                filter_end_time=filter_end_time,
+            )
+
+    return named_time_ranges
+
+
+def build_dry_run_log_path(rules_file: str) -> str:
+    if "/" in rules_file and "\\" not in rules_file:
+        return str(PurePosixPath(rules_file).with_name("tv_auto_scheduler_dry_run.csv"))
+
+    return str(Path(rules_file).with_name("tv_auto_scheduler_dry_run.csv"))
+
+
+def resolve_dry_run_log_path(rules_file: str, dry_run_log_file: str | None) -> str:
+    if dry_run_log_file:
+        return dry_run_log_file
+
+    return build_dry_run_log_path(rules_file)
+
+
 def build_change_log_path(rules_file: str) -> str:
     if "/" in rules_file and "\\" not in rules_file:
         return str(PurePosixPath(rules_file).with_name("tv_auto_scheduler_changes.csv"))
@@ -213,24 +451,9 @@ def append_change_log(log_file: str, entries: list[ChangeLogEntry]) -> int:
         return 0
 
     path = Path(log_file)
-    fieldnames = [
-        "type",
-        "run_at",
-        "start_at",
-        "end_at",
-        "timezone",
-        "calendar",
-        "channel",
-        "channel_name",
-        "programme",
-        "rule",
-        "rule_row",
-        "source_epg",
-        "programme_description",
-    ]
-
     path.parent.mkdir(parents=True, exist_ok=True)
     write_header = not path.exists() or path.stat().st_size == 0
+    fieldnames = _resolve_change_log_fieldnames(path, write_header)
 
     with path.open("a", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -238,7 +461,7 @@ def append_change_log(log_file: str, entries: list[ChangeLogEntry]) -> int:
             writer.writeheader()
 
         for entry in entries:
-            writer.writerow(_build_change_log_row(entry))
+            writer.writerow(_build_change_log_row(entry, fieldnames))
 
     return len(entries)
 
@@ -383,6 +606,40 @@ async def calendar_event_exists(
     calendar_entity: str,
     programme: EpgProgramme,
 ) -> bool:
+    exact_match, _ = await find_existing_auto_calendar_events(
+        hass,
+        calendar_entity,
+        programme,
+    )
+    return exact_match is not None
+
+
+async def find_existing_auto_calendar_events(
+    hass: HomeAssistant,
+    calendar_entity: str,
+    programme: EpgProgramme,
+) -> tuple[ExistingAutoCalendarEvent | None, list[ExistingAutoCalendarEvent]]:
+    entity = _get_calendar_entity(hass, calendar_entity)
+
+    if entity is not None:
+        query_start = _replacement_lookup_start(programme)
+        query_end = _replacement_lookup_end(programme)
+
+        try:
+            events = await entity.async_get_events(
+                hass,
+                query_start,
+                query_end,
+            )
+        except HomeAssistantError:
+            _LOGGER.exception(
+                "TV Auto Scheduler: failed to read existing events for %s",
+                calendar_entity,
+            )
+            return None, []
+
+        return _classify_existing_auto_calendar_events(events, programme)
+
     summary = build_event_summary(programme)
 
     response = await hass.services.async_call(
@@ -414,9 +671,57 @@ async def calendar_event_exists(
             and existing_end == programme.end_datetime.isoformat()
             and AUTO_MARKER in existing_description
         ):
-            return True
+            return (
+                ExistingAutoCalendarEvent(
+                    uid="",
+                    recurrence_id=None,
+                    summary=existing_summary,
+                    start_datetime=programme.start_datetime,
+                    end_datetime=programme.end_datetime,
+                ),
+                [],
+            )
 
-    return False
+    return None, []
+
+
+async def replace_calendar_event(
+    hass: HomeAssistant,
+    calendar_entity: str,
+    rule: ScheduleRule,
+    programme: EpgProgramme,
+    stale_events: list[ExistingAutoCalendarEvent],
+) -> int:
+    entity = _get_calendar_entity(hass, calendar_entity)
+
+    if entity is None:
+        raise HomeAssistantError(
+            f"Calendar entity is not available for replacement: {calendar_entity}"
+        )
+
+    supported_features = getattr(entity, "supported_features", 0) or 0
+    if not supported_features & CalendarEntityFeature.DELETE_EVENT:
+        raise HomeAssistantError(
+            f"Calendar does not support event deletion: {calendar_entity}"
+        )
+
+    removed = 0
+
+    for stale_event in stale_events:
+        await entity.async_delete_event(
+            stale_event.uid,
+            recurrence_id=stale_event.recurrence_id,
+        )
+        removed += 1
+
+    await create_calendar_event(
+        hass,
+        calendar_entity,
+        rule,
+        programme,
+    )
+
+    return removed
 
 
 def build_event_summary(programme: EpgProgramme) -> str:
@@ -442,6 +747,127 @@ def _extract_calendar_events_response(
         return events
 
     return []
+
+
+def _get_calendar_entity(hass: HomeAssistant, calendar_entity: str) -> Any | None:
+    component = hass.data.get(CALENDAR_COMPONENT)
+    if component is None or not hasattr(component, "get_entity"):
+        return None
+
+    return component.get_entity(calendar_entity)
+
+
+def _classify_existing_auto_calendar_events(
+    events: list[object],
+    programme: EpgProgramme,
+) -> tuple[ExistingAutoCalendarEvent | None, list[ExistingAutoCalendarEvent]]:
+    exact_match: ExistingAutoCalendarEvent | None = None
+    shifted_matches: list[ExistingAutoCalendarEvent] = []
+    summary = build_event_summary(programme)
+    source_marker = f"Source: {programme.epg_entity}"
+
+    for event in events:
+        normalized_event = _normalize_existing_auto_calendar_event(
+            event,
+            summary,
+            source_marker,
+        )
+        if normalized_event is None:
+            continue
+
+        if (
+            normalized_event.start_datetime == programme.start_datetime
+            and normalized_event.end_datetime == programme.end_datetime
+        ):
+            exact_match = normalized_event
+            continue
+
+        if _time_ranges_overlap(
+            normalized_event.start_datetime,
+            normalized_event.end_datetime,
+            programme.start_datetime,
+            programme.end_datetime,
+        ):
+            shifted_matches.append(normalized_event)
+
+    return exact_match, shifted_matches
+
+
+def _normalize_existing_auto_calendar_event(
+    event: object,
+    expected_summary: str,
+    expected_source_marker: str,
+) -> ExistingAutoCalendarEvent | None:
+    summary = _clean(_existing_event_value(event, "summary"))
+    description = _clean(_existing_event_value(event, "description"))
+
+    if summary != expected_summary:
+        return None
+
+    if AUTO_MARKER not in description or expected_source_marker not in description:
+        return None
+
+    uid = _clean(_existing_event_value(event, "uid"))
+    if not uid:
+        return None
+
+    start_datetime = _existing_event_datetime(event, "start")
+    end_datetime = _existing_event_datetime(event, "end")
+
+    if start_datetime is None or end_datetime is None:
+        return None
+
+    recurrence_id = _clean(_existing_event_value(event, "recurrence_id")) or None
+
+    return ExistingAutoCalendarEvent(
+        uid=uid,
+        recurrence_id=recurrence_id,
+        summary=summary,
+        start_datetime=start_datetime,
+        end_datetime=end_datetime,
+    )
+
+
+def _existing_event_value(event: object, name: str) -> Any:
+    if isinstance(event, dict):
+        return event.get(name)
+
+    return getattr(event, name, None)
+
+
+def _existing_event_datetime(event: object, attribute_name: str) -> datetime | None:
+    local_attribute_name = f"{attribute_name}_datetime_local"
+
+    if hasattr(event, local_attribute_name):
+        value = getattr(event, local_attribute_name)
+        if isinstance(value, datetime):
+            return value
+
+    raw_value = _existing_event_value(event, attribute_name)
+    if isinstance(raw_value, datetime):
+        return dt_util.as_local(raw_value)
+
+    if isinstance(raw_value, date):
+        return dt_util.start_of_local_day(datetime.combine(raw_value, time.min))
+
+    return None
+
+
+def _replacement_lookup_start(programme: EpgProgramme) -> datetime:
+    return dt_util.start_of_local_day(programme.start_datetime)
+
+
+def _replacement_lookup_end(programme: EpgProgramme) -> datetime:
+    return _replacement_lookup_start(programme) + timedelta(days=1)
+
+
+def _time_ranges_overlap(
+    start_a: datetime,
+    end_a: datetime,
+    start_b: datetime,
+    end_b: datetime,
+) -> bool:
+    return start_a < end_b and start_b < end_a
 
 
 def find_matches(
@@ -579,16 +1005,21 @@ def _combine_base_date_and_time(base: datetime, time_value: str) -> datetime:
 def _parse_time_filter(
     row: dict[str, Any],
     row_number: int,
+    *,
+    default_start_time: time | None = None,
+    default_end_time: time | None = None,
+    source_name: str = "rule",
 ) -> tuple[time | None, time | None]:
     start_value = _clean(row.get(CSV_FILTER_START_TIME))
     end_value = _clean(row.get(CSV_FILTER_END_TIME))
 
     if not start_value and not end_value:
-        return None, None
+        return default_start_time, default_end_time
 
     if not start_value or not end_value:
         _LOGGER.warning(
-            "Skipping invalid rule on row %s: filter-start-time and filter-end-time must both be set",
+            "Skipping invalid %s on row %s: filter-start-time and filter-end-time must both be set",
+            source_name,
             row_number,
         )
         return None, None
@@ -597,7 +1028,8 @@ def _parse_time_filter(
         return _parse_time_value(start_value), _parse_time_value(end_value)
     except ValueError:
         _LOGGER.warning(
-            "Skipping invalid rule on row %s: invalid filter time value (%s-%s)",
+            "Skipping invalid %s on row %s: invalid filter time value (%s-%s)",
+            source_name,
             row_number,
             start_value,
             end_value,
@@ -608,11 +1040,14 @@ def _parse_time_filter(
 def _parse_start_day_filter(
     row: dict[str, Any],
     row_number: int,
+    *,
+    default: frozenset[int] | None = None,
+    source_name: str = "rule",
 ) -> frozenset[int] | None:
     value = _clean(row.get(CSV_FILTER_START_DAY))
 
     if not value:
-        return None
+        return default
 
     days: set[int] = set()
 
@@ -629,7 +1064,8 @@ def _parse_start_day_filter(
         weekday = _WEEKDAY_ALIASES.get(normalized)
         if weekday is None:
             _LOGGER.warning(
-                "Skipping invalid rule on row %s: invalid filter-start-day value (%s)",
+                "Skipping invalid %s on row %s: invalid filter-start-day value (%s)",
+                source_name,
                 row_number,
                 value,
             )
@@ -639,7 +1075,8 @@ def _parse_start_day_filter(
 
     if not days:
         _LOGGER.warning(
-            "Skipping invalid rule on row %s: invalid filter-start-day value (%s)",
+            "Skipping invalid %s on row %s: invalid filter-start-day value (%s)",
+            source_name,
             row_number,
             value,
         )
@@ -670,7 +1107,103 @@ def _parse_time_value(value: str) -> time:
     return time(hour=hours, minute=minutes)
 
 
-def _build_change_log_row(entry: ChangeLogEntry) -> dict[str, str]:
+def _parse_rule_id(
+    value: Any,
+    row_number: int,
+    next_rule_id: int,
+) -> tuple[int, int]:
+    parsed_rule_id = _try_parse_positive_int(_clean(value))
+    if parsed_rule_id is None:
+        parsed_rule_id = next_rule_id
+
+    return parsed_rule_id, max(next_rule_id, parsed_rule_id + 1)
+
+
+def _determine_next_rule_id(reader: csv.DictReader) -> int:
+    max_rule_id = 0
+    for row in reader:
+        parsed_rule_id = _try_parse_positive_int(_clean(row.get(CSV_RULE_ID)))
+        if parsed_rule_id is not None:
+            max_rule_id = max(max_rule_id, parsed_rule_id)
+
+    return max_rule_id + 1 if max_rule_id else 1
+
+
+def _resolve_named_time_range(
+    named_time_ranges: dict[str, NamedTimeRange],
+    key: str,
+    row_number: int,
+) -> NamedTimeRange | None:
+    if not key:
+        return None
+
+    resolved = named_time_ranges.get(key.lower())
+    if resolved is not None:
+        return resolved
+
+    _LOGGER.warning(
+        "Skipping invalid rule on row %s: unknown named time range (%s)",
+        row_number,
+        key,
+    )
+    return None
+
+
+def _try_parse_positive_int(value: str) -> int | None:
+    if not value:
+        return None
+
+    try:
+        parsed = int(value)
+    except ValueError:
+        return None
+
+    return parsed if parsed > 0 else None
+
+
+def _normalize_rules_csv_row(
+    row: dict[str, Any],
+    existing_fields: list[str],
+) -> dict[str, str]:
+    normalized_row = {
+        field: _clean(row.get(field))
+        for field in existing_fields
+        if field
+    }
+
+    if not _looks_like_shifted_rule_id_row(normalized_row):
+        return normalized_row
+
+    ordered_values = [normalized_row.get(field, "") for field in RULES_CSV_FIELD_ORDER]
+    shifted_values = [""] + ordered_values[:-1]
+
+    for field, value in zip(RULES_CSV_FIELD_ORDER, shifted_values, strict=False):
+        normalized_row[field] = value
+
+    return normalized_row
+
+
+def _looks_like_shifted_rule_id_row(row: dict[str, str]) -> bool:
+    rule_id_value = row.get(CSV_RULE_ID, "")
+    enabled_value = row.get(CSV_ENABLED, "")
+
+    if not rule_id_value or _try_parse_positive_int(rule_id_value) is not None:
+        return False
+
+    if not _looks_like_bool_token(rule_id_value):
+        return False
+
+    return not _looks_like_bool_token(enabled_value)
+
+
+def _looks_like_bool_token(value: str) -> bool:
+    return _clean(value).lower() in {"1", "true", "yes", "y", "ja", "j", "0", "false", "no", "n", "nee"}
+
+
+def _build_change_log_row(
+    entry: ChangeLogEntry,
+    fieldnames: list[str],
+) -> dict[str, str]:
     programme_timezone = (
         entry.programme.start_datetime.tzname()
         or entry.programme.end_datetime.tzname()
@@ -678,7 +1211,7 @@ def _build_change_log_row(entry: ChangeLogEntry) -> dict[str, str]:
         or ""
     )
 
-    return {
+    row = {
         "type": entry.change_type,
         "run_at": _format_change_log_datetime(entry.run_datetime),
         "start_at": _format_change_log_datetime(entry.programme.start_datetime),
@@ -689,10 +1222,59 @@ def _build_change_log_row(entry: ChangeLogEntry) -> dict[str, str]:
         "channel_name": entry.programme.channel_name,
         "programme": entry.programme.title,
         "rule": entry.rule.programme,
-        "rule_row": "" if entry.rule.row_number is None else str(entry.rule.row_number),
         "source_epg": entry.programme.epg_entity,
         "programme_description": entry.programme.description,
     }
+    if "rule_id" in fieldnames:
+        row["rule_id"] = str(entry.rule.rule_id)
+    if "rule_row" in fieldnames:
+        row["rule_row"] = str(entry.rule.rule_id)
+    return row
+
+
+def _resolve_change_log_fieldnames(path: Path, write_header: bool) -> list[str]:
+    if write_header:
+        return [
+            "type",
+            "run_at",
+            "start_at",
+            "end_at",
+            "timezone",
+            "calendar",
+            "channel",
+            "channel_name",
+            "programme",
+            "rule",
+            "rule_id",
+            "source_epg",
+            "programme_description",
+        ]
+
+    with path.open("r", newline="", encoding="utf-8-sig") as file:
+        reader = csv.reader(file)
+        existing_header = next(reader, [])
+
+    if "rule_id" in existing_header:
+        return existing_header
+
+    if "rule_row" in existing_header:
+        return existing_header
+
+    return [
+        "type",
+        "run_at",
+        "start_at",
+        "end_at",
+        "timezone",
+        "calendar",
+        "channel",
+        "channel_name",
+        "programme",
+        "rule",
+        "rule_id",
+        "source_epg",
+        "programme_description",
+    ]
 
 
 def _format_change_log_datetime(value: datetime) -> str:

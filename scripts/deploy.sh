@@ -35,10 +35,14 @@ TARGET_CUSTOM_COMPONENTS_DIR="$HA_CONFIG_DIR/custom_components"
 TARGET_INTEGRATION="$TARGET_CUSTOM_COMPONENTS_DIR/$INTEGRATION_NAME"
 
 SOURCE_EXAMPLE_RULES="$SOURCE_ROOT/examples/tv-rules.csv"
+SOURCE_EXAMPLE_NAMED_TIME_RANGES="$SOURCE_ROOT/examples/named_time_ranges.csv"
 SOURCE_RULES_MIGRATOR="$SOURCE_ROOT/scripts/migrate_rules_csv.py"
+SOURCE_NAMED_TIME_RANGES_TEMPLATE="$SOURCE_ROOT/scripts/create_named_time_ranges_template.py"
 TARGET_RULES_DIR="$HA_CONFIG_DIR/tv_auto_scheduler"
 TARGET_RULES="$TARGET_RULES_DIR/rules.csv"
+TARGET_NAMED_TIME_RANGES="$TARGET_RULES_DIR/named_time_ranges.csv"
 TARGET_RULES_MIGRATOR="$TARGET_RULES_DIR/migrate_rules_csv.py"
+TARGET_NAMED_TIME_RANGES_TEMPLATE="$TARGET_RULES_DIR/create_named_time_ranges_template.py"
 
 if [[ ! -d "$SOURCE_INTEGRATION" ]]; then
   echo "Source integration folder not found: $SOURCE_INTEGRATION" >&2
@@ -81,6 +85,23 @@ if [[ -f "$SOURCE_EXAMPLE_RULES" ]]; then
   fi
 fi
 
+if [[ -f "$SOURCE_EXAMPLE_NAMED_TIME_RANGES" ]]; then
+  if [[ -f "$TARGET_NAMED_TIME_RANGES" ]]; then
+    echo "Named time ranges file already exists, leaving it untouched:"
+    echo "  $TARGET_NAMED_TIME_RANGES"
+  else
+    echo "Installing initial named time ranges file:"
+    echo "  $TARGET_NAMED_TIME_RANGES"
+
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+      echo "DRY-RUN: named time ranges copy skipped"
+    else
+      mkdir -p "$TARGET_RULES_DIR"
+      cp "$SOURCE_EXAMPLE_NAMED_TIME_RANGES" "$TARGET_NAMED_TIME_RANGES"
+    fi
+  fi
+fi
+
 if [[ -f "$SOURCE_RULES_MIGRATOR" ]]; then
   echo
   echo "Deploying rules utility:"
@@ -92,6 +113,20 @@ if [[ -f "$SOURCE_RULES_MIGRATOR" ]]; then
     mkdir -p "$TARGET_RULES_DIR"
     cp "$SOURCE_RULES_MIGRATOR" "$TARGET_RULES_MIGRATOR"
     chmod +x "$TARGET_RULES_MIGRATOR"
+  fi
+fi
+
+if [[ -f "$SOURCE_NAMED_TIME_RANGES_TEMPLATE" ]]; then
+  echo
+  echo "Deploying named time ranges utility:"
+  echo "  $TARGET_NAMED_TIME_RANGES_TEMPLATE"
+
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    echo "DRY-RUN: named time ranges utility copy skipped"
+  else
+    mkdir -p "$TARGET_RULES_DIR"
+    cp "$SOURCE_NAMED_TIME_RANGES_TEMPLATE" "$TARGET_NAMED_TIME_RANGES_TEMPLATE"
+    chmod +x "$TARGET_NAMED_TIME_RANGES_TEMPLATE"
   fi
 fi
 

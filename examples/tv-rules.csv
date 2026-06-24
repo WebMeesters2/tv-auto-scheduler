@@ -1,5 +1,5 @@
-enabled,channel,programme,pre,tv,flag-delete-after-use,filter-start-time,filter-end-time
-y,NPO.*,The Connection,y,y,n,,
-y,BBC.*,Bargain Hunt,n,y,n,,
-y,BBC.*,Celebrity Bridge of Lies,n,y,y,20:00,23:30
-y,BBC.*,Return to Paradise,n,y,n,,
+rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time
+1,y,NPO.*,The Connection,y,y,n,,,,
+2,y,BBC.*,Bargain Hunt,n,y,n,,mon|wed,,
+3,y,BBC.*,Celebrity Bridge of Lies,n,y,y,,fri,20:00,23:30
+,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime,,,
