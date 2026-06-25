@@ -159,6 +159,8 @@ RULES_CSV_FIELD_DEFAULTS = {
     CSV_FILTER_END_TIME: "",
 }
 
+_INLINE_COMMENT_FIELD = "__inline_comment__"
+
 
 def load_rules(
     rules_file: str,
@@ -177,13 +179,10 @@ def load_rules(
     rules: list[ScheduleRule] = []
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
-        existing_fields = reader.fieldnames or []
-        next_rule_id = _determine_next_rule_id(reader)
-        file.seek(0)
-        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
+        existing_fields, rows = _read_csv_rows(file.readlines())
+        next_rule_id = max(_collect_existing_rule_ids(rows, existing_fields), default=0) + 1
 
-        for row_number, row in enumerate(reader, start=2):
+        for row_number, row in enumerate(rows, start=2):
             row = _normalize_rules_csv_row(row, existing_fields)
             rule_id, next_rule_id = _parse_rule_id(
                 row.get(CSV_RULE_ID),
@@ -267,8 +266,7 @@ def remove_rules_by_row_numbers(rules_file: str, row_numbers: set[int]) -> int:
     path = Path(rules_file)
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
-        fieldnames = reader.fieldnames
+        fieldnames, rows = _read_csv_rows(file.readlines())
 
         if not fieldnames:
             return 0
@@ -276,7 +274,7 @@ def remove_rules_by_row_numbers(rules_file: str, row_numbers: set[int]) -> int:
         kept_rows: list[dict[str, str]] = []
         removed = 0
 
-        for row_number, row in enumerate(reader, start=2):
+        for row_number, row in enumerate(rows, start=2):
             if row_number in row_numbers:
                 removed += 1
                 continue
@@ -295,9 +293,7 @@ def ensure_rules_file_schema(rules_file: str) -> bool:
         raise FileNotFoundError(f"Rules file not found: {rules_file}")
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
-        existing_fields = reader.fieldnames or []
-        rows = list(reader)
+        existing_fields, rows = _read_csv_rows(file.readlines())
 
     extra_fields = [
         field for field in existing_fields if field and field not in RULES_CSV_FIELD_ORDER
@@ -310,6 +306,7 @@ def ensure_rules_file_schema(rules_file: str) -> bool:
 
     for row in rows:
         migrated_row = _normalize_rules_csv_row(row, existing_fields)
+        migrated_row[_INLINE_COMMENT_FIELD] = _clean(row.get(_INLINE_COMMENT_FIELD))
         for field in final_fields:
             migrated_row.setdefault(field, _clean(row.get(field)))
 
@@ -373,9 +370,12 @@ def load_named_time_ranges(
     named_time_ranges: dict[str, NamedTimeRange] = {}
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
+        fieldnames, rows = _read_csv_rows(file.readlines())
 
-        for row_number, row in enumerate(reader, start=2):
+        if not fieldnames:
+            return {}
+
+        for row_number, row in enumerate(rows, start=2):
             key = _clean(row.get("key") or row.get("KEY"))
             if not key:
                 _LOGGER.warning(
@@ -1193,19 +1193,36 @@ def _normalize_rules_csv_row(
     return normalized_row
 
 
-def _prepare_csv_text(lines: list[str]) -> str:
-    prepared_lines: list[str] = []
+def _read_csv_rows(lines: list[str]) -> tuple[list[str], list[dict[str, str]]]:
+    prepared_lines = _prepare_csv_lines(lines)
+    if not prepared_lines:
+        return [], []
+
+    reader = csv.DictReader(io.StringIO("\n".join(line for line, _ in prepared_lines)))
+    fieldnames = reader.fieldnames or []
+    rows = list(reader)
+    comments = [comment for _, comment in prepared_lines[1:]]
+
+    for row, comment in zip(rows, comments, strict=False):
+        row[_INLINE_COMMENT_FIELD] = comment
+
+    return fieldnames, rows
+
+
+def _prepare_csv_lines(lines: list[str]) -> list[tuple[str, str]]:
+    prepared_lines: list[tuple[str, str]] = []
 
     for line in lines:
-        cleaned_line = _strip_inline_comment(line).strip()
+        cleaned_line, comment = _split_inline_comment(line)
+        cleaned_line = cleaned_line.strip()
         if not cleaned_line:
             continue
-        prepared_lines.append(cleaned_line)
+        prepared_lines.append((cleaned_line, comment))
 
-    return "\n".join(prepared_lines)
+    return prepared_lines
 
 
-def _strip_inline_comment(line: str, marker: str = "#") -> str:
+def _split_inline_comment(line: str, marker: str = "#") -> tuple[str, str]:
     in_quotes = False
     index = 0
 
@@ -1217,10 +1234,10 @@ def _strip_inline_comment(line: str, marker: str = "#") -> str:
                 continue
             in_quotes = not in_quotes
         elif char == marker and not in_quotes:
-            return line[:index]
+            return line[:index], line[index + 1 :].strip()
         index += 1
 
-    return line
+    return line, ""
 
 
 def _write_compact_csv_rows(
@@ -1229,14 +1246,24 @@ def _write_compact_csv_rows(
     rows: list[dict[str, str]],
 ) -> None:
     with path.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        writer.writerow(fieldnames)
+        header_buffer = io.StringIO()
+        header_writer = csv.writer(header_buffer, lineterminator="")
+        header_writer.writerow(fieldnames)
+        file.write(f"{header_buffer.getvalue()}\n")
 
         for row in rows:
             values = [_clean(row.get(field)) for field in fieldnames]
             while values and values[-1] == "":
                 values.pop()
-            writer.writerow(values)
+            row_buffer = io.StringIO()
+            row_writer = csv.writer(row_buffer, lineterminator="")
+            row_writer.writerow(values)
+            line = row_buffer.getvalue()
+            comment = _clean(row.get(_INLINE_COMMENT_FIELD))
+            if comment:
+                file.write(f"{line} # {comment}\n")
+                continue
+            file.write(f"{line}\n")
 
 
 def _looks_like_shifted_rule_id_row(row: dict[str, str]) -> bool:

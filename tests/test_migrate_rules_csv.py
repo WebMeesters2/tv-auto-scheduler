@@ -155,7 +155,7 @@ class MigrationScriptTests(unittest.TestCase):
         self.assertEqual(rows[0]["programme"], "Het Perfecte Plaatje")
         self.assertEqual(rows[0]["named-time-range"], "primetime")
 
-    def test_migrate_rules_file_ignores_inline_comments_and_writes_compact_rows(self) -> None:
+    def test_migrate_rules_file_preserves_inline_comments_on_compact_rewrite(self) -> None:
         csv_content = "\n".join(
             [
                 "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
@@ -175,7 +175,7 @@ class MigrationScriptTests(unittest.TestCase):
             updated,
             [
                 "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
-                "1,y,BBC[1-2],Impossible,y,y,,afternoon",
+                "1,y,BBC[1-2],Impossible,y,y,,afternoon # readable comment",
             ],
         )
 

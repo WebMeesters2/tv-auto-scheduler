@@ -35,6 +35,8 @@ FIELD_DEFAULTS = {
     "filter-end-time": "",
 }
 
+INLINE_COMMENT_FIELD = "__inline_comment__"
+
 
 def validate_rules_file(rules_file: str) -> list[str]:
     path = Path(rules_file)
@@ -44,9 +46,7 @@ def validate_rules_file(rules_file: str) -> list[str]:
     issues: list[str] = []
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
-        existing_fields = reader.fieldnames or []
-        rows = list(reader)
+        existing_fields, rows = _read_csv_rows(file.readlines())
 
     missing_fields = [field for field in TARGET_FIELDS if field not in existing_fields]
     if missing_fields:
@@ -102,9 +102,7 @@ def migrate_rules_file(
         raise FileNotFoundError(f"Rules file not found: {rules_file}")
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
-        existing_fields = reader.fieldnames or []
-        rows = list(reader)
+        existing_fields, rows = _read_csv_rows(file.readlines())
 
     extra_fields = [
         field for field in existing_fields if field and field not in TARGET_FIELDS
@@ -116,6 +114,7 @@ def migrate_rules_file(
     next_rule_id = max(used_rule_ids, default=0) + 1
     for row in rows:
         migrated_row = _normalize_rules_csv_row(row, existing_fields)
+        migrated_row[INLINE_COMMENT_FIELD] = _clean(row.get(INLINE_COMMENT_FIELD))
         for field in final_fields:
             value = migrated_row.get(field, row.get(field))
             migrated_row[field] = "" if value is None else str(value)
@@ -221,19 +220,36 @@ def _normalize_rules_csv_row(
     return normalized_row
 
 
-def _prepare_csv_text(lines: list[str]) -> str:
-    prepared_lines: list[str] = []
+def _read_csv_rows(lines: list[str]) -> tuple[list[str], list[dict[str, str | None]]]:
+    prepared_lines = _prepare_csv_lines(lines)
+    if not prepared_lines:
+        return [], []
+
+    reader = csv.DictReader(io.StringIO("\n".join(line for line, _ in prepared_lines)))
+    fieldnames = reader.fieldnames or []
+    rows = list(reader)
+    comments = [comment for _, comment in prepared_lines[1:]]
+
+    for row, comment in zip(rows, comments, strict=False):
+        row[INLINE_COMMENT_FIELD] = comment
+
+    return fieldnames, rows
+
+
+def _prepare_csv_lines(lines: list[str]) -> list[tuple[str, str]]:
+    prepared_lines: list[tuple[str, str]] = []
 
     for line in lines:
-        cleaned_line = _strip_inline_comment(line).strip()
+        cleaned_line, comment = _split_inline_comment(line)
+        cleaned_line = cleaned_line.strip()
         if not cleaned_line:
             continue
-        prepared_lines.append(cleaned_line)
+        prepared_lines.append((cleaned_line, comment))
 
-    return "\n".join(prepared_lines)
+    return prepared_lines
 
 
-def _strip_inline_comment(line: str, marker: str = "#") -> str:
+def _split_inline_comment(line: str, marker: str = "#") -> tuple[str, str]:
     in_quotes = False
     index = 0
 
@@ -245,10 +261,14 @@ def _strip_inline_comment(line: str, marker: str = "#") -> str:
                 continue
             in_quotes = not in_quotes
         elif char == marker and not in_quotes:
-            return line[:index]
+            return line[:index], line[index + 1 :].strip()
         index += 1
 
-    return line
+    return line, ""
+
+
+def _clean(value: object) -> str:
+    return "" if value is None else str(value).strip()
 
 
 def _write_compact_csv_rows(
@@ -257,14 +277,24 @@ def _write_compact_csv_rows(
     rows: list[dict[str, str]],
 ) -> None:
     with path.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        writer.writerow(fieldnames)
+        header_buffer = io.StringIO()
+        header_writer = csv.writer(header_buffer, lineterminator="")
+        header_writer.writerow(fieldnames)
+        file.write(f"{header_buffer.getvalue()}\n")
 
         for row in rows:
             values = ["" if row.get(field) is None else str(row.get(field)) for field in fieldnames]
             while values and values[-1] == "":
                 values.pop()
-            writer.writerow(values)
+            row_buffer = io.StringIO()
+            row_writer = csv.writer(row_buffer, lineterminator="")
+            row_writer.writerow(values)
+            line = row_buffer.getvalue()
+            comment = _clean(row.get(INLINE_COMMENT_FIELD))
+            if comment:
+                file.write(f"{line} # {comment}\n")
+                continue
+            file.write(f"{line}\n")
 
 
 def _collect_existing_rule_ids(

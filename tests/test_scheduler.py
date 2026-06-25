@@ -444,7 +444,7 @@ class SchedulerTests(unittest.TestCase):
         self.assertTrue(changed)
         self.assertEqual([row["rule-id"] for row in rows], ["10", "26", "25"])
 
-    def test_ensure_rules_file_schema_writes_compact_rows_without_trailing_commas(self) -> None:
+    def test_ensure_rules_file_schema_preserves_inline_comments_on_compact_rewrite(self) -> None:
         csv_content = "\n".join(
             [
                 "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
@@ -464,7 +464,7 @@ class SchedulerTests(unittest.TestCase):
             updated,
             [
                 "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
-                "1,y,BBC[1-2],Impossible,y,y,,afternoon",
+                "1,y,BBC[1-2],Impossible,y,y,,afternoon # readable comment",
             ],
         )
 

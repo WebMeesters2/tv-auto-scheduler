@@ -150,6 +150,8 @@ You can also add comments after a rule by placing `#` after the last CSV value y
 71,y,BBC[1-2],Impossible,y,y,,afternoon # weekday afternoon catch-up
 ```
 
+If the scheduler or migration utility later normalizes the file, that inline rule comment is preserved on the same row.
+
 If you use a time filter, set both `filter-start-time` and `filter-end-time`. The filter is applied to the programme start time. Windows that cross midnight are supported, so `23:00` to `02:00` will match late-night and after-midnight starts.
 
 `filter-start-day` is also applied to the programme start. You can use English or Dutch weekday names, short or long, for example `mon`, `wednesday`, `vr`, or `zondag`. To match multiple start days in one rule, separate them with `|`, `,`, `;`, or `/`, for example `mon|wed|fri`. Day ranges are also supported, for example `mon-fri`, `sat-sun`, `ma-vr`, or wrap-around ranges such as `fri-mon`.
