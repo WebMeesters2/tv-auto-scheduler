@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import io
 from pathlib import Path, PurePosixPath
 
 TARGET_FIELDS = [
@@ -43,7 +44,7 @@ def validate_rules_file(rules_file: str) -> list[str]:
     issues: list[str] = []
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(file)
+        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
         existing_fields = reader.fieldnames or []
         rows = list(reader)
 
@@ -101,7 +102,7 @@ def migrate_rules_file(
         raise FileNotFoundError(f"Rules file not found: {rules_file}")
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(file)
+        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
         existing_fields = reader.fieldnames or []
         rows = list(reader)
 
@@ -111,8 +112,8 @@ def migrate_rules_file(
     final_fields = TARGET_FIELDS + extra_fields
 
     migrated_rows: list[dict[str, str]] = []
-    used_rule_ids: set[int] = set()
-    next_rule_id = 1
+    used_rule_ids = _collect_existing_rule_ids(rows, existing_fields)
+    next_rule_id = max(used_rule_ids, default=0) + 1
     for row in rows:
         migrated_row = _normalize_rules_csv_row(row, existing_fields)
         for field in final_fields:
@@ -126,7 +127,7 @@ def migrate_rules_file(
                 migrated_row[field] = default
 
         parsed_rule_id = _try_parse_positive_int(migrated_row["rule-id"])
-        if parsed_rule_id is None or parsed_rule_id in used_rule_ids:
+        if parsed_rule_id is None:
             parsed_rule_id = next_rule_id
             while parsed_rule_id in used_rule_ids:
                 parsed_rule_id += 1
@@ -159,10 +160,7 @@ def migrate_rules_file(
             raise FileExistsError(f"Backup file already exists: {backup_path}")
         backup_path.write_text(path.read_text(encoding="utf-8-sig"), encoding="utf-8")
 
-    with path.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=final_fields)
-        writer.writeheader()
-        writer.writerows(migrated_rows)
+    _write_compact_csv_rows(path, final_fields, migrated_rows)
 
     return changed, backup_path
 
@@ -221,6 +219,67 @@ def _normalize_rules_csv_row(
         normalized_row[field] = value
 
     return normalized_row
+
+
+def _prepare_csv_text(lines: list[str]) -> str:
+    prepared_lines: list[str] = []
+
+    for line in lines:
+        cleaned_line = _strip_inline_comment(line).strip()
+        if not cleaned_line:
+            continue
+        prepared_lines.append(cleaned_line)
+
+    return "\n".join(prepared_lines)
+
+
+def _strip_inline_comment(line: str, marker: str = "#") -> str:
+    in_quotes = False
+    index = 0
+
+    while index < len(line):
+        char = line[index]
+        if char == '"':
+            if in_quotes and index + 1 < len(line) and line[index + 1] == '"':
+                index += 2
+                continue
+            in_quotes = not in_quotes
+        elif char == marker and not in_quotes:
+            return line[:index]
+        index += 1
+
+    return line
+
+
+def _write_compact_csv_rows(
+    path: Path,
+    fieldnames: list[str],
+    rows: list[dict[str, str]],
+) -> None:
+    with path.open("w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(fieldnames)
+
+        for row in rows:
+            values = ["" if row.get(field) is None else str(row.get(field)) for field in fieldnames]
+            while values and values[-1] == "":
+                values.pop()
+            writer.writerow(values)
+
+
+def _collect_existing_rule_ids(
+    rows: list[dict[str, str | None]],
+    existing_fields: list[str],
+) -> set[int]:
+    existing_rule_ids: set[int] = set()
+
+    for row in rows:
+        normalized_row = _normalize_rules_csv_row(row, existing_fields)
+        parsed_rule_id = _try_parse_positive_int(normalized_row.get("rule-id", ""))
+        if parsed_rule_id is not None:
+            existing_rule_ids.add(parsed_rule_id)
+
+    return existing_rule_ids
 
 
 def _looks_like_shifted_rule_id_row(row: dict[str, str]) -> bool:

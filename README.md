@@ -103,10 +103,10 @@ Example:
 
 ```csv
 rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time
-1,y,NPO.*,The Connection,y,y,n,,,,
-2,y,BBC.*,Bargain Hunt,n,y,n,,mon|wed,,
+1,y,NPO.*,The Connection,y,y,n
+2,y,BBC.*,Bargain Hunt,n,y,n,,mon|wed
 3,y,BBC.*,Celebrity Bridge of Lies,n,y,y,,fri,20:00,23:30
-,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime,,,
+,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime
 ```
 
 ### Columns
@@ -132,11 +132,23 @@ These CSV header names are fixed and must match exactly. For example, use `rule-
 If you add a brand-new rule manually, both of these forms are accepted:
 
 ```csv
-,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime,,,
-y,RTL4,Het Perfecte Plaatje,y,y,n,primetime,,,
+,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime
+y,RTL4,Het Perfecte Plaatje,y,y,n,primetime
 ```
 
 The second form is treated as if the missing leading comma had been supplied, so the scheduler will still interpret `y` as `enabled` and assign a new `rule-id` automatically.
+
+The five trailing optional fields do not need placeholder commas at the end of the line. In other words, keep only the commas needed to reach the last field you actually use. This is valid, for example:
+
+```csv
+71,y,BBC[1-2],Impossible,y,y,,afternoon
+```
+
+You can also add comments after a rule by placing `#` after the last CSV value you care about. Everything after that `#` is ignored while reading the file:
+
+```csv
+71,y,BBC[1-2],Impossible,y,y,,afternoon # weekday afternoon catch-up
+```
 
 If you use a time filter, set both `filter-start-time` and `filter-end-time`. The filter is applied to the programme start time. Windows that cross midnight are supported, so `23:00` to `02:00` will match late-night and after-midnight starts.
 
@@ -170,7 +182,7 @@ If the file already exists, the helper leaves it untouched unless you add `--ove
 Then a rule can reference one of those keys:
 
 ```csv
-,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime,,,
+,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime
 ```
 
 If a rule uses `named-time-range`, the named values are used as defaults for `filter-start-day`, `filter-start-time`, and `filter-end-time`. Any explicit filter values on the rule itself override the named range value for that column.
@@ -178,13 +190,13 @@ If a rule uses `named-time-range`, the named values are used as defaults for `fi
 If a field contains a comma, wrap it in double quotes as standard CSV. For example:
 
 ```csv
-,y,BBC.*,"Law & Order, Special Victims Unit",n,y,n,,,,
+,y,BBC.*,"Law & Order, Special Victims Unit",n,y,n
 ```
 
 If a field contains a double quote character, escape it by doubling it:
 
 ```csv
-,y,BBC.*,"The ""Best Of"" Show",n,y,n,,,,
+,y,BBC.*,"The ""Best Of"" Show",n,y,n
 ```
 
 Example channel rules:

@@ -109,13 +109,13 @@ class MigrationScriptTests(unittest.TestCase):
             ],
         )
 
-    def test_migrate_rules_file_assigns_missing_and_duplicate_rule_ids(self) -> None:
+    def test_migrate_rules_file_preserves_existing_rule_ids_and_assigns_missing_ones(self) -> None:
         csv_content = "\n".join(
             [
                 "rule-id,enabled,channel,programme,pre,tv",
                 "5,y,BBC.*,Bargain Hunt,n,y",
                 ",y,NPO.*,The Connection,y,y",
-                "5,y,RTL4,Het Perfecte Plaatje,y,y",
+                "11,y,RTL4,Het Perfecte Plaatje,y,y",
             ]
         )
 
@@ -129,13 +129,13 @@ class MigrationScriptTests(unittest.TestCase):
                 rows = list(csv.DictReader(file))
 
         self.assertTrue(changed)
-        self.assertEqual([row["rule-id"] for row in rows], ["5", "6", "7"])
+        self.assertEqual([row["rule-id"] for row in rows], ["5", "12", "11"])
 
     def test_migrate_rules_file_repairs_shifted_rows_without_leading_rule_id_comma(self) -> None:
         csv_content = "\n".join(
             [
                 "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
-                "y,RTL4,Het Perfecte Plaatje,y,y,n,primetime,,,",
+                "y,RTL4,Het Perfecte Plaatje,y,y,n,primetime",
             ]
         )
 
@@ -154,6 +154,30 @@ class MigrationScriptTests(unittest.TestCase):
         self.assertEqual(rows[0]["channel"], "RTL4")
         self.assertEqual(rows[0]["programme"], "Het Perfecte Plaatje")
         self.assertEqual(rows[0]["named-time-range"], "primetime")
+
+    def test_migrate_rules_file_ignores_inline_comments_and_writes_compact_rows(self) -> None:
+        csv_content = "\n".join(
+            [
+                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "y,BBC[1-2],Impossible,y,y,,afternoon # readable comment",
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = Path(temp_dir) / "rules.csv"
+            rules_file.write_text(csv_content, encoding="utf-8")
+
+            changed, _ = self.migration.migrate_rules_file(str(rules_file))
+            updated = rules_file.read_text(encoding="utf-8").splitlines()
+
+        self.assertTrue(changed)
+        self.assertEqual(
+            updated,
+            [
+                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "1,y,BBC[1-2],Impossible,y,y,,afternoon",
+            ],
+        )
 
     def test_validate_rules_file_reports_extra_row_values(self) -> None:
         csv_content = "\n".join(

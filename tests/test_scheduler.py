@@ -302,7 +302,7 @@ class SchedulerTests(unittest.TestCase):
         csv_content = "\n".join(
             [
                 "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
-                "8,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime,,,",
+                "8,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime",
             ]
         )
         named_time_ranges_content = "\n".join(
@@ -330,7 +330,7 @@ class SchedulerTests(unittest.TestCase):
         csv_content = "\n".join(
             [
                 "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
-                "y,RTL4,Het Perfecte Plaatje,y,y,n,primetime,,,",
+                "y,RTL4,Het Perfecte Plaatje,y,y,n,primetime",
             ]
         )
         named_time_ranges_content = "\n".join(
@@ -355,6 +355,35 @@ class SchedulerTests(unittest.TestCase):
         self.assertEqual(rules[0].rule_id, 1)
         self.assertEqual(rules[0].filter_start_time.isoformat(), "20:00:00")
         self.assertEqual(rules[0].filter_end_time.isoformat(), "22:00:00")
+
+    def test_load_rules_ignores_inline_comments(self) -> None:
+        csv_content = "\n".join(
+            [
+                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "71,y,BBC[1-2],Impossible,y,y,,afternoon # weekday afternoon catch-up",
+            ]
+        )
+        named_time_ranges_content = "\n".join(
+            [
+                "key,filter-start-day,filter-start-time,filter-end-time",
+                "afternoon,,14:00,18:00",
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = Path(temp_dir) / "rules.csv"
+            named_time_ranges_file = Path(temp_dir) / "named_time_ranges.csv"
+            rules_file.write_text(csv_content, encoding="utf-8")
+            named_time_ranges_file.write_text(named_time_ranges_content, encoding="utf-8")
+
+            rules = self.scheduler.load_rules(str(rules_file))
+
+        self.assertEqual(len(rules), 1)
+        self.assertEqual(rules[0].rule_id, 71)
+        self.assertEqual(rules[0].channel_pattern, "BBC[1-2]")
+        self.assertEqual(rules[0].programme, "Impossible")
+        self.assertEqual(rules[0].filter_start_time.isoformat(), "14:00:00")
+        self.assertEqual(rules[0].filter_end_time.isoformat(), "18:00:00")
 
     def test_ensure_rules_file_schema_adds_columns_and_assigns_rule_ids(self) -> None:
         csv_content = "\n".join(
@@ -392,6 +421,52 @@ class SchedulerTests(unittest.TestCase):
             ],
         )
         self.assertEqual([row["rule-id"] for row in rows], ["1", "2"])
+
+    def test_ensure_rules_file_schema_preserves_existing_rule_ids_and_appends_new_ones(self) -> None:
+        csv_content = "\n".join(
+            [
+                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "10,y,BBC.*,Bargain Hunt,n,y,n",
+                ",y,NPO.*,The Connection,y,y,n",
+                "25,y,RTL4,Het Perfecte Plaatje,y,y,n,primetime",
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = Path(temp_dir) / "rules.csv"
+            rules_file.write_text(csv_content, encoding="utf-8")
+
+            changed = self.scheduler.ensure_rules_file_schema(str(rules_file))
+
+            with rules_file.open("r", newline="", encoding="utf-8") as file:
+                rows = list(csv.DictReader(file))
+
+        self.assertTrue(changed)
+        self.assertEqual([row["rule-id"] for row in rows], ["10", "26", "25"])
+
+    def test_ensure_rules_file_schema_writes_compact_rows_without_trailing_commas(self) -> None:
+        csv_content = "\n".join(
+            [
+                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "y,BBC[1-2],Impossible,y,y,,afternoon # readable comment",
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = Path(temp_dir) / "rules.csv"
+            rules_file.write_text(csv_content, encoding="utf-8")
+
+            changed = self.scheduler.ensure_rules_file_schema(str(rules_file))
+            updated = rules_file.read_text(encoding="utf-8").splitlines()
+
+        self.assertTrue(changed)
+        self.assertEqual(
+            updated,
+            [
+                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "1,y,BBC[1-2],Impossible,y,y,,afternoon",
+            ],
+        )
 
     def test_find_matches_applies_start_time_filter(self) -> None:
         rule = self.scheduler.ScheduleRule(

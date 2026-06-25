@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import io
 import logging
 import re
 from dataclasses import dataclass
@@ -176,11 +177,11 @@ def load_rules(
     rules: list[ScheduleRule] = []
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(file)
+        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
         existing_fields = reader.fieldnames or []
         next_rule_id = _determine_next_rule_id(reader)
         file.seek(0)
-        reader = csv.DictReader(file)
+        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
 
         for row_number, row in enumerate(reader, start=2):
             row = _normalize_rules_csv_row(row, existing_fields)
@@ -266,7 +267,7 @@ def remove_rules_by_row_numbers(rules_file: str, row_numbers: set[int]) -> int:
     path = Path(rules_file)
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(file)
+        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
         fieldnames = reader.fieldnames
 
         if not fieldnames:
@@ -282,10 +283,7 @@ def remove_rules_by_row_numbers(rules_file: str, row_numbers: set[int]) -> int:
 
             kept_rows.append(row)
 
-    with path.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(kept_rows)
+    _write_compact_csv_rows(path, fieldnames, kept_rows)
 
     return removed
 
@@ -297,7 +295,7 @@ def ensure_rules_file_schema(rules_file: str) -> bool:
         raise FileNotFoundError(f"Rules file not found: {rules_file}")
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(file)
+        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
         existing_fields = reader.fieldnames or []
         rows = list(reader)
 
@@ -306,8 +304,8 @@ def ensure_rules_file_schema(rules_file: str) -> bool:
     ]
     final_fields = RULES_CSV_FIELD_ORDER + extra_fields
 
-    used_rule_ids: set[int] = set()
-    next_rule_id = 1
+    used_rule_ids = _collect_existing_rule_ids(rows, existing_fields)
+    next_rule_id = max(used_rule_ids, default=0) + 1
     migrated_rows: list[dict[str, str]] = []
 
     for row in rows:
@@ -323,7 +321,7 @@ def ensure_rules_file_schema(rules_file: str) -> bool:
 
         rule_id_text = migrated_row[CSV_RULE_ID]
         parsed_rule_id = _try_parse_positive_int(rule_id_text)
-        if parsed_rule_id is None or parsed_rule_id in used_rule_ids:
+        if parsed_rule_id is None:
             parsed_rule_id = next_rule_id
             while parsed_rule_id in used_rule_ids:
                 parsed_rule_id += 1
@@ -346,10 +344,7 @@ def ensure_rules_file_schema(rules_file: str) -> bool:
     if not changed:
         return False
 
-    with path.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=final_fields)
-        writer.writeheader()
-        writer.writerows(migrated_rows)
+    _write_compact_csv_rows(path, final_fields, migrated_rows)
 
     return True
 
@@ -378,7 +373,7 @@ def load_named_time_ranges(
     named_time_ranges: dict[str, NamedTimeRange] = {}
 
     with path.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(file)
+        reader = csv.DictReader(io.StringIO(_prepare_csv_text(file.readlines())))
 
         for row_number, row in enumerate(reader, start=2):
             key = _clean(row.get("key") or row.get("KEY"))
@@ -1119,6 +1114,21 @@ def _parse_rule_id(
     return parsed_rule_id, max(next_rule_id, parsed_rule_id + 1)
 
 
+def _collect_existing_rule_ids(
+    rows: list[dict[str, Any]],
+    existing_fields: list[str],
+) -> set[int]:
+    existing_rule_ids: set[int] = set()
+
+    for row in rows:
+        normalized_row = _normalize_rules_csv_row(row, existing_fields)
+        parsed_rule_id = _try_parse_positive_int(normalized_row.get(CSV_RULE_ID, ""))
+        if parsed_rule_id is not None:
+            existing_rule_ids.add(parsed_rule_id)
+
+    return existing_rule_ids
+
+
 def _determine_next_rule_id(reader: csv.DictReader) -> int:
     max_rule_id = 0
     for row in reader:
@@ -1181,6 +1191,52 @@ def _normalize_rules_csv_row(
         normalized_row[field] = value
 
     return normalized_row
+
+
+def _prepare_csv_text(lines: list[str]) -> str:
+    prepared_lines: list[str] = []
+
+    for line in lines:
+        cleaned_line = _strip_inline_comment(line).strip()
+        if not cleaned_line:
+            continue
+        prepared_lines.append(cleaned_line)
+
+    return "\n".join(prepared_lines)
+
+
+def _strip_inline_comment(line: str, marker: str = "#") -> str:
+    in_quotes = False
+    index = 0
+
+    while index < len(line):
+        char = line[index]
+        if char == '"':
+            if in_quotes and index + 1 < len(line) and line[index + 1] == '"':
+                index += 2
+                continue
+            in_quotes = not in_quotes
+        elif char == marker and not in_quotes:
+            return line[:index]
+        index += 1
+
+    return line
+
+
+def _write_compact_csv_rows(
+    path: Path,
+    fieldnames: list[str],
+    rows: list[dict[str, str]],
+) -> None:
+    with path.open("w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(fieldnames)
+
+        for row in rows:
+            values = [_clean(row.get(field)) for field in fieldnames]
+            while values and values[-1] == "":
+                values.pop()
+            writer.writerow(values)
 
 
 def _looks_like_shifted_rule_id_row(row: dict[str, str]) -> bool:
