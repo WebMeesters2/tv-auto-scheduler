@@ -353,3 +353,21 @@ This is an unofficial custom integration and is not affiliated with Home Assista
 ## License
 
 MIT
+
+
+## Experimental Canal+ Comparison
+
+Open EPG remains the primary scheduling source. The experimental Canal+ comparison service fetches Canal+ schedule data for mapped channels and writes a report of differences. It does not create, delete, or modify calendar events.
+
+The service currently requires a fresh Authorization header copied from an authenticated Canal+ browser request. Canal+ tokens are short-lived, so this is intended for investigation and validation rather than unattended automation.
+
+Example:
+
+    action: tv_auto_scheduler.compare_canalplus
+    data:
+      canalplus_authorization: !secret canalplus_authorization
+      canalplus_channels:
+        npo1: 9zhabdaigZd4WCwrn1Yyl7LtviNAKEgAgG6ysNpd
+      comparison_report_file: /config/tv_auto_scheduler/canalplus_comparison.csv
+
+The CSV report contains one row per comparison with the classification, channel, Open EPG title/time, Canal+ title/time, and start/end deltas. Current classifications include confirmed, missing_in_primary, missing_in_secondary, time_mismatch, duration_mismatch, title_mismatch, and replaced.

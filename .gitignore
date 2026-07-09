@@ -43,3 +43,7 @@ AGENTS.md
 
 # Auxiliary files
 UNCPath
+
+# Local EPG/API captures
+tests/data/*.json
+tests/data/*.txt

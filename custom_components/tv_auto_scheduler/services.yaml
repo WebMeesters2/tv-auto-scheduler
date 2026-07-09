@@ -57,3 +57,41 @@ scan:
       example: /config/tv_auto_scheduler/tv_auto_scheduler_changes.csv
       selector:
         text:
+
+
+compare_canalplus:
+  name: Compare Open EPG with Canal+
+  description: Experimental report-only comparison between the existing Open EPG sensor data and Canal+ schedule data.
+  fields:
+    canalplus_authorization:
+      name: Canal+ authorization
+      description: Full Authorization header value copied from an authenticated Canal+ browser request.
+      required: true
+      selector:
+        text:
+          type: password
+
+    canalplus_channels:
+      name: Canal+ channels
+      description: Mapping from Open EPG channel keys to Canal+ channel IDs.
+      required: true
+      example:
+        npo1: 9zhabdaigZd4WCwrn1Yyl7LtviNAKEgAgG6ysNpd
+      selector:
+        object:
+
+    comparison_report_file:
+      name: Comparison report file
+      description: Optional CSV path where comparison rows are written. Existing content is replaced.
+      required: false
+      example: /config/tv_auto_scheduler/canalplus_comparison.csv
+      selector:
+        text:
+
+    show_missing_epg:
+      name: Show missing EPG entities
+      description: Log every channel whose configured Open EPG entity is missing before comparison.
+      required: false
+      default: false
+      selector:
+        boolean:

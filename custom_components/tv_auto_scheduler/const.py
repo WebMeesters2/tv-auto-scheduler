@@ -16,8 +16,12 @@ CONF_TV_CALENDAR = "tv_calendar"
 CONF_SHOW_MISSING_EPG = "show_missing_epg"
 CONF_CHANGE_LOG = "change_log"
 CONF_CHANGE_LOG_FILE = "change_log_file"
+CONF_CANALPLUS_AUTHORIZATION = "canalplus_authorization"
+CONF_CANALPLUS_CHANNELS = "canalplus_channels"
+CONF_COMPARISON_REPORT_FILE = "comparison_report_file"
 
 SERVICE_SCAN = "scan"
+SERVICE_COMPARE_CANALPLUS = "compare_canalplus"
 
 CSV_RULE_ID = "rule-id"
 CSV_ENABLED = "enabled"

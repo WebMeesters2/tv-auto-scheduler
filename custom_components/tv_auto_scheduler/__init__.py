@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from functools import partial
 
 import voluptuous as vol
 from homeassistant.core import HomeAssistant, ServiceCall
@@ -8,9 +9,14 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.util import dt as dt_util
 
+from .canalplus import CanalPlusClient
+from .canalplus_compare import build_canalplus_comparison_report
 from .const import (
+    CONF_CANALPLUS_AUTHORIZATION,
+    CONF_CANALPLUS_CHANNELS,
     CONF_CHANGE_LOG,
     CONF_CHANGE_LOG_FILE,
+    CONF_COMPARISON_REPORT_FILE,
     CONF_DRY_RUN,
     CONF_DRY_RUN_LOG,
     CONF_DRY_RUN_LOG_FILE,
@@ -22,25 +28,36 @@ from .const import (
     DEFAULT_RULES_FILE,
     DEFAULT_TV_CALENDAR,
     DOMAIN,
+    SERVICE_COMPARE_CANALPLUS,
     SERVICE_SCAN,
 )
 from .scheduler import (
     ChangeLogEntry,
     append_change_log,
-    ensure_rules_file_schema,
-    resolve_dry_run_log_path,
-    resolve_change_log_path,
     create_calendar_event,
-    find_matches,
+    ensure_rules_file_schema,
     find_existing_auto_calendar_events,
+    find_matches,
     load_rules,
     log_matches,
     remove_rules_by_row_numbers,
     replace_calendar_event,
+    resolve_change_log_path,
+    resolve_dry_run_log_path,
     scan_epg,
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+SERVICE_COMPARE_CANALPLUS_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_CANALPLUS_AUTHORIZATION): cv.string,
+        vol.Required(CONF_CANALPLUS_CHANNELS): vol.Schema({cv.string: cv.string}),
+        vol.Optional(CONF_COMPARISON_REPORT_FILE): cv.path,
+        vol.Optional(CONF_SHOW_MISSING_EPG, default=False): cv.boolean,
+    }
+)
+
 
 SERVICE_SCAN_SCHEMA = vol.Schema(
     {
@@ -84,7 +101,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             )
             if schema_updated:
                 _LOGGER.info(
-                    "TV Auto Scheduler: updated rules.csv schema and assigned missing rule-id values"
+                    "TV Auto Scheduler: updated rules.csv schema and assigned "
+                    "missing rule-id values"
                 )
 
             rules = await hass.async_add_executor_job(
@@ -105,7 +123,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
             _LOGGER.debug("Found %s matches", len(matches))
 
-            for rule, programme in matches:
+            for _rule, programme in matches:
                 _LOGGER.debug(
                     "Match datetime: %s | %s | %s → %s",
                     programme.channel_name,
@@ -128,7 +146,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                             targets.append(tv_calendar)
 
                         for calendar_entity in targets:
-                            exact_match, stale_events = await find_existing_auto_calendar_events(
+                            (
+                                exact_match,
+                                stale_events,
+                            ) = await find_existing_auto_calendar_events(
                                 hass,
                                 calendar_entity,
                                 programme,
@@ -197,7 +218,11 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
                 _LOGGER.info(
                     "TV Auto Scheduler: dry-run enabled, no calendars changed%s",
-                    "" if not dry_run_log else f", logged {dry_run_logged} proposed change(s)",
+                    (
+                        ""
+                        if not dry_run_log
+                        else f", logged {dry_run_logged} proposed change(s)"
+                    ),
                 )
             else:
                 created = 0
@@ -218,7 +243,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                         targets.append(tv_calendar)
 
                     for calendar_entity in targets:
-                        exact_match, stale_events = await find_existing_auto_calendar_events(
+                        (
+                            exact_match,
+                            stale_events,
+                        ) = await find_existing_auto_calendar_events(
                             hass,
                             calendar_entity,
                             programme,
@@ -245,7 +273,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                 )
                             except Exception:
                                 _LOGGER.exception(
-                                    "TV Auto Scheduler: failed to replace shifted event for %s | %s | %s",
+                                    "TV Auto Scheduler: failed to replace shifted "
+                                    "event for %s | %s | %s",
                                     calendar_entity,
                                     programme.start_datetime,
                                     programme.title,
@@ -342,7 +371,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     )
 
                 _LOGGER.info(
-                    "TV Auto Scheduler: created %s event(s), replaced %s shifted event(s), removed %s previous event(s), skipped %s existing event(s), removed %s used rule(s), logged %s change(s)",
+                    "TV Auto Scheduler: created %s event(s), replaced %s shifted "
+                    "event(s), removed %s previous event(s), skipped %s existing "
+                    "event(s), removed %s used rule(s), logged %s change(s)",
                     created,
                     replaced,
                     removed_existing,
@@ -354,11 +385,56 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         except Exception:
             _LOGGER.exception("TV Auto Scheduler scan failed")
 
+
+    async def async_compare_canalplus(call: ServiceCall) -> None:
+        _LOGGER.debug("TV Auto Scheduler: Canal+ comparison service called")
+
+        authorization = call.data[CONF_CANALPLUS_AUTHORIZATION]
+        channel_map = dict(call.data[CONF_CANALPLUS_CHANNELS])
+        report_file = call.data.get(CONF_COMPARISON_REPORT_FILE)
+        show_missing_epg = call.data[CONF_SHOW_MISSING_EPG]
+
+        try:
+            programmes = scan_epg(
+                hass,
+                show_missing_epg=show_missing_epg,
+            )
+            client = CanalPlusClient(authorization=authorization)
+            report = await hass.async_add_executor_job(
+                partial(
+                    build_canalplus_comparison_report,
+                    programmes,
+                    client,
+                    channel_map,
+                    report_file=report_file,
+                )
+            )
+
+            _LOGGER.info(
+                "TV Auto Scheduler: Canal+ comparison complete "
+                "(%s comparison row(s), counts=%s%s)",
+                len(report.comparisons),
+                report.counts,
+                (
+                    f", wrote {report.rows_written} row(s) to {report_file}"
+                    if report_file
+                    else ""
+                ),
+            )
+        except Exception:
+            _LOGGER.exception("TV Auto Scheduler Canal+ comparison failed")
+
     hass.services.async_register(
         DOMAIN,
         SERVICE_SCAN,
         async_scan,
         schema=SERVICE_SCAN_SCHEMA,
+    )
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_COMPARE_CANALPLUS,
+        async_compare_canalplus,
+        schema=SERVICE_COMPARE_CANALPLUS_SCHEMA,
     )
 
     return True
