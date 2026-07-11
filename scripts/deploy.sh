@@ -36,11 +36,16 @@ TARGET_INTEGRATION="$TARGET_CUSTOM_COMPONENTS_DIR/$INTEGRATION_NAME"
 
 SOURCE_EXAMPLE_RULES="$SOURCE_ROOT/examples/tv-rules.csv"
 SOURCE_EXAMPLE_NAMED_TIME_RANGES="$SOURCE_ROOT/examples/named_time_ranges.csv"
+SOURCE_EXAMPLE_CHANNELS="$SOURCE_ROOT/examples/channels.yaml"
+SOURCE_CANALPLUS_SCRIPT="$SOURCE_ROOT/examples/canalplus_compare_script.yaml"
 SOURCE_RULES_MIGRATOR="$SOURCE_ROOT/scripts/migrate_rules_csv.py"
 SOURCE_NAMED_TIME_RANGES_TEMPLATE="$SOURCE_ROOT/scripts/create_named_time_ranges_template.py"
 TARGET_RULES_DIR="$HA_CONFIG_DIR/tv_auto_scheduler"
+TARGET_TV_DIR="$HA_CONFIG_DIR/tv"
 TARGET_RULES="$TARGET_RULES_DIR/rules.csv"
 TARGET_NAMED_TIME_RANGES="$TARGET_RULES_DIR/named_time_ranges.csv"
+TARGET_CHANNELS="$TARGET_TV_DIR/channels.yaml"
+TARGET_CANALPLUS_SCRIPT="$TARGET_RULES_DIR/canalplus_compare_script.yaml"
 TARGET_RULES_MIGRATOR="$TARGET_RULES_DIR/migrate_rules_csv.py"
 TARGET_NAMED_TIME_RANGES_TEMPLATE="$TARGET_RULES_DIR/create_named_time_ranges_template.py"
 
@@ -99,6 +104,37 @@ if [[ -f "$SOURCE_EXAMPLE_NAMED_TIME_RANGES" ]]; then
       mkdir -p "$TARGET_RULES_DIR"
       cp "$SOURCE_EXAMPLE_NAMED_TIME_RANGES" "$TARGET_NAMED_TIME_RANGES"
     fi
+  fi
+fi
+
+if [[ -f "$SOURCE_EXAMPLE_CHANNELS" ]]; then
+  if [[ -f "$TARGET_CHANNELS" ]]; then
+    echo "Channel database already exists, leaving it untouched:"
+    echo "  $TARGET_CHANNELS"
+    echo "  Merge canalplus_id values from examples/channels.yaml when needed."
+  else
+    echo "Installing initial channel database:"
+    echo "  $TARGET_CHANNELS"
+
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+      echo "DRY-RUN: channel database copy skipped"
+    else
+      mkdir -p "$TARGET_TV_DIR"
+      cp "$SOURCE_EXAMPLE_CHANNELS" "$TARGET_CHANNELS"
+    fi
+  fi
+fi
+
+if [[ -f "$SOURCE_CANALPLUS_SCRIPT" ]]; then
+  echo
+  echo "Deploying Canal+ script example:"
+  echo "  $TARGET_CANALPLUS_SCRIPT"
+
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    echo "DRY-RUN: Canal+ script example copy skipped"
+  else
+    mkdir -p "$TARGET_RULES_DIR"
+    cp "$SOURCE_CANALPLUS_SCRIPT" "$TARGET_CANALPLUS_SCRIPT"
   fi
 fi
 

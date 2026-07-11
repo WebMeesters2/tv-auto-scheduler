@@ -366,8 +366,17 @@ Example:
     action: tv_auto_scheduler.compare_canalplus
     data:
       canalplus_authorization: !secret canalplus_authorization
-      canalplus_channels:
-        npo1: 9zhabdaigZd4WCwrn1Yyl7LtviNAKEgAgG6ysNpd
+      channels_file: /config/tv/channels.yaml
       comparison_report_file: /config/tv_auto_scheduler/canalplus_comparison.csv
 
+The `channels_file` should contain the normal channel entries with a `canalplus_id` value for every channel that should be compared. You can still pass `canalplus_channels` directly on the service call to override or add individual mappings.
+
 The CSV report contains one row per comparison with the classification, channel, Open EPG title/time, Canal+ title/time, and start/end deltas. Current classifications include confirmed, missing_in_primary, missing_in_secondary, time_mismatch, duration_mismatch, title_mismatch, and replaced.
+
+The example Home Assistant script in `examples/canalplus_compare_script.yaml` accepts a fresh bearer token and calls this service from Home Assistant. The Home Assistant script trace only shows the service call itself; the Python comparison details are written to `home-assistant.log`. For extra detail during investigation, temporarily enable debug logging:
+
+    logger:
+      logs:
+        custom_components.tv_auto_scheduler: debug
+
+If the Canal+ comparison fails before the CSV report is written, the service raises an error so the script trace shows the failure instead of looking like a successful no-op.

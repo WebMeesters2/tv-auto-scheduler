@@ -1,3 +1,11 @@
+"""Scheduler core for loading CSV rules, scanning EPG data, and writing calendars.
+
+This module owns the source-file workflow for the Open EPG scheduler: it reads
+`rules.csv` and optional named time ranges, normalizes Home Assistant EPG sensor
+attributes into programme objects, matches programmes against case-insensitive
+regular-expression rules, and creates or replaces Home Assistant calendar events.
+"""
+
 from __future__ import annotations
 
 import csv
@@ -166,6 +174,7 @@ def load_rules(
     rules_file: str,
     named_time_ranges_file: str | None = None,
 ) -> list[ScheduleRule]:
+    """Load enabled schedule rules from CSV paths and return parsed rule objects."""
     path = Path(rules_file)
 
     if not path.exists():
@@ -260,6 +269,7 @@ def load_rules(
 
 
 def remove_rules_by_row_numbers(rules_file: str, row_numbers: set[int]) -> int:
+    """Remove rows from a rules CSV and return how many rows were deleted."""
     if not row_numbers:
         return 0
 
@@ -287,6 +297,7 @@ def remove_rules_by_row_numbers(rules_file: str, row_numbers: set[int]) -> int:
 
 
 def ensure_rules_file_schema(rules_file: str) -> bool:
+    """Normalize the rules CSV schema in place and return whether it changed."""
     path = Path(rules_file)
 
     if not path.exists():
@@ -350,6 +361,7 @@ def resolve_named_time_ranges_path(
     rules_file: str,
     named_time_ranges_file: str | None = None,
 ) -> str:
+    """Return an explicit named-time-ranges path or the default beside rules_file."""
     if named_time_ranges_file:
         return named_time_ranges_file
 
@@ -363,6 +375,7 @@ def load_named_time_ranges(
     rules_file: str,
     named_time_ranges_file: str | None = None,
 ) -> dict[str, NamedTimeRange]:
+    """Load named time filters keyed case-insensitively by range name."""
     path = Path(resolve_named_time_ranges_path(rules_file, named_time_ranges_file))
     if not path.exists():
         return {}
@@ -414,6 +427,7 @@ def load_named_time_ranges(
 
 
 def build_dry_run_log_path(rules_file: str) -> str:
+    """Return the default dry-run CSV log path beside the rules file."""
     if "/" in rules_file and "\\" not in rules_file:
         return str(PurePosixPath(rules_file).with_name("tv_auto_scheduler_dry_run.csv"))
 
@@ -421,6 +435,7 @@ def build_dry_run_log_path(rules_file: str) -> str:
 
 
 def resolve_dry_run_log_path(rules_file: str, dry_run_log_file: str | None) -> str:
+    """Return a supplied dry-run log path or the default path for rules_file."""
     if dry_run_log_file:
         return dry_run_log_file
 
@@ -428,6 +443,7 @@ def resolve_dry_run_log_path(rules_file: str, dry_run_log_file: str | None) -> s
 
 
 def build_change_log_path(rules_file: str) -> str:
+    """Return the default change-log CSV path beside the rules file."""
     if "/" in rules_file and "\\" not in rules_file:
         return str(PurePosixPath(rules_file).with_name("tv_auto_scheduler_changes.csv"))
 
@@ -435,6 +451,7 @@ def build_change_log_path(rules_file: str) -> str:
 
 
 def resolve_change_log_path(rules_file: str, change_log_file: str | None) -> str:
+    """Return a supplied change-log path or the default path for rules_file."""
     if change_log_file:
         return change_log_file
 
@@ -442,6 +459,7 @@ def resolve_change_log_path(rules_file: str, change_log_file: str | None) -> str
 
 
 def append_change_log(log_file: str, entries: list[ChangeLogEntry]) -> int:
+    """Append change-log entries to CSV and return the number of rows written."""
     if not entries:
         return 0
 
@@ -465,6 +483,7 @@ def scan_epg(
     hass: HomeAssistant,
     show_missing_epg: bool = False,
 ) -> list[EpgProgramme]:
+    """Read Home Assistant EPG sensors and return normalized programmes."""
     state = hass.states.get(CHANNEL_DATABASE_ENTITY)
 
     if not state:
@@ -568,6 +587,7 @@ async def create_calendar_event(
     rule: ScheduleRule,
     programme: EpgProgramme,
 ) -> None:
+    """Create one Home Assistant calendar event for a matched programme."""
     summary = build_event_summary(programme)
 
     description = (
@@ -601,6 +621,7 @@ async def calendar_event_exists(
     calendar_entity: str,
     programme: EpgProgramme,
 ) -> bool:
+    """Return whether the calendar already has the exact scheduler-created event."""
     exact_match, _ = await find_existing_auto_calendar_events(
         hass,
         calendar_entity,
@@ -614,6 +635,7 @@ async def find_existing_auto_calendar_events(
     calendar_entity: str,
     programme: EpgProgramme,
 ) -> tuple[ExistingAutoCalendarEvent | None, list[ExistingAutoCalendarEvent]]:
+    """Return exact and overlapping scheduler-created events for a programme."""
     entity = _get_calendar_entity(hass, calendar_entity)
 
     if entity is not None:
@@ -687,6 +709,7 @@ async def replace_calendar_event(
     programme: EpgProgramme,
     stale_events: list[ExistingAutoCalendarEvent],
 ) -> int:
+    """Delete stale matching calendar events, create the new event, and return deletions."""
     entity = _get_calendar_entity(hass, calendar_entity)
 
     if entity is None:
@@ -720,6 +743,7 @@ async def replace_calendar_event(
 
 
 def build_event_summary(programme: EpgProgramme) -> str:
+    """Return the calendar summary text for a programme."""
     return f"{programme.channel_name} | {programme.title}"
 
 
@@ -727,6 +751,7 @@ def _extract_calendar_events_response(
     response: object,
     calendar_entity: str,
 ) -> list[object]:
+    """Extract event objects from Home Assistant calendar service responses."""
     if not isinstance(response, dict):
         return []
 
@@ -745,6 +770,7 @@ def _extract_calendar_events_response(
 
 
 def _get_calendar_entity(hass: HomeAssistant, calendar_entity: str) -> Any | None:
+    """Return a loaded calendar entity object when Home Assistant exposes it."""
     component = hass.data.get(CALENDAR_COMPONENT)
     if component is None or not hasattr(component, "get_entity"):
         return None
@@ -756,6 +782,7 @@ def _classify_existing_auto_calendar_events(
     events: list[object],
     programme: EpgProgramme,
 ) -> tuple[ExistingAutoCalendarEvent | None, list[ExistingAutoCalendarEvent]]:
+    """Classify scheduler-created events as exact or shifted matches."""
     exact_match: ExistingAutoCalendarEvent | None = None
     shifted_matches: list[ExistingAutoCalendarEvent] = []
     summary = build_event_summary(programme)
@@ -793,6 +820,7 @@ def _normalize_existing_auto_calendar_event(
     expected_summary: str,
     expected_source_marker: str,
 ) -> ExistingAutoCalendarEvent | None:
+    """Convert a matching raw calendar event into the scheduler event shape."""
     summary = _clean(_existing_event_value(event, "summary"))
     description = _clean(_existing_event_value(event, "description"))
 
@@ -824,6 +852,7 @@ def _normalize_existing_auto_calendar_event(
 
 
 def _existing_event_value(event: object, name: str) -> Any:
+    """Read a named value from a dict-like or attribute-based calendar event."""
     if isinstance(event, dict):
         return event.get(name)
 
@@ -831,6 +860,7 @@ def _existing_event_value(event: object, name: str) -> Any:
 
 
 def _existing_event_datetime(event: object, attribute_name: str) -> datetime | None:
+    """Return a local datetime value from a calendar event date/datetime field."""
     local_attribute_name = f"{attribute_name}_datetime_local"
 
     if hasattr(event, local_attribute_name):
@@ -849,10 +879,12 @@ def _existing_event_datetime(event: object, attribute_name: str) -> datetime | N
 
 
 def _replacement_lookup_start(programme: EpgProgramme) -> datetime:
+    """Return the local-day query start used when looking for stale events."""
     return dt_util.start_of_local_day(programme.start_datetime)
 
 
 def _replacement_lookup_end(programme: EpgProgramme) -> datetime:
+    """Return the exclusive query end used when looking for stale events."""
     return _replacement_lookup_start(programme) + timedelta(days=1)
 
 
@@ -862,6 +894,7 @@ def _time_ranges_overlap(
     start_b: datetime,
     end_b: datetime,
 ) -> bool:
+    """Return whether two half-open datetime ranges overlap."""
     return start_a < end_b and start_b < end_a
 
 
@@ -869,6 +902,7 @@ def find_matches(
     rules: list[ScheduleRule],
     programmes: list[EpgProgramme],
 ) -> list[tuple[ScheduleRule, EpgProgramme]]:
+    """Return every rule/programme pair that satisfies regex and time filters."""
     matches: list[tuple[ScheduleRule, EpgProgramme]] = []
 
     for rule in rules:
@@ -891,6 +925,7 @@ def find_matches(
 
 
 def log_matches(matches: list[tuple[ScheduleRule, EpgProgramme]]) -> None:
+    """Write a concise log summary for matched rule/programme pairs."""
     if not matches:
         _LOGGER.info("TV Auto Scheduler: no matching programmes found")
         return
@@ -915,6 +950,7 @@ def log_matches(matches: list[tuple[ScheduleRule, EpgProgramme]]) -> None:
 
 
 def _matches_channel(rule: ScheduleRule, programme: EpgProgramme) -> bool:
+    """Return whether a rule regex matches a programme channel key, ignoring case."""
     try:
         return bool(
             re.search(
@@ -929,6 +965,7 @@ def _matches_channel(rule: ScheduleRule, programme: EpgProgramme) -> bool:
 
 
 def _matches_programme(rule: ScheduleRule, programme: EpgProgramme) -> bool:
+    """Return whether a rule regex matches a programme title, ignoring case."""
     try:
         return bool(
             re.search(
@@ -943,6 +980,7 @@ def _matches_programme(rule: ScheduleRule, programme: EpgProgramme) -> bool:
 
 
 def _matches_start_time_filter(rule: ScheduleRule, programme: EpgProgramme) -> bool:
+    """Return whether a programme start time falls inside the rule time window."""
     if rule.filter_start_time is None or rule.filter_end_time is None:
         return True
 
@@ -958,6 +996,7 @@ def _matches_start_time_filter(rule: ScheduleRule, programme: EpgProgramme) -> b
 
 
 def _matches_start_day_filter(rule: ScheduleRule, programme: EpgProgramme) -> bool:
+    """Return whether a programme start weekday satisfies the rule day filter."""
     if not rule.filter_start_days:
         return True
 
@@ -965,6 +1004,7 @@ def _matches_start_day_filter(rule: ScheduleRule, programme: EpgProgramme) -> bo
 
 
 def _first_alias(channel_key: str, channel_data: dict[str, Any]) -> str:
+    """Return the first configured channel alias, falling back to the channel key."""
     aliases = channel_data.get("aliases")
 
     if isinstance(aliases, list) and aliases:
@@ -980,6 +1020,7 @@ def _build_programme_datetimes(
     start_time: str,
     end_time: str,
 ) -> tuple[datetime, datetime]:
+    """Combine EPG day offset and HH:MM strings into local start/end datetimes."""
     base = dt_util.now().replace(hour=0, minute=0, second=0, microsecond=0)
     base = base + timedelta(days=day_offset)
 
@@ -993,6 +1034,7 @@ def _build_programme_datetimes(
 
 
 def _combine_base_date_and_time(base: datetime, time_value: str) -> datetime:
+    """Return base with hour and minute replaced from an HH:MM value."""
     hours, minutes = [int(part) for part in time_value.split(":", maxsplit=1)]
     return base.replace(hour=hours, minute=minutes, second=0, microsecond=0)
 
@@ -1005,6 +1047,7 @@ def _parse_time_filter(
     default_end_time: time | None = None,
     source_name: str = "rule",
 ) -> tuple[time | None, time | None]:
+    """Parse optional start/end time filters, returning defaults or invalid sentinels."""
     start_value = _clean(row.get(CSV_FILTER_START_TIME))
     end_value = _clean(row.get(CSV_FILTER_END_TIME))
 
@@ -1039,6 +1082,7 @@ def _parse_start_day_filter(
     default: frozenset[int] | None = None,
     source_name: str = "rule",
 ) -> frozenset[int] | None:
+    """Parse weekday tokens and ranges into Python weekday numbers."""
     value = _clean(row.get(CSV_FILTER_START_DAY))
 
     if not value:
@@ -1081,6 +1125,7 @@ def _parse_start_day_filter(
 
 
 def _parse_weekday_range(value: str) -> set[int] | None:
+    """Parse a weekday range token into weekday numbers, including wraparound ranges."""
     if "-" not in value:
         return None
 
@@ -1098,6 +1143,7 @@ def _parse_weekday_range(value: str) -> set[int] | None:
 
 
 def _parse_time_value(value: str) -> time:
+    """Parse an HH:MM value into a time object."""
     hours, minutes = [int(part) for part in value.split(":", maxsplit=1)]
     return time(hour=hours, minute=minutes)
 
@@ -1107,6 +1153,7 @@ def _parse_rule_id(
     row_number: int,
     next_rule_id: int,
 ) -> tuple[int, int]:
+    """Return a positive rule ID and the next candidate ID for following rows."""
     parsed_rule_id = _try_parse_positive_int(_clean(value))
     if parsed_rule_id is None:
         parsed_rule_id = next_rule_id
@@ -1118,6 +1165,7 @@ def _collect_existing_rule_ids(
     rows: list[dict[str, Any]],
     existing_fields: list[str],
 ) -> set[int]:
+    """Return all positive rule IDs already present in normalized CSV rows."""
     existing_rule_ids: set[int] = set()
 
     for row in rows:
@@ -1130,6 +1178,7 @@ def _collect_existing_rule_ids(
 
 
 def _determine_next_rule_id(reader: csv.DictReader) -> int:
+    """Return the next positive rule ID after scanning a CSV DictReader."""
     max_rule_id = 0
     for row in reader:
         parsed_rule_id = _try_parse_positive_int(_clean(row.get(CSV_RULE_ID)))
@@ -1144,6 +1193,7 @@ def _resolve_named_time_range(
     key: str,
     row_number: int,
 ) -> NamedTimeRange | None:
+    """Return the named time range for a key or log and return None when invalid."""
     if not key:
         return None
 
@@ -1160,6 +1210,7 @@ def _resolve_named_time_range(
 
 
 def _try_parse_positive_int(value: str) -> int | None:
+    """Return a positive integer parsed from text, otherwise None."""
     if not value:
         return None
 
@@ -1175,6 +1226,7 @@ def _normalize_rules_csv_row(
     row: dict[str, Any],
     existing_fields: list[str],
 ) -> dict[str, str]:
+    """Clean a rules CSV row and repair legacy rows missing the rule-id column."""
     normalized_row = {
         field: _clean(row.get(field))
         for field in existing_fields
@@ -1194,6 +1246,7 @@ def _normalize_rules_csv_row(
 
 
 def _read_csv_rows(lines: list[str]) -> tuple[list[str], list[dict[str, str]]]:
+    """Read CSV text lines into fieldnames and rows while preserving inline comments."""
     prepared_lines = _prepare_csv_lines(lines)
     if not prepared_lines:
         return [], []
@@ -1210,6 +1263,7 @@ def _read_csv_rows(lines: list[str]) -> tuple[list[str], list[dict[str, str]]]:
 
 
 def _prepare_csv_lines(lines: list[str]) -> list[tuple[str, str]]:
+    """Return non-empty CSV lines paired with stripped inline comments."""
     prepared_lines: list[tuple[str, str]] = []
 
     for line in lines:
@@ -1223,6 +1277,7 @@ def _prepare_csv_lines(lines: list[str]) -> list[tuple[str, str]]:
 
 
 def _split_inline_comment(line: str, marker: str = "#") -> tuple[str, str]:
+    """Split one CSV line at an unquoted comment marker."""
     in_quotes = False
     index = 0
 
@@ -1245,6 +1300,7 @@ def _write_compact_csv_rows(
     fieldnames: list[str],
     rows: list[dict[str, str]],
 ) -> None:
+    """Write CSV rows with trailing empty values trimmed and comments preserved."""
     with path.open("w", newline="", encoding="utf-8") as file:
         header_buffer = io.StringIO()
         header_writer = csv.writer(header_buffer, lineterminator="")
@@ -1267,6 +1323,7 @@ def _write_compact_csv_rows(
 
 
 def _looks_like_shifted_rule_id_row(row: dict[str, str]) -> bool:
+    """Return whether a row appears shifted because it lacks a leading rule ID."""
     rule_id_value = row.get(CSV_RULE_ID, "")
     enabled_value = row.get(CSV_ENABLED, "")
 
@@ -1280,6 +1337,7 @@ def _looks_like_shifted_rule_id_row(row: dict[str, str]) -> bool:
 
 
 def _looks_like_bool_token(value: str) -> bool:
+    """Return whether text is one of the scheduler's accepted boolean tokens."""
     return _clean(value).lower() in {"1", "true", "yes", "y", "ja", "j", "0", "false", "no", "n", "nee"}
 
 
@@ -1287,6 +1345,7 @@ def _build_change_log_row(
     entry: ChangeLogEntry,
     fieldnames: list[str],
 ) -> dict[str, str]:
+    """Convert a change-log entry into a CSV row honoring existing fieldnames."""
     programme_timezone = (
         entry.programme.start_datetime.tzname()
         or entry.programme.end_datetime.tzname()
@@ -1316,6 +1375,7 @@ def _build_change_log_row(
 
 
 def _resolve_change_log_fieldnames(path: Path, write_header: bool) -> list[str]:
+    """Return the change-log CSV fields to write, preserving legacy headers."""
     if write_header:
         return [
             "type",
@@ -1361,10 +1421,12 @@ def _resolve_change_log_fieldnames(path: Path, write_header: bool) -> list[str]:
 
 
 def _format_change_log_datetime(value: datetime) -> str:
+    """Format a datetime for the scheduler CSV logs."""
     return value.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def _as_bool(value: Any, default: bool = False) -> bool:
+    """Parse scheduler boolean tokens, returning default for blank values."""
     if value is None or value == "":
         return default
 
@@ -1372,4 +1434,5 @@ def _as_bool(value: Any, default: bool = False) -> bool:
 
 
 def _clean(value: Any) -> str:
+    """Return a stripped string representation or an empty string for None."""
     return "" if value is None else str(value).strip()

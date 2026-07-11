@@ -4,6 +4,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
+from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -50,8 +51,17 @@ class CanalPlusClient:
             },
             method=method,
         )
-        with urlopen(request) as response:
-            return json.loads(response.read().decode("utf-8"))
+        try:
+            with urlopen(request) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except HTTPError as err:
+            body = err.read().decode("utf-8", errors="replace").strip()
+            if len(body) > 500:
+                body = f"{body[:500]}..."
+            message = f"HTTP Error {err.code}: {err.reason}"
+            if body:
+                message = f"{message}; response={body}"
+            raise RuntimeError(message) from err
 
     def get_schedule(
         self,

@@ -12,6 +12,7 @@ TIME_MISMATCH = "time_mismatch"
 DURATION_MISMATCH = "duration_mismatch"
 TITLE_MISMATCH = "title_mismatch"
 REPLACED = "replaced"
+SECONDARY_FETCH_FAILED = "secondary_fetch_failed"
 
 
 @dataclass(frozen=True)
@@ -32,6 +33,7 @@ class ProgrammeComparison:
     secondary: GuideProgramme | None
     start_delta_minutes: int | None = None
     end_delta_minutes: int | None = None
+    note: str = ""
 
 
 def compare_guides(

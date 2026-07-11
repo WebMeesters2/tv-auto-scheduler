@@ -1,0 +1,144 @@
+# DOX framework
+
+- DOX is highly performant AGENTS.md hierarchy installed here.
+- Agent must follow DOX instructions across any edits.
+
+## Core Contract
+
+- AGENTS.md files are binding work contracts for their subtrees.
+- Work products, source materials, instructions, records, assets, and durable docs must stay understandable from the nearest applicable AGENTS.md plus every parent AGENTS.md above it.
+
+## Read Before Editing
+
+1. Read the root AGENTS.md.
+2. Identify every file or folder you expect to touch.
+3. Walk from the repository root to each target path.
+4. Read every AGENTS.md found along each route.
+5. If a parent AGENTS.md lists a child AGENTS.md whose scope contains the path, read that child and continue from there.
+6. Use the nearest AGENTS.md as the local contract and parent docs for repo-wide rules.
+7. If docs conflict, the closer doc controls local work details, but no child doc may weaken DOX.
+
+Do not rely on memory. Re-read the applicable DOX chain in the current session before editing.
+
+## Update After Editing
+
+Every meaningful change requires a DOX pass before the task is done.
+
+Update the closest owning AGENTS.md when a change affects:
+
+- purpose, scope, ownership, or responsibilities
+- durable structure, contracts, workflows, or operating rules
+- required inputs, outputs, permissions, constraints, side effects, or artifacts
+- user preferences about behavior, communication, process, organization, or quality
+- AGENTS.md creation, deletion, move, rename, or index contents
+
+Update parent docs when parent-level structure, ownership, workflow, or child index changes. Update child docs when parent changes alter local rules. Remove stale or contradictory text immediately. Small edits that do not change behavior or contracts may leave docs unchanged, but the DOX pass still must happen.
+
+## Hierarchy
+
+- Root AGENTS.md is the DOX rail: project-wide instructions, global preferences, durable workflow rules, and the top-level Child DOX Index.
+- Child AGENTS.md files own domain-specific instructions and their own Child DOX Index.
+- Each parent explains what its direct children cover and what stays owned by the parent.
+- The closer a doc is to the work, the more specific and practical it must be.
+
+## Child Doc Shape
+
+- Create a child AGENTS.md when a folder becomes a durable boundary with its own purpose, rules, responsibilities, workflow, materials, or quality standards.
+- Work Guidance must reflect the current standards of the project or user instructions; if there are no specific standards or instructions yet, leave it empty.
+- Verification must reflect an existing check; if no verification framework exists yet, leave it empty and update it when one exists.
+
+Default section order:
+
+- Purpose
+- Ownership
+- Local Contracts
+- Work Guidance
+- Verification
+- Child DOX Index
+
+## Style
+
+- Keep docs concise, current, and operational.
+- Document stable contracts, not diary entries.
+- Put broad rules in parent docs and concrete details in child docs.
+- Prefer direct bullets with explicit names.
+- Do not duplicate rules across many files unless each scope needs a local version.
+- Delete stale notes instead of explaining history.
+- Trim obvious statements, repeated rules, misplaced detail, and warnings for risks that no longer exist.
+
+## Repository Notes
+
+- Home Assistant custom integration.
+- Target Home Assistant 2026.6 or newer unless explicitly stated otherwise.
+- Rules are loaded from `rules.csv`.
+- Existing user `rules.csv` files must never be overwritten.
+- Deployment uses `scripts/deploy.sh`.
+- Logging should remain informative but not excessive.
+- Use Bash first, CMD second, and PowerShell only as a last resort.
+- Prefer simple solutions over clever ones.
+- Avoid new dependencies unless they provide clear value.
+- Preserve backwards compatibility whenever reasonably possible.
+- Follow existing project conventions rather than introducing new patterns.
+- Make the smallest change that solves the problem.
+- Do not perform unrelated refactors.
+- Do not rename files, entities, classes, functions, or configuration keys unless necessary.
+- Do not remove existing functionality without explicit instruction.
+- Update documentation when behavior changes.
+
+## Project Notes
+
+- This project is maintained by Ruben van der Steenhoven.
+- It belongs to a broader Home Assistant ecosystem for automation, media control, scheduling, and workflow management.
+- Automations should behave predictably; reliability is more important than elegance.
+- Configuration should be visible and understandable.
+- Prefer native Home Assistant functionality over custom infrastructure.
+- Development occurs locally in WSL under `~/projects`.
+- Deployment targets Home Assistant running on `jeeves`; repository deployment scripts are authoritative.
+- Documentation should assume the maintainer may revisit the project months later.
+- Do not rely on commit history as the primary source of architectural knowledge.
+
+## Coding Standards
+
+- Python: use type hints where practical, clear naming, and avoid unnecessary abstraction.
+- TypeScript: prefer strict typing, avoid `any` unless unavoidable, and keep component logic readable.
+- YAML: prefer modern Home Assistant syntax, use native `note:` fields where supported, and keep automations readable.
+- Source files should include a module-level comment or docstring describing the file purpose, and functions should include concise purpose/input/output comments or docstrings where prudent.
+
+## Build & Validation
+
+- For Python changes, run `python -m compileall .`.
+- Run project-specific validation when relevant, such as tests for touched behavior.
+- Before committing, run `git status` and `git diff` and review all changes.
+- Avoid committing `.venv`, `node_modules`, editor caches, or temporary files.
+- On WSL paths, use WSL-native `git`, not Windows `git.exe`.
+
+## Local Windows Paths
+
+- On Ruben's Windows PC, user libraries are relocated to `D:\Users\Ruben`.
+- Use `/mnt/d/Users/Ruben/Documents`, `/mnt/d/Users/Ruben/Pictures`, and similar paths for user-library content.
+- Use `/mnt/c/Users/Ruben` only for Windows profile or app state such as `.codex` and `AppData`.
+
+## Closeout
+
+1. Re-check changed paths against the DOX chain.
+2. Update nearest owning docs and any affected parents or children.
+3. Refresh every affected Child DOX Index.
+4. Remove stale or contradictory text.
+5. Run existing verification when relevant.
+6. Report any docs intentionally left unchanged and why.
+
+## User Preferences
+
+- When the user requests a durable behavior change, record it here or in the relevant child AGENTS.md.
+- Maintainability, transparency, and predictable behavior matter more than clever abstractions.
+- If uncertain, explain the uncertainty and ask for clarification rather than guessing.
+- Prefer preserving existing behavior.
+
+## Child DOX Index
+
+- `.github/AGENTS.md`: GitHub workflow metadata and CI configuration.
+- `custom_components/tv_auto_scheduler/AGENTS.md`: Home Assistant integration source, service schemas, Canal+ comparison support, scheduler logic, and integration constants.
+- `docs/AGENTS.md`: Durable project documentation and handover notes.
+- `examples/AGENTS.md`: Example CSV and YAML files users can adapt.
+- `scripts/AGENTS.md`: Deployment, migration, generation, and proof-of-concept scripts.
+- `tests/AGENTS.md`: Test suite and test fixtures.

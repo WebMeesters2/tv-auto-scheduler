@@ -2,6 +2,7 @@ DOMAIN = "tv_auto_scheduler"
 
 DEFAULT_RULES_FILE = "/config/tv_auto_scheduler/rules.csv"
 DEFAULT_NAMED_TIME_RANGES_FILE = "/config/tv_auto_scheduler/named_time_ranges.csv"
+DEFAULT_CHANNELS_FILE = "/config/tv/channels.yaml"
 CHANNEL_DATABASE_ENTITY = "sensor.tv_channel_database"
 
 DEFAULT_PRE_CALENDAR = "calendar.pre_tv"
@@ -18,6 +19,7 @@ CONF_CHANGE_LOG = "change_log"
 CONF_CHANGE_LOG_FILE = "change_log_file"
 CONF_CANALPLUS_AUTHORIZATION = "canalplus_authorization"
 CONF_CANALPLUS_CHANNELS = "canalplus_channels"
+CONF_CHANNELS_FILE = "channels_file"
 CONF_COMPARISON_REPORT_FILE = "comparison_report_file"
 
 SERVICE_SCAN = "scan"

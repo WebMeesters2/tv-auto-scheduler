@@ -1,0 +1,925 @@
+kind,channel,primary_title,primary_start,primary_end,secondary_title,secondary_start,secondary_end,start_delta_minutes,end_delta_minutes
+missing_in_secondary,npo1,NOS Journaal,2026-07-10T13:35:00+02:00,2026-07-10T14:00:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal,2026-07-10T14:00:00+02:00,2026-07-10T14:10:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal,2026-07-10T14:10:00+02:00,2026-07-10T14:20:00+02:00,,,,,
+missing_in_secondary,npo1,Etappe 7,2026-07-10T14:20:00+02:00,2026-07-10T18:00:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal 18.00 uur,2026-07-10T18:00:00+02:00,2026-07-10T18:15:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Sportjournaal,2026-07-10T18:15:00+02:00,2026-07-10T18:30:00+02:00,,,,,
+missing_in_secondary,npo1,EenVandaag,2026-07-10T18:30:00+02:00,2026-07-10T18:50:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Gesprek minister-president,2026-07-10T18:50:00+02:00,2026-07-10T19:05:00+02:00,,,,,
+missing_in_secondary,npo1,NOS De Avondetappe,2026-07-10T19:05:00+02:00,2026-07-10T20:00:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal 20.00 uur,2026-07-10T20:00:00+02:00,2026-07-10T20:30:00+02:00,,,,,
+missing_in_secondary,npo1,NOS WK Avond,2026-07-10T20:30:00+02:00,2026-07-10T20:50:00+02:00,,,,,
+missing_in_secondary,npo1,Kwartfinale: Spanje - België,2026-07-10T20:50:00+02:00,2026-07-10T23:10:00+02:00,,,,,
+missing_in_secondary,npo1,NOS WK Avond,2026-07-10T23:10:00+02:00,2026-07-10T23:35:00+02:00,,,,,
+missing_in_secondary,npo1,NOS De Avondetappe,2026-07-10T23:35:00+02:00,2026-07-11T00:35:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal,2026-07-11T00:35:00+02:00,2026-07-11T00:45:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal met gebarentaal,2026-07-11T00:45:00+02:00,2026-07-11T01:10:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal,2026-07-11T01:10:00+02:00,2026-07-11T01:30:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal,2026-07-11T01:30:00+02:00,2026-07-11T07:30:00+02:00,,,,,
+missing_in_secondary,npo1,Nederland in Beweging,2026-07-11T07:30:00+02:00,2026-07-11T07:50:00+02:00,,,,,
+missing_in_secondary,npo1,Wim Crouwel Modernist,2026-07-11T07:50:00+02:00,2026-07-11T08:55:00+02:00,,,,,
+missing_in_secondary,npo1,Waar doen ze het van?,2026-07-11T08:55:00+02:00,2026-07-11T09:45:00+02:00,,,,,
+missing_in_secondary,npo1,Het mooiste meisje van de klas,2026-07-11T09:45:00+02:00,2026-07-11T10:35:00+02:00,,,,,
+missing_in_secondary,npo1,Herinneringen voor het leven - stop dementie,2026-07-11T10:35:00+02:00,2026-07-11T12:20:00+02:00,,,,,
+missing_in_secondary,npo1,Sterren NL Top 25,2026-07-11T12:20:00+02:00,2026-07-11T13:00:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal,2026-07-11T13:00:00+02:00,2026-07-11T13:05:00+02:00,,,,,
+missing_in_secondary,npo1,Socutera,2026-07-11T13:05:00+02:00,2026-07-11T13:15:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal,2026-07-11T13:15:00+02:00,2026-07-11T13:20:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal,2026-07-11T13:20:00+02:00,2026-07-11T13:25:00+02:00,,,,,
+missing_in_secondary,npo1,Cruijff,2026-07-11T13:25:00+02:00,2026-07-11T14:20:00+02:00,,,,,
+missing_in_secondary,npo1,Etappe 8,2026-07-11T14:20:00+02:00,2026-07-11T18:00:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal 18.00 uur,2026-07-11T18:00:00+02:00,2026-07-11T18:15:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Sportjournaal,2026-07-11T18:15:00+02:00,2026-07-11T18:30:00+02:00,,,,,
+missing_in_secondary,npo1,EenVandaag,2026-07-11T18:30:00+02:00,2026-07-11T19:05:00+02:00,,,,,
+missing_in_secondary,npo1,NOS De Avondetappe,2026-07-11T19:05:00+02:00,2026-07-11T20:00:00+02:00,,,,,
+missing_in_secondary,npo1,NOS Journaal 20.00 uur,2026-07-11T20:00:00+02:00,2026-07-11T20:30:00+02:00,,,,,
+missing_in_secondary,npo1,Concert at SEA 2026,2026-07-11T20:30:00+02:00,2026-07-11T21:45:00+02:00,,,,,
+missing_in_secondary,npo1,Ik Vertrek,2026-07-11T21:45:00+02:00,2026-07-11T22:00:00+02:00,,,,,
+missing_in_secondary,npo1,NOS WK Avond,2026-07-11T22:00:00+02:00,2026-07-11T22:50:00+02:00,,,,,
+missing_in_secondary,npo1,Kwartfinale: Noorwegen - Engeland,2026-07-11T22:50:00+02:00,2026-07-12T01:05:00+02:00,,,,,
+missing_in_secondary,npo2,Herinneringen voor het leven - stop dementie,2026-07-10T13:25:00+02:00,2026-07-10T15:00:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Journaal,2026-07-10T15:00:00+02:00,2026-07-10T15:15:00+02:00,,,,,
+missing_in_secondary,npo2,Jongstof,2026-07-10T15:15:00+02:00,2026-07-10T15:45:00+02:00,,,,,
+missing_in_secondary,npo2,Art Department,2026-07-10T15:45:00+02:00,2026-07-10T16:00:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Journaal,2026-07-10T16:00:00+02:00,2026-07-10T16:05:00+02:00,,,,,
+missing_in_secondary,npo2,Bak mee met MAX,2026-07-10T16:05:00+02:00,2026-07-10T16:20:00+02:00,,,,,
+missing_in_secondary,npo2,BinnensteBuiten,2026-07-10T16:20:00+02:00,2026-07-10T16:54:00+02:00,,,,,
+missing_in_secondary,npo2,Politieke Partijen,2026-07-10T16:54:00+02:00,2026-07-10T17:00:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Journaal in Makkelijke Taal,2026-07-10T17:00:00+02:00,2026-07-10T17:15:00+02:00,,,,,
+missing_in_secondary,npo2,Samen Digitaal,2026-07-10T17:15:00+02:00,2026-07-10T17:20:00+02:00,,,,,
+missing_in_secondary,npo2,Kunst in het Wild,2026-07-10T17:20:00+02:00,2026-07-10T18:00:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Journaal 18.00 uur,2026-07-10T18:00:00+02:00,2026-07-10T18:15:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Journaal Regio,2026-07-10T18:15:00+02:00,2026-07-10T18:30:00+02:00,,,,,
+missing_in_secondary,npo2,Noord-Zuid-Oost-West,2026-07-10T18:30:00+02:00,2026-07-10T19:05:00+02:00,,,,,
+missing_in_secondary,npo2,BinnensteBuiten,2026-07-10T19:05:00+02:00,2026-07-10T19:40:00+02:00,,,,,
+missing_in_secondary,npo2,Rail Away,2026-07-10T19:40:00+02:00,2026-07-10T20:00:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Journaal 20.00 uur,2026-07-10T20:00:00+02:00,2026-07-10T20:30:00+02:00,,,,,
+missing_in_secondary,npo2,Nederland op film,2026-07-10T20:30:00+02:00,2026-07-10T21:10:00+02:00,,,,,
+missing_in_secondary,npo2,Patience,2026-07-10T21:10:00+02:00,2026-07-10T22:00:00+02:00,,,,,
+missing_in_secondary,npo2,Nieuwsuur,2026-07-10T22:00:00+02:00,2026-07-10T22:40:00+02:00,,,,,
+missing_in_secondary,npo2,McDonald and Dodds,2026-07-10T22:40:00+02:00,2026-07-11T00:10:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Journaal,2026-07-11T00:10:00+02:00,2026-07-11T00:25:00+02:00,,,,,
+missing_in_secondary,npo2,De Nachtzoen,2026-07-11T00:25:00+02:00,2026-07-11T00:40:00+02:00,,,,,
+missing_in_secondary,npo2,Nieuwsuur,2026-07-11T00:40:00+02:00,2026-07-11T01:20:00+02:00,,,,,
+missing_in_secondary,npo2,Nieuwsuur,2026-07-11T01:20:00+02:00,2026-07-11T01:50:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Gesprek minister-president,2026-07-11T01:50:00+02:00,2026-07-11T08:00:00+02:00,,,,,
+missing_in_secondary,npo2,Hello Goodbye,2026-07-11T08:00:00+02:00,2026-07-11T08:20:00+02:00,,,,,
+missing_in_secondary,npo2,Natuur in de Cariben,2026-07-11T08:20:00+02:00,2026-07-11T08:55:00+02:00,,,,,
+missing_in_secondary,npo2,Mocronado's,2026-07-11T08:55:00+02:00,2026-07-11T09:45:00+02:00,,,,,
+missing_in_secondary,npo2,Kijken met Caspers,2026-07-11T09:45:00+02:00,2026-07-11T10:30:00+02:00,,,,,
+missing_in_secondary,npo2,Nu te Zien!,2026-07-11T10:30:00+02:00,2026-07-11T10:40:00+02:00,,,,,
+missing_in_secondary,npo2,Krabbé zoekt Chagall,2026-07-11T10:40:00+02:00,2026-07-11T11:40:00+02:00,,,,,
+missing_in_secondary,npo2,Iedereen Verlicht,2026-07-11T11:40:00+02:00,2026-07-11T12:15:00+02:00,,,,,
+missing_in_secondary,npo2,Wat houdt ons tegen?,2026-07-11T12:15:00+02:00,2026-07-11T12:40:00+02:00,,,,,
+missing_in_secondary,npo2,EO Metterdaad,2026-07-11T12:40:00+02:00,2026-07-11T13:00:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Journaal,2026-07-11T13:00:00+02:00,2026-07-11T13:10:00+02:00,,,,,
+missing_in_secondary,npo2,Nederland op film,2026-07-11T13:10:00+02:00,2026-07-11T13:55:00+02:00,,,,,
+missing_in_secondary,npo2,Meldpunt Actueel,2026-07-11T13:55:00+02:00,2026-07-11T14:20:00+02:00,,,,,
+missing_in_secondary,npo2,MAX Maakt Mogelijk Helpt,2026-07-11T14:20:00+02:00,2026-07-11T14:35:00+02:00,,,,,
+missing_in_secondary,npo2,Attenborough: Kingdom,2026-07-11T14:35:00+02:00,2026-07-11T15:30:00+02:00,,,,,
+missing_in_secondary,npo2,Fryslân Dok,2026-07-11T15:30:00+02:00,2026-07-11T16:05:00+02:00,,,,,
+missing_in_secondary,npo2,Pauscast,2026-07-11T16:05:00+02:00,2026-07-11T16:30:00+02:00,,,,,
+missing_in_secondary,npo2,De verwondering,2026-07-11T16:30:00+02:00,2026-07-11T17:00:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Journaal 17.00 uur,2026-07-11T17:00:00+02:00,2026-07-11T17:10:00+02:00,,,,,
+missing_in_secondary,npo2,Petrus in het land,2026-07-11T17:10:00+02:00,2026-07-11T17:35:00+02:00,,,,,
+missing_in_secondary,npo2,De Verandering,2026-07-11T17:35:00+02:00,2026-07-11T17:55:00+02:00,,,,,
+missing_in_secondary,npo2,EO Metterdaad,2026-07-11T17:55:00+02:00,2026-07-11T18:10:00+02:00,,,,,
+missing_in_secondary,npo2,Nederland Zingt,2026-07-11T18:10:00+02:00,2026-07-11T18:35:00+02:00,,,,,
+missing_in_secondary,npo2,Ik mis je,2026-07-11T18:35:00+02:00,2026-07-11T19:00:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Herdenking Srebrenica,2026-07-11T19:00:00+02:00,2026-07-11T19:50:00+02:00,,,,,
+missing_in_secondary,npo2,Prinses Kate: een leven in beeld,2026-07-11T19:50:00+02:00,2026-07-11T20:35:00+02:00,,,,,
+missing_in_secondary,npo2,Over Leven,2026-07-11T20:35:00+02:00,2026-07-11T21:25:00+02:00,,,,,
+missing_in_secondary,npo2,Kloostergasten,2026-07-11T21:25:00+02:00,2026-07-11T22:00:00+02:00,,,,,
+missing_in_secondary,npo2,Nieuwsuur,2026-07-11T22:00:00+02:00,2026-07-11T22:40:00+02:00,,,,,
+missing_in_secondary,npo2,Etty,2026-07-11T22:40:00+02:00,2026-07-11T23:30:00+02:00,,,,,
+missing_in_secondary,npo2,NOS Journaal Laat,2026-07-11T23:30:00+02:00,2026-07-11T23:45:00+02:00,,,,,
+missing_in_secondary,npo2,After the Flood,2026-07-11T23:45:00+02:00,2026-07-12T00:30:00+02:00,,,,,
+missing_in_secondary,npo3,Kindertijd,2026-07-10T13:40:00+02:00,2026-07-10T13:48:00+02:00,,,,,
+missing_in_secondary,npo3,Zin in Zappelin,2026-07-10T13:48:00+02:00,2026-07-10T13:50:00+02:00,,,,,
+missing_in_secondary,npo3,Zin in Zappelin,2026-07-10T13:50:00+02:00,2026-07-10T13:55:00+02:00,,,,,
+missing_in_secondary,npo3,Mike de Ridder,2026-07-10T13:55:00+02:00,2026-07-10T14:05:00+02:00,,,,,
+missing_in_secondary,npo3,Bob de Bouwer,2026-07-10T14:05:00+02:00,2026-07-10T14:15:00+02:00,,,,,
+missing_in_secondary,npo3,SamSam,2026-07-10T14:15:00+02:00,2026-07-10T14:30:00+02:00,,,,,
+missing_in_secondary,npo3,De Smurfen,2026-07-10T14:30:00+02:00,2026-07-10T14:40:00+02:00,,,,,
+missing_in_secondary,npo3,Het betoverde dorp van Pinokkio,2026-07-10T14:40:00+02:00,2026-07-10T14:50:00+02:00,,,,,
+missing_in_secondary,npo3,Bollie And Billie,2026-07-10T14:50:00+02:00,2026-07-10T15:05:00+02:00,,,,,
+missing_in_secondary,npo3,Herrie op zolder,2026-07-10T15:05:00+02:00,2026-07-10T15:15:00+02:00,,,,,
+missing_in_secondary,npo3,Shaun het schaap,2026-07-10T15:15:00+02:00,2026-07-10T15:20:00+02:00,,,,,
+missing_in_secondary,npo3,Interstellar Ella,2026-07-10T15:20:00+02:00,2026-07-10T15:35:00+02:00,,,,,
+missing_in_secondary,npo3,Coop Troop,2026-07-10T15:35:00+02:00,2026-07-10T15:45:00+02:00,,,,,
+missing_in_secondary,npo3,Peter Pan,2026-07-10T15:45:00+02:00,2026-07-10T16:10:00+02:00,,,,,
+missing_in_secondary,npo3,Jungle Book,2026-07-10T16:10:00+02:00,2026-07-10T16:20:00+02:00,,,,,
+missing_in_secondary,npo3,Agent Binky,2026-07-10T16:20:00+02:00,2026-07-10T16:30:00+02:00,,,,,
+missing_in_secondary,npo3,Grizzy en de Lemmingen,2026-07-10T16:30:00+02:00,2026-07-10T16:35:00+02:00,,,,,
+missing_in_secondary,npo3,Dino Daan And Lucy,2026-07-10T16:35:00+02:00,2026-07-10T16:48:00+02:00,,,,,
+missing_in_secondary,npo3,NXT - Ik voel het,2026-07-10T16:48:00+02:00,2026-07-10T16:50:00+02:00,,,,,
+missing_in_secondary,npo3,Brugklas marathon,2026-07-10T16:50:00+02:00,2026-07-10T17:45:00+02:00,,,,,
+missing_in_secondary,npo3,Checkpoint,2026-07-10T17:45:00+02:00,2026-07-10T18:10:00+02:00,,,,,
+missing_in_secondary,npo3,Freeks wilde wereld,2026-07-10T18:10:00+02:00,2026-07-10T18:20:00+02:00,,,,,
+missing_in_secondary,npo3,Waku Waku,2026-07-10T18:20:00+02:00,2026-07-10T18:45:00+02:00,,,,,
+missing_in_secondary,npo3,Het Klokhuis,2026-07-10T18:45:00+02:00,2026-07-10T19:00:00+02:00,,,,,
+missing_in_secondary,npo3,NOS Jeugdjournaal,2026-07-10T19:00:00+02:00,2026-07-10T19:25:00+02:00,,,,,
+missing_in_secondary,npo3,Reizen Waes: de bucketlist,2026-07-10T19:25:00+02:00,2026-07-10T20:20:00+02:00,,,,,
+missing_in_secondary,npo3,De slimste mens België,2026-07-10T20:20:00+02:00,2026-07-10T21:25:00+02:00,,,,,
+missing_in_secondary,npo3,Sluipschutters,2026-07-10T21:25:00+02:00,2026-07-10T21:55:00+02:00,,,,,
+missing_in_secondary,npo3,North Sea Jazz 2026 Live Stream,2026-07-10T21:55:00+02:00,2026-07-11T05:30:00+02:00,,,,,
+missing_in_secondary,npo3,NOS Jeugdjournaal met gebarentaal,2026-07-11T05:30:00+02:00,2026-07-11T06:02:00+02:00,,,,,
+missing_in_secondary,npo3,"Olly, het kleine witte busje",2026-07-11T06:02:00+02:00,2026-07-11T06:05:00+02:00,,,,,
+missing_in_secondary,npo3,Lief Monster,2026-07-11T06:05:00+02:00,2026-07-11T06:15:00+02:00,,,,,
+missing_in_secondary,npo3,Nelli en Nora,2026-07-11T06:15:00+02:00,2026-07-11T06:20:00+02:00,,,,,
+missing_in_secondary,npo3,Hoi Duggee,2026-07-11T06:20:00+02:00,2026-07-11T06:25:00+02:00,,,,,
+missing_in_secondary,npo3,"Ella, Oscar And Hoo",2026-07-11T06:25:00+02:00,2026-07-11T06:37:00+02:00,,,,,
+missing_in_secondary,npo3,Kiri And Lou,2026-07-11T06:37:00+02:00,2026-07-11T06:40:00+02:00,,,,,
+missing_in_secondary,npo3,Ziggy en de Zootram,2026-07-11T06:40:00+02:00,2026-07-11T06:55:00+02:00,,,,,
+missing_in_secondary,npo3,Angelina Ballerina,2026-07-11T06:55:00+02:00,2026-07-11T07:05:00+02:00,,,,,
+missing_in_secondary,npo3,Olivia,2026-07-11T07:05:00+02:00,2026-07-11T07:17:00+02:00,,,,,
+missing_in_secondary,npo3,Zin in Zappelin,2026-07-11T07:17:00+02:00,2026-07-11T07:19:00+02:00,,,,,
+missing_in_secondary,npo3,Zin in Zappelin,2026-07-11T07:19:00+02:00,2026-07-11T07:20:00+02:00,,,,,
+missing_in_secondary,npo3,"Noddy, de detective",2026-07-11T07:20:00+02:00,2026-07-11T07:33:00+02:00,,,,,
+missing_in_secondary,npo3,Zin in Zappelin,2026-07-11T07:33:00+02:00,2026-07-11T07:40:00+02:00,,,,,
+missing_in_secondary,npo3,Charlie en Lola,2026-07-11T07:40:00+02:00,2026-07-11T07:49:00+02:00,,,,,
+missing_in_secondary,npo3,Zin in Zappelin,2026-07-11T07:49:00+02:00,2026-07-11T07:50:00+02:00,,,,,
+missing_in_secondary,npo3,Rubble And Crew,2026-07-11T07:50:00+02:00,2026-07-11T08:04:00+02:00,,,,,
+missing_in_secondary,npo3,Zin in Zappelin,2026-07-11T08:04:00+02:00,2026-07-11T08:07:00+02:00,,,,,
+missing_in_secondary,npo3,Zin in Zappelin,2026-07-11T08:07:00+02:00,2026-07-11T08:10:00+02:00,,,,,
+missing_in_secondary,npo3,Buurman en Buurman,2026-07-11T08:10:00+02:00,2026-07-11T08:15:00+02:00,,,,,
+missing_in_secondary,npo3,Samson And Marie ijsjestijd,2026-07-11T08:15:00+02:00,2026-07-11T08:25:00+02:00,,,,,
+missing_in_secondary,npo3,Pop Papierstad,2026-07-11T08:25:00+02:00,2026-07-11T08:35:00+02:00,,,,,
+missing_in_secondary,npo3,Casper en Emma,2026-07-11T08:35:00+02:00,2026-07-11T08:50:00+02:00,,,,,
+missing_in_secondary,npo3,De magische auto,2026-07-11T08:50:00+02:00,2026-07-11T09:00:00+02:00,,,,,
+missing_in_secondary,npo3,Kindertijd,2026-07-11T09:00:00+02:00,2026-07-11T09:10:00+02:00,,,,,
+missing_in_secondary,npo3,Beestenbrigade missie,2026-07-11T09:10:00+02:00,2026-07-11T09:25:00+02:00,,,,,
+missing_in_secondary,npo3,Het betoverde dorp van Pinokkio,2026-07-11T09:25:00+02:00,2026-07-11T09:35:00+02:00,,,,,
+missing_in_secondary,npo3,Splat And Seymour,2026-07-11T09:35:00+02:00,2026-07-11T09:45:00+02:00,,,,,
+missing_in_secondary,npo3,De Smurfen,2026-07-11T09:45:00+02:00,2026-07-11T10:00:00+02:00,,,,,
+missing_in_secondary,npo3,SamSam,2026-07-11T10:00:00+02:00,2026-07-11T10:11:00+02:00,,,,,
+missing_in_secondary,npo3,Kiwi And Strit,2026-07-11T10:11:00+02:00,2026-07-11T10:15:00+02:00,,,,,
+missing_in_secondary,npo3,Lucas de spin,2026-07-11T10:15:00+02:00,2026-07-11T10:25:00+02:00,,,,,
+missing_in_secondary,npo3,Masha en de Beer,2026-07-11T10:25:00+02:00,2026-07-11T10:30:00+02:00,,,,,
+missing_in_secondary,npo3,Shaun het schaap,2026-07-11T10:30:00+02:00,2026-07-11T10:40:00+02:00,,,,,
+missing_in_secondary,npo3,Zin in Zappelin,2026-07-11T10:40:00+02:00,2026-07-11T10:55:00+02:00,,,,,
+missing_in_secondary,npo3,Agent Binky,2026-07-11T10:55:00+02:00,2026-07-11T11:05:00+02:00,,,,,
+missing_in_secondary,npo3,Wickie de Viking,2026-07-11T11:05:00+02:00,2026-07-11T11:20:00+02:00,,,,,
+missing_in_secondary,npo3,Mike de Ridder,2026-07-11T11:20:00+02:00,2026-07-11T11:30:00+02:00,,,,,
+missing_in_secondary,npo3,Pol de Piratenmuis,2026-07-11T11:30:00+02:00,2026-07-11T11:35:00+02:00,,,,,
+missing_in_secondary,npo3,Grizzy en de Lemmingen,2026-07-11T11:35:00+02:00,2026-07-11T11:45:00+02:00,,,,,
+missing_in_secondary,npo3,Molmans,2026-07-11T11:45:00+02:00,2026-07-11T11:55:00+02:00,,,,,
+missing_in_secondary,npo3,Machtige Mike,2026-07-11T11:55:00+02:00,2026-07-11T12:05:00+02:00,,,,,
+missing_in_secondary,npo3,Pippi gaat aan boord,2026-07-11T12:05:00+02:00,2026-07-11T13:20:00+02:00,,,,,
+missing_in_secondary,npo3,Studio Snugger,2026-07-11T13:20:00+02:00,2026-07-11T13:35:00+02:00,,,,,
+missing_in_secondary,npo3,Zara en de magische kicksen,2026-07-11T13:35:00+02:00,2026-07-11T13:50:00+02:00,,,,,
+missing_in_secondary,npo3,Zara en de magische kicksen,2026-07-11T13:50:00+02:00,2026-07-11T14:00:00+02:00,,,,,
+missing_in_secondary,npo3,De Dodelijkste 60,2026-07-11T14:00:00+02:00,2026-07-11T14:35:00+02:00,,,,,
+missing_in_secondary,npo3,Koen Kampioen,2026-07-11T14:35:00+02:00,2026-07-11T15:00:00+02:00,,,,,
+missing_in_secondary,npo3,Koen Kampioen,2026-07-11T15:00:00+02:00,2026-07-11T15:25:00+02:00,,,,,
+missing_in_secondary,npo3,NXT - Ik voel het,2026-07-11T15:25:00+02:00,2026-07-11T15:30:00+02:00,,,,,
+missing_in_secondary,npo3,Boets And ik,2026-07-11T15:30:00+02:00,2026-07-11T16:55:00+02:00,,,,,
+missing_in_secondary,npo3,De Selectie,2026-07-11T16:55:00+02:00,2026-07-11T17:10:00+02:00,,,,,
+missing_in_secondary,npo3,Checkpoint,2026-07-11T17:10:00+02:00,2026-07-11T17:35:00+02:00,,,,,
+missing_in_secondary,npo3,Klaas Kan Alles Kort,2026-07-11T17:35:00+02:00,2026-07-11T17:50:00+02:00,,,,,
+missing_in_secondary,npo3,Zapp detective: Summer Vibes Italië,2026-07-11T17:50:00+02:00,2026-07-11T18:05:00+02:00,,,,,
+missing_in_secondary,npo3,De Eindmusical,2026-07-11T18:05:00+02:00,2026-07-11T18:20:00+02:00,,,,,
+missing_in_secondary,npo3,Enkeltje Verweggistan,2026-07-11T18:20:00+02:00,2026-07-11T18:45:00+02:00,,,,,
+missing_in_secondary,npo3,Steken en Prikken in Suriname,2026-07-11T18:45:00+02:00,2026-07-11T19:00:00+02:00,,,,,
+missing_in_secondary,npo3,NOS Jeugdjournaal,2026-07-11T19:00:00+02:00,2026-07-11T19:20:00+02:00,,,,,
+missing_in_secondary,npo3,Bommetje!,2026-07-11T19:20:00+02:00,2026-07-11T19:45:00+02:00,,,,,
+missing_in_secondary,npo3,Zapp Recordbrekers,2026-07-11T19:45:00+02:00,2026-07-11T20:14:00+02:00,,,,,
+missing_in_secondary,npo3,Socutera,2026-07-11T20:14:00+02:00,2026-07-11T20:25:00+02:00,,,,,
+missing_in_secondary,npo3,Beck,2026-07-11T20:25:00+02:00,2026-07-11T22:00:00+02:00,,,,,
+missing_in_secondary,npo3,North Sea Jazz 2026 Live Stream,2026-07-11T22:00:00+02:00,2026-07-12T05:30:00+02:00,,,,,
+missing_in_secondary,rtl4,Van woonvilla naar droomvilla,2026-07-10T13:30:00+02:00,2026-07-10T14:05:00+02:00,,,,,
+missing_in_secondary,rtl4,Kom Je Bij Me Eten? VIPS,2026-07-10T14:05:00+02:00,2026-07-10T15:05:00+02:00,,,,,
+missing_in_secondary,rtl4,Kopen Of Slopen?,2026-07-10T15:05:00+02:00,2026-07-10T16:30:00+02:00,,,,,
+missing_in_secondary,rtl4,Het perfecte plaatje op reis,2026-07-10T16:30:00+02:00,2026-07-10T18:00:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Nieuws - 18:00 uur,2026-07-10T18:00:00+02:00,2026-07-10T18:15:00+02:00,,,,,
+missing_in_secondary,rtl4,EditieNL,2026-07-10T18:15:00+02:00,2026-07-10T18:30:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Weer 18:30,2026-07-10T18:30:00+02:00,2026-07-10T18:35:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Boulevard,2026-07-10T18:35:00+02:00,2026-07-10T19:30:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Nieuws - 19:30 uur,2026-07-10T19:30:00+02:00,2026-07-10T19:55:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Weer 19:55,2026-07-10T19:55:00+02:00,2026-07-10T20:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Richard Groenendijk - Voor Iedereen Beter,2026-07-10T20:00:00+02:00,2026-07-10T22:50:00+02:00,,,,,
+missing_in_secondary,rtl4,Secret Duets,2026-07-10T22:50:00+02:00,2026-07-10T23:40:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Nieuws - Laat,2026-07-10T23:40:00+02:00,2026-07-10T23:55:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Weer - Laat,2026-07-10T23:55:00+02:00,2026-07-11T00:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Secret Duets,2026-07-11T00:00:00+02:00,2026-07-11T00:50:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Boulevard,2026-07-11T00:50:00+02:00,2026-07-11T01:45:00+02:00,,,,,
+missing_in_secondary,rtl4,Tommy Teleshopping,2026-07-11T01:45:00+02:00,2026-07-11T02:10:00+02:00,,,,,
+missing_in_secondary,rtl4,Tommy Teleshopping,2026-07-11T02:10:00+02:00,2026-07-11T06:00:00+02:00,,,,,
+missing_in_secondary,rtl4,"Ernst, Bobbie en de rest",2026-07-11T06:00:00+02:00,2026-07-11T06:10:00+02:00,,,,,
+missing_in_secondary,rtl4,"Ernst, Bobbie en de rest",2026-07-11T06:10:00+02:00,2026-07-11T06:25:00+02:00,,,,,
+missing_in_secondary,rtl4,"Ernst, Bobbie en de rest",2026-07-11T06:25:00+02:00,2026-07-11T06:40:00+02:00,,,,,
+missing_in_secondary,rtl4,"Ernst, Bobbie en de rest",2026-07-11T06:40:00+02:00,2026-07-11T06:50:00+02:00,,,,,
+missing_in_secondary,rtl4,"Ernst, Bobbie en de rest",2026-07-11T06:50:00+02:00,2026-07-11T07:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Thomas de Stoomlocomotief,2026-07-11T07:00:00+02:00,2026-07-11T07:10:00+02:00,,,,,
+missing_in_secondary,rtl4,Thomas de Stoomlocomotief,2026-07-11T07:10:00+02:00,2026-07-11T07:20:00+02:00,,,,,
+missing_in_secondary,rtl4,Sprookjes van Klaas Vaak,2026-07-11T07:20:00+02:00,2026-07-11T07:30:00+02:00,,,,,
+missing_in_secondary,rtl4,Jokie,2026-07-11T07:30:00+02:00,2026-07-11T07:40:00+02:00,,,,,
+missing_in_secondary,rtl4,Jokie en Jet op avontuur in de Efteling,2026-07-11T07:40:00+02:00,2026-07-11T07:45:00+02:00,,,,,
+missing_in_secondary,rtl4,Sprookjesboom Muziekclips,2026-07-11T07:45:00+02:00,2026-07-11T07:50:00+02:00,,,,,
+missing_in_secondary,rtl4,Sprookjesboom,2026-07-11T07:50:00+02:00,2026-07-11T07:55:00+02:00,,,,,
+missing_in_secondary,rtl4,Mike And Molly,2026-07-11T07:55:00+02:00,2026-07-11T08:05:00+02:00,,,,,
+missing_in_secondary,rtl4,Fien And Teun TV,2026-07-11T08:05:00+02:00,2026-07-11T08:15:00+02:00,,,,,
+missing_in_secondary,rtl4,Fien And Teun TV,2026-07-11T08:15:00+02:00,2026-07-11T08:20:00+02:00,,,,,
+missing_in_secondary,rtl4,Fien And Teun TV,2026-07-11T08:20:00+02:00,2026-07-11T08:30:00+02:00,,,,,
+missing_in_secondary,rtl4,"Ernst, Bobbie en de rest",2026-07-11T08:30:00+02:00,2026-07-11T08:40:00+02:00,,,,,
+missing_in_secondary,rtl4,"Ernst, Bobbie en de rest",2026-07-11T08:40:00+02:00,2026-07-11T08:50:00+02:00,,,,,
+missing_in_secondary,rtl4,"Ernst, Bobbie en de rest",2026-07-11T08:50:00+02:00,2026-07-11T09:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Telvero,2026-07-11T09:00:00+02:00,2026-07-11T10:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Tommy Teleshopping,2026-07-11T10:00:00+02:00,2026-07-11T12:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Later als ik groot ben,2026-07-11T12:00:00+02:00,2026-07-11T12:30:00+02:00,,,,,
+missing_in_secondary,rtl4,Way Of Living,2026-07-11T12:30:00+02:00,2026-07-11T13:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Van woonvilla naar droomvilla,2026-07-11T13:00:00+02:00,2026-07-11T13:30:00+02:00,,,,,
+missing_in_secondary,rtl4,Buitengewoon Wonen,2026-07-11T13:30:00+02:00,2026-07-11T14:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Knappe Koppen,2026-07-11T14:00:00+02:00,2026-07-11T14:30:00+02:00,,,,,
+missing_in_secondary,rtl4,De Cruise Familie,2026-07-11T14:30:00+02:00,2026-07-11T15:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Let's Visit,2026-07-11T15:00:00+02:00,2026-07-11T15:30:00+02:00,,,,,
+missing_in_secondary,rtl4,Franky en Coen: Patatje Hoop,2026-07-11T15:30:00+02:00,2026-07-11T16:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Campingtijd,2026-07-11T16:00:00+02:00,2026-07-11T16:30:00+02:00,,,,,
+missing_in_secondary,rtl4,Huis Gezocht,2026-07-11T16:30:00+02:00,2026-07-11T17:00:00+02:00,,,,,
+missing_in_secondary,rtl4,Helden Van Zuid-Afrika,2026-07-11T17:00:00+02:00,2026-07-11T17:30:00+02:00,,,,,
+missing_in_secondary,rtl4,Het Goede Buitenleven,2026-07-11T17:30:00+02:00,2026-07-11T18:00:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Nieuws - 18:00 uur,2026-07-11T18:00:00+02:00,2026-07-11T18:15:00+02:00,,,,,
+missing_in_secondary,rtl4,EditieNL,2026-07-11T18:15:00+02:00,2026-07-11T18:30:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Weer 18:30,2026-07-11T18:30:00+02:00,2026-07-11T18:35:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Boulevard,2026-07-11T18:35:00+02:00,2026-07-11T19:30:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Nieuws - 19:30 uur,2026-07-11T19:30:00+02:00,2026-07-11T19:55:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Weer 19:55,2026-07-11T19:55:00+02:00,2026-07-11T20:05:00+02:00,,,,,
+missing_in_secondary,rtl4,"Oh, wat een jaar!",2026-07-11T20:05:00+02:00,2026-07-11T21:35:00+02:00,,,,,
+missing_in_secondary,rtl4,Beste Kijkers,2026-07-11T21:35:00+02:00,2026-07-11T22:45:00+02:00,,,,,
+missing_in_secondary,rtl4,Huizenruilers,2026-07-11T22:45:00+02:00,2026-07-11T23:30:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Nieuws - Laat,2026-07-11T23:30:00+02:00,2026-07-11T23:50:00+02:00,,,,,
+missing_in_secondary,rtl4,RTL Weer - Laat,2026-07-11T23:50:00+02:00,2026-07-11T23:55:00+02:00,,,,,
+missing_in_secondary,rtl4,Huizenruilers,2026-07-11T23:55:00+02:00,2026-07-12T00:40:00+02:00,,,,,
+missing_in_secondary,rtl5,Tommy Teleshopping,2026-07-10T12:30:00+02:00,2026-07-10T14:30:00+02:00,,,,,
+missing_in_secondary,rtl5,Telvero,2026-07-10T14:30:00+02:00,2026-07-10T16:30:00+02:00,,,,,
+missing_in_secondary,rtl5,Stop! Politie UK,2026-07-10T16:30:00+02:00,2026-07-10T17:35:00+02:00,,,,,
+missing_in_secondary,rtl5,De Augurkenkoning,2026-07-10T17:35:00+02:00,2026-07-10T19:05:00+02:00,,,,,
+missing_in_secondary,rtl5,De Pfaffs,2026-07-10T19:05:00+02:00,2026-07-10T19:45:00+02:00,,,,,
+missing_in_secondary,rtl5,De Pfaffs,2026-07-10T19:45:00+02:00,2026-07-10T20:30:00+02:00,,,,,
+missing_in_secondary,rtl5,Over De A4,2026-07-10T20:30:00+02:00,2026-07-10T21:55:00+02:00,,,,,
+missing_in_secondary,rtl5,112 Vandaag,2026-07-10T21:55:00+02:00,2026-07-10T22:25:00+02:00,,,,,
+missing_in_secondary,rtl5,112 Weer,2026-07-10T22:25:00+02:00,2026-07-10T22:35:00+02:00,,,,,
+missing_in_secondary,rtl5,24 uur in de E.R,2026-07-10T22:35:00+02:00,2026-07-10T23:35:00+02:00,,,,,
+missing_in_secondary,rtl5,112 Vandaag,2026-07-10T23:35:00+02:00,2026-07-11T00:00:00+02:00,,,,,
+missing_in_secondary,rtl5,112 Weer,2026-07-11T00:00:00+02:00,2026-07-11T00:05:00+02:00,,,,,
+missing_in_secondary,rtl5,Stop! Politie UK,2026-07-11T00:05:00+02:00,2026-07-11T01:10:00+02:00,,,,,
+missing_in_secondary,rtl5,Tommy Teleshopping,2026-07-11T01:10:00+02:00,2026-07-11T02:10:00+02:00,,,,,
+missing_in_secondary,rtl5,Tommy Teleshopping,2026-07-11T02:10:00+02:00,2026-07-11T07:30:00+02:00,,,,,
+missing_in_secondary,rtl5,Joseph Prince: New Creation Church TV,2026-07-11T07:30:00+02:00,2026-07-11T08:00:00+02:00,,,,,
+missing_in_secondary,rtl5,Tommy Teleshopping,2026-07-11T08:00:00+02:00,2026-07-11T13:00:00+02:00,,,,,
+missing_in_secondary,rtl5,Telvero,2026-07-11T13:00:00+02:00,2026-07-11T14:30:00+02:00,,,,,
+missing_in_secondary,rtl5,Tommy Teleshopping,2026-07-11T14:30:00+02:00,2026-07-11T17:00:00+02:00,,,,,
+missing_in_secondary,rtl5,Stop! Politie UK,2026-07-11T17:00:00+02:00,2026-07-11T18:00:00+02:00,,,,,
+missing_in_secondary,rtl5,Helden Van Hier: De Traumahelikopter,2026-07-11T18:00:00+02:00,2026-07-11T19:00:00+02:00,,,,,
+missing_in_secondary,rtl5,Helden Van Hier: De Traumahelikopter,2026-07-11T19:00:00+02:00,2026-07-11T20:00:00+02:00,,,,,
+missing_in_secondary,rtl5,Het Interventie Team,2026-07-11T20:00:00+02:00,2026-07-11T21:00:00+02:00,,,,,
+missing_in_secondary,rtl5,Het Interventie Team,2026-07-11T21:00:00+02:00,2026-07-11T22:00:00+02:00,,,,,
+missing_in_secondary,rtl5,Helden Van Hier: De Traumahelikopter,2026-07-11T22:00:00+02:00,2026-07-11T23:00:00+02:00,,,,,
+missing_in_secondary,rtl5,Helden Van Hier: Op Interventie,2026-07-11T23:00:00+02:00,2026-07-12T00:05:00+02:00,,,,,
+missing_in_secondary,sbs6,De Bondgenoten,2026-07-10T12:45:00+02:00,2026-07-10T13:55:00+02:00,,,,,
+missing_in_secondary,sbs6,Droomhuis op het platteland,2026-07-10T13:55:00+02:00,2026-07-10T14:50:00+02:00,,,,,
+missing_in_secondary,sbs6,Huizen Onder De Hamer,2026-07-10T14:50:00+02:00,2026-07-10T16:00:00+02:00,,,,,
+missing_in_secondary,sbs6,Droomhuis op het platteland,2026-07-10T16:00:00+02:00,2026-07-10T17:00:00+02:00,,,,,
+missing_in_secondary,sbs6,Het Oranje Café,2026-07-10T17:00:00+02:00,2026-07-10T17:50:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-10T17:50:00+02:00,2026-07-10T18:05:00+02:00,,,,,
+missing_in_secondary,sbs6,Nieuws van de Dag,2026-07-10T18:05:00+02:00,2026-07-10T18:45:00+02:00,,,,,
+missing_in_secondary,sbs6,Overtreders,2026-07-10T18:45:00+02:00,2026-07-10T19:20:00+02:00,,,,,
+missing_in_secondary,sbs6,Shownieuws - late editie,2026-07-10T19:20:00+02:00,2026-07-10T20:00:00+02:00,,,,,
+missing_in_secondary,sbs6,De Oranjezomer,2026-07-10T20:00:00+02:00,2026-07-10T21:00:00+02:00,,,,,
+missing_in_secondary,sbs6,De Bondgenoten,2026-07-10T21:00:00+02:00,2026-07-10T22:25:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-10T22:25:00+02:00,2026-07-10T23:00:00+02:00,,,,,
+missing_in_secondary,sbs6,De Oranjezomer,2026-07-10T23:00:00+02:00,2026-07-11T00:05:00+02:00,,,,,
+missing_in_secondary,sbs6,Shownieuws - late editie,2026-07-11T00:05:00+02:00,2026-07-11T00:35:00+02:00,,,,,
+missing_in_secondary,sbs6,De Bondgenoten,2026-07-11T00:35:00+02:00,2026-07-11T01:45:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T01:45:00+02:00,2026-07-11T02:10:00+02:00,,,,,
+missing_in_secondary,sbs6,Loop: Hart van Nederland,2026-07-11T02:10:00+02:00,2026-07-11T06:00:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T06:00:00+02:00,2026-07-11T06:32:00+02:00,,,,,
+missing_in_secondary,sbs6,Loop: Hart van Nederland,2026-07-11T06:32:00+02:00,2026-07-11T07:00:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T07:00:00+02:00,2026-07-11T07:15:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T07:15:00+02:00,2026-07-11T07:30:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T07:30:00+02:00,2026-07-11T07:45:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T07:45:00+02:00,2026-07-11T08:00:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T08:00:00+02:00,2026-07-11T08:15:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T08:15:00+02:00,2026-07-11T08:30:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T08:30:00+02:00,2026-07-11T08:45:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T08:45:00+02:00,2026-07-11T09:00:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T09:00:00+02:00,2026-07-11T09:15:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T09:15:00+02:00,2026-07-11T09:30:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T09:30:00+02:00,2026-07-11T09:45:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T09:45:00+02:00,2026-07-11T10:00:00+02:00,,,,,
+missing_in_secondary,sbs6,De Grote Verbouwing,2026-07-11T10:00:00+02:00,2026-07-11T11:00:00+02:00,,,,,
+missing_in_secondary,sbs6,The Secret Life of the Zoo,2026-07-11T11:00:00+02:00,2026-07-11T11:30:00+02:00,,,,,
+missing_in_secondary,sbs6,Nederland in Beeld,2026-07-11T11:30:00+02:00,2026-07-11T12:00:00+02:00,,,,,
+missing_in_secondary,sbs6,Levende Steen Ministries,2026-07-11T12:00:00+02:00,2026-07-11T12:35:00+02:00,,,,,
+missing_in_secondary,sbs6,Man bijt hond,2026-07-11T12:35:00+02:00,2026-07-11T12:40:00+02:00,,,,,
+missing_in_secondary,sbs6,Verkopen of verbouwen,2026-07-11T12:40:00+02:00,2026-07-11T13:40:00+02:00,,,,,
+missing_in_secondary,sbs6,Onmogelijke Duetten,2026-07-11T13:40:00+02:00,2026-07-11T14:30:00+02:00,,,,,
+missing_in_secondary,sbs6,Verkopen of verbouwen,2026-07-11T14:30:00+02:00,2026-07-11T15:30:00+02:00,,,,,
+missing_in_secondary,sbs6,De Grote Tuinverbouwing,2026-07-11T15:30:00+02:00,2026-07-11T17:00:00+02:00,,,,,
+missing_in_secondary,sbs6,Het Oranje Café,2026-07-11T17:00:00+02:00,2026-07-11T17:50:00+02:00,,,,,
+missing_in_secondary,sbs6,Lachen om Home Video's,2026-07-11T17:50:00+02:00,2026-07-11T18:45:00+02:00,,,,,
+missing_in_secondary,sbs6,Overtreders,2026-07-11T18:45:00+02:00,2026-07-11T19:20:00+02:00,,,,,
+missing_in_secondary,sbs6,Shownieuws - late editie,2026-07-11T19:20:00+02:00,2026-07-11T20:00:00+02:00,,,,,
+missing_in_secondary,sbs6,De Oranjezomer,2026-07-11T20:00:00+02:00,2026-07-11T21:00:00+02:00,,,,,
+missing_in_secondary,sbs6,De Bondgenoten,2026-07-11T21:00:00+02:00,2026-07-11T22:25:00+02:00,,,,,
+missing_in_secondary,sbs6,Hart van Nederland,2026-07-11T22:25:00+02:00,2026-07-11T22:45:00+02:00,,,,,
+missing_in_secondary,sbs6,Shownieuws - late editie,2026-07-11T22:45:00+02:00,2026-07-11T23:30:00+02:00,,,,,
+missing_in_secondary,sbs6,De Bondgenoten,2026-07-11T23:30:00+02:00,2026-07-12T00:40:00+02:00,,,,,
+missing_in_secondary,rtl7,De Sterkste Man van Nederland,2026-07-10T13:30:00+02:00,2026-07-10T14:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Flodder,2026-07-10T14:30:00+02:00,2026-07-10T15:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Flodder,2026-07-10T15:00:00+02:00,2026-07-10T15:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Flodder,2026-07-10T15:30:00+02:00,2026-07-10T16:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Pawn Stars,2026-07-10T16:00:00+02:00,2026-07-10T17:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Pawn Stars,2026-07-10T17:00:00+02:00,2026-07-10T17:55:00+02:00,,,,,
+missing_in_secondary,rtl7,Pawn Stars,2026-07-10T17:55:00+02:00,2026-07-10T18:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Pawn Stars,2026-07-10T18:00:00+02:00,2026-07-10T18:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Pawn Stars,2026-07-10T18:30:00+02:00,2026-07-10T19:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Pawn Stars,2026-07-10T19:30:00+02:00,2026-07-10T20:27:00+02:00,,,,,
+missing_in_secondary,rtl7,Resident Evil: Welcome to Raccoon City,2026-07-10T20:27:00+02:00,2026-07-10T22:35:00+02:00,,,,,
+missing_in_secondary,rtl7,Resident Evil: The Final Chapter,2026-07-10T22:35:00+02:00,2026-07-11T00:40:00+02:00,,,,,
+missing_in_secondary,rtl7,Pawn Stars,2026-07-11T00:40:00+02:00,2026-07-11T01:40:00+02:00,,,,,
+missing_in_secondary,rtl7,Tommy Teleshopping,2026-07-11T01:40:00+02:00,2026-07-11T02:10:00+02:00,,,,,
+missing_in_secondary,rtl7,Tommy Teleshopping,2026-07-11T02:10:00+02:00,2026-07-11T06:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Telvero,2026-07-11T06:00:00+02:00,2026-07-11T13:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Innoverend Nederland,2026-07-11T13:00:00+02:00,2026-07-11T13:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Idioten op de weg,2026-07-11T13:30:00+02:00,2026-07-11T14:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Autosport NL,2026-07-11T14:00:00+02:00,2026-07-11T14:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Idioten op de weg,2026-07-11T14:30:00+02:00,2026-07-11T15:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Idioten op de weg,2026-07-11T15:00:00+02:00,2026-07-11T15:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Idioten op de weg,2026-07-11T15:30:00+02:00,2026-07-11T16:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Idioten op de weg,2026-07-11T16:00:00+02:00,2026-07-11T16:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Idioten op de weg,2026-07-11T16:30:00+02:00,2026-07-11T17:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Hardcore Pawn,2026-07-11T17:00:00+02:00,2026-07-11T17:05:00+02:00,,,,,
+missing_in_secondary,rtl7,Hardcore Pawn,2026-07-11T17:05:00+02:00,2026-07-11T17:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Hardcore Pawn,2026-07-11T17:30:00+02:00,2026-07-11T18:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Hardcore Pawn,2026-07-11T18:00:00+02:00,2026-07-11T18:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Hardcore Pawn,2026-07-11T18:30:00+02:00,2026-07-11T19:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Hardcore Pawn,2026-07-11T19:00:00+02:00,2026-07-11T19:30:00+02:00,,,,,
+missing_in_secondary,rtl7,Hardcore Pawn,2026-07-11T19:30:00+02:00,2026-07-11T20:00:00+02:00,,,,,
+missing_in_secondary,rtl7,Candyman,2026-07-11T20:00:00+02:00,2026-07-11T21:45:00+02:00,,,,,
+missing_in_secondary,rtl7,Midsommar,2026-07-11T21:45:00+02:00,2026-07-12T00:50:00+02:00,,,,,
+missing_in_secondary,veronica,Pause,2026-07-10T01:50:00+02:00,2026-07-10T18:00:00+02:00,,,,,
+missing_in_secondary,veronica,The big bang theory,2026-07-10T18:00:00+02:00,2026-07-10T18:15:00+02:00,,,,,
+missing_in_secondary,veronica,Two and a half men,2026-07-10T18:15:00+02:00,2026-07-10T18:40:00+02:00,,,,,
+missing_in_secondary,veronica,Two and a half men,2026-07-10T18:40:00+02:00,2026-07-10T19:05:00+02:00,,,,,
+missing_in_secondary,veronica,Two and a half men,2026-07-10T19:05:00+02:00,2026-07-10T19:35:00+02:00,,,,,
+missing_in_secondary,veronica,The big bang theory,2026-07-10T19:35:00+02:00,2026-07-10T20:00:00+02:00,,,,,
+missing_in_secondary,veronica,The big bang theory,2026-07-10T20:00:00+02:00,2026-07-10T20:30:00+02:00,,,,,
+missing_in_secondary,veronica,Demolition Man,2026-07-10T20:30:00+02:00,2026-07-10T22:40:00+02:00,,,,,
+missing_in_secondary,veronica,Samaritan,2026-07-10T22:40:00+02:00,2026-07-11T00:45:00+02:00,,,,,
+missing_in_secondary,veronica,Overtreders USA,2026-07-11T00:45:00+02:00,2026-07-11T01:25:00+02:00,,,,,
+missing_in_secondary,veronica,Hart van Nederland,2026-07-11T01:25:00+02:00,2026-07-11T01:40:00+02:00,,,,,
+missing_in_secondary,veronica,Pause,2026-07-11T01:40:00+02:00,2026-07-11T18:00:00+02:00,,,,,
+missing_in_secondary,veronica,Married with children,2026-07-11T18:00:00+02:00,2026-07-11T18:30:00+02:00,,,,,
+missing_in_secondary,veronica,Married with children,2026-07-11T18:30:00+02:00,2026-07-11T19:00:00+02:00,,,,,
+missing_in_secondary,veronica,Married with children,2026-07-11T19:00:00+02:00,2026-07-11T19:30:00+02:00,,,,,
+missing_in_secondary,veronica,Married with children,2026-07-11T19:30:00+02:00,2026-07-11T20:00:00+02:00,,,,,
+missing_in_secondary,veronica,Baywatch remastered,2026-07-11T20:00:00+02:00,2026-07-11T21:00:00+02:00,,,,,
+missing_in_secondary,veronica,Baywatch remastered,2026-07-11T21:00:00+02:00,2026-07-11T21:55:00+02:00,,,,,
+missing_in_secondary,veronica,Rescue: HI-surf,2026-07-11T21:55:00+02:00,2026-07-11T22:50:00+02:00,,,,,
+missing_in_secondary,veronica,Rescue: HI-surf,2026-07-11T22:50:00+02:00,2026-07-11T23:50:00+02:00,,,,,
+missing_in_secondary,veronica,911 crisis center,2026-07-11T23:50:00+02:00,2026-07-12T00:10:00+02:00,,,,,
+confirmed,net5,Telvero,2026-07-10T13:30:00+02:00,2026-07-10T14:05:00+02:00,Telvero,2026-07-10T11:32:00+00:00,2026-07-10T12:02:00+00:00,2,-3
+confirmed,net5,Home and Away,2026-07-10T14:05:00+02:00,2026-07-10T14:35:00+02:00,Home and Away,2026-07-10T12:02:00+00:00,2026-07-10T12:32:00+00:00,-3,-3
+replaced,net5,Sold on SLC,2026-07-10T14:35:00+02:00,2026-07-10T15:30:00+02:00,Sold on SLC: Thou Shalt Not Break Thy Broker,2026-07-10T12:32:00+00:00,2026-07-10T13:29:00+00:00,-3,-1
+replaced,net5,Neighbours: A New Chapter,2026-07-10T15:30:00+02:00,2026-07-10T16:00:00+02:00,Buren,2026-07-10T13:29:00+00:00,2026-07-10T14:00:00+00:00,-1,0
+confirmed,net5,Home and Away,2026-07-10T16:00:00+02:00,2026-07-10T16:30:00+02:00,Home and Away,2026-07-10T14:00:00+00:00,2026-07-10T14:30:00+00:00,0,0
+replaced,net5,Een dag in de Dierentuin: Pairi Daiza,2026-07-10T16:30:00+02:00,2026-07-10T17:05:00+02:00,Een dag in de Dierentuin: Expeditie Pairi Daiza,2026-07-10T14:30:00+00:00,2026-07-10T15:04:00+00:00,0,-1
+replaced,net5,Een dag in de Dierentuin: Pairi Daiza,2026-07-10T17:05:00+02:00,2026-07-10T17:35:00+02:00,Een dag in de Dierentuin: Expeditie Pairi Daiza,2026-07-10T15:04:00+00:00,2026-07-10T15:39:00+00:00,-1,4
+replaced,net5,MasterChef Australië,2026-07-10T17:35:00+02:00,2026-07-10T18:30:00+02:00,"MasterChef Australië: The Fun One! Andy Allen, Jean-Christophe Novelli, Poh Ling Yeow and the Final Three",2026-07-10T15:39:00+00:00,2026-07-10T16:31:00+00:00,4,1
+replaced,net5,Het Blok Australië,2026-07-10T18:30:00+02:00,2026-07-10T19:30:00+02:00,Het blok Australië: Living & Dining Week - Part 3,2026-07-10T16:31:00+00:00,2026-07-10T17:32:00+00:00,1,2
+replaced,net5,Luxe Listings Sydney,2026-07-10T19:30:00+02:00,2026-07-10T20:30:00+02:00,Luxe Listings Sydney: That's the Vibe,2026-07-10T17:32:00+00:00,2026-07-10T18:30:00+00:00,2,0
+replaced,net5,Fire Country,2026-07-10T20:30:00+02:00,2026-07-10T21:25:00+02:00,Fire Country: Welcome to the Cult,2026-07-10T18:30:00+00:00,2026-07-10T19:27:00+00:00,0,2
+replaced,net5,Fire Country,2026-07-10T21:25:00+02:00,2026-07-10T22:20:00+02:00,Fire Country: Keep Your Cool,2026-07-10T19:27:00+00:00,2026-07-10T20:23:00+00:00,2,3
+replaced,net5,Chicago Fire,2026-07-10T22:20:00+02:00,2026-07-10T23:15:00+02:00,Chicago Fire: The first symptom,2026-07-10T20:23:00+00:00,2026-07-10T21:19:00+00:00,3,4
+replaced,net5,Chicago Fire,2026-07-10T23:15:00+02:00,2026-07-11T00:05:00+02:00,Chicago Fire: Danger is all around,2026-07-10T21:19:00+00:00,2026-07-10T22:07:00+00:00,4,2
+replaced,net5,Een dag in de Dierentuin: Pairi Daiza,2026-07-11T00:05:00+02:00,2026-07-11T00:40:00+02:00,Een dag in de Dierentuin: Expeditie Pairi Daiza,2026-07-10T22:07:00+00:00,2026-07-10T22:42:00+00:00,2,2
+replaced,net5,Een dag in de Dierentuin: Pairi Daiza,2026-07-11T00:40:00+02:00,2026-07-11T01:10:00+02:00,Een dag in de Dierentuin: Expeditie Pairi Daiza,2026-07-10T22:42:00+00:00,2026-07-10T23:16:00+00:00,2,6
+replaced,net5,Hart van Nederland,2026-07-11T01:10:00+02:00,2026-07-11T06:00:00+02:00,Loop Hart van Nederland,2026-07-10T23:16:00+00:00,2026-07-11T03:53:00+00:00,6,-7
+replaced,net5,Hart van Nederland,2026-07-11T06:00:00+02:00,2026-07-11T08:20:00+02:00,Loop Hart van Nederland,2026-07-11T03:53:00+00:00,2026-07-11T06:19:00+00:00,-7,-1
+confirmed,net5,"Signed, Sealed, Delivered: The Impossible Dream",2026-07-11T08:20:00+02:00,2026-07-11T10:10:00+02:00,"Signed, Sealed, Delivered: The Impossible Dream",2026-07-11T06:19:00+00:00,2026-07-11T08:07:00+00:00,-1,-3
+confirmed,net5,Home and Away,2026-07-11T10:10:00+02:00,2026-07-11T10:40:00+02:00,Home and Away,2026-07-11T08:07:00+00:00,2026-07-11T08:34:00+00:00,-3,-6
+confirmed,net5,Home and Away,2026-07-11T10:40:00+02:00,2026-07-11T11:10:00+02:00,Home and Away,2026-07-11T08:34:00+00:00,2026-07-11T09:02:00+00:00,-6,-8
+confirmed,net5,Home and Away,2026-07-11T11:10:00+02:00,2026-07-11T11:35:00+02:00,Home and Away,2026-07-11T09:02:00+00:00,2026-07-11T09:31:00+00:00,-8,-4
+confirmed,net5,Home and Away,2026-07-11T11:35:00+02:00,2026-07-11T12:05:00+02:00,Home and Away,2026-07-11T09:31:00+00:00,2026-07-11T09:59:00+00:00,-4,-6
+confirmed,net5,Home and Away,2026-07-11T12:05:00+02:00,2026-07-11T12:35:00+02:00,Home and Away,2026-07-11T09:59:00+00:00,2026-07-11T10:28:00+00:00,-6,-7
+replaced,net5,Gilmore Girls,2026-07-11T12:35:00+02:00,2026-07-11T13:30:00+02:00,"Gilmore Girls: That 'll Do, Pig",2026-07-11T10:28:00+00:00,2026-07-11T11:22:00+00:00,-7,-8
+replaced,net5,Gilmore Girls,2026-07-11T13:30:00+02:00,2026-07-11T14:20:00+02:00,Gilmore Girls: I Solemnly Swear,2026-07-11T11:22:00+00:00,2026-07-11T12:18:00+00:00,-8,-2
+replaced,net5,Gilmore Girls,2026-07-11T14:20:00+02:00,2026-07-11T15:20:00+02:00,Gilmore Girls: Lorelai Out of Water,2026-07-11T12:18:00+00:00,2026-07-11T13:14:00+00:00,-2,-6
+replaced,net5,Gilmore Girls,2026-07-11T15:20:00+02:00,2026-07-11T16:10:00+02:00,Gilmore Girls: Dear Emily and Richard,2026-07-11T13:14:00+00:00,2026-07-11T14:09:00+00:00,-6,-1
+confirmed,net5,Een dag in de dierenkliniek,2026-07-11T16:10:00+02:00,2026-07-11T17:10:00+02:00,Een dag in de dierenkliniek,2026-07-11T14:09:00+00:00,2026-07-11T15:09:00+00:00,-1,-1
+confirmed,net5,Een dag in de dierenkliniek,2026-07-11T17:10:00+02:00,2026-07-11T18:00:00+02:00,Een dag in de dierenkliniek,2026-07-11T15:09:00+00:00,2026-07-11T16:03:00+00:00,-1,3
+confirmed,net5,Een dag in de dierenkliniek,2026-07-11T18:00:00+02:00,2026-07-11T19:00:00+02:00,Een dag in de dierenkliniek,2026-07-11T16:03:00+00:00,2026-07-11T17:01:00+00:00,3,1
+confirmed,net5,Een dag in de dierenkliniek,2026-07-11T19:00:00+02:00,2026-07-11T20:00:00+02:00,Een dag in de dierenkliniek,2026-07-11T17:01:00+00:00,2026-07-11T18:00:00+00:00,1,0
+replaced,net5,NCIS,2026-07-11T20:00:00+02:00,2026-07-11T20:55:00+02:00,NCIS: Baker's Man,2026-07-11T18:00:00+00:00,2026-07-11T18:56:00+00:00,0,1
+replaced,net5,NCIS,2026-07-11T20:55:00+02:00,2026-07-11T21:50:00+02:00,NCIS: For Better or Worse,2026-07-11T18:56:00+00:00,2026-07-11T19:53:00+00:00,1,3
+replaced,net5,SOKO Wismar,2026-07-11T21:50:00+02:00,2026-07-11T22:50:00+02:00,SOKO Wismar: Lebensretter,2026-07-11T19:53:00+00:00,2026-07-11T20:52:00+00:00,3,2
+replaced,net5,SOKO Köln,2026-07-11T22:50:00+02:00,2026-07-11T23:50:00+02:00,SOKO Keulen: Unter Kollegen,2026-07-11T20:52:00+00:00,2026-07-11T21:51:00+00:00,2,1
+replaced,net5,The Resident,2026-07-11T23:50:00+02:00,2026-07-12T00:45:00+02:00,"The Resident: So Long, Dawn Long",2026-07-11T21:51:00+00:00,2026-07-11T22:48:00+00:00,1,3
+missing_in_secondary,bbc1,Bargain Hunt,2026-07-10T13:15:00+02:00,2026-07-10T14:00:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC News at One,2026-07-10T14:00:00+02:00,2026-07-10T14:35:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC London,2026-07-10T14:35:00+02:00,2026-07-10T14:45:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC News at One,2026-07-10T14:45:00+02:00,2026-07-10T15:00:00+02:00,,,,,
+missing_in_secondary,bbc1,Day 12,2026-07-10T15:00:00+02:00,2026-07-10T19:00:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC News at Six,2026-07-10T19:00:00+02:00,2026-07-10T19:30:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC London,2026-07-10T19:30:00+02:00,2026-07-10T20:00:00+02:00,,,,,
+missing_in_secondary,bbc1,Our Lives,2026-07-10T20:00:00+02:00,2026-07-10T20:30:00+02:00,,,,,
+missing_in_secondary,bbc1,Quarter-Final: Spain v Belgium,2026-07-10T20:30:00+02:00,2026-07-10T23:30:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC News at Ten,2026-07-10T23:30:00+02:00,2026-07-11T00:00:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC London,2026-07-11T00:00:00+02:00,2026-07-11T00:10:00+02:00,,,,,
+missing_in_secondary,bbc1,Austin,2026-07-11T00:10:00+02:00,2026-07-11T00:35:00+02:00,,,,,
+missing_in_secondary,bbc1,Austin,2026-07-11T00:35:00+02:00,2026-07-11T01:05:00+02:00,,,,,
+missing_in_secondary,bbc1,Harry Brown,2026-07-11T01:05:00+02:00,2026-07-11T02:40:00+02:00,,,,,
+missing_in_secondary,bbc1,Weather for the Week Ahead,2026-07-11T02:40:00+02:00,2026-07-11T02:45:00+02:00,,,,,
+missing_in_secondary,bbc1,Joins BBC News,2026-07-11T02:45:00+02:00,2026-07-11T03:00:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC News,2026-07-11T03:00:00+02:00,2026-07-11T03:30:00+02:00,,,,,
+missing_in_secondary,bbc1,China's Greatest Treasures,2026-07-11T03:30:00+02:00,2026-07-11T04:00:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC News,2026-07-11T04:00:00+02:00,2026-07-11T04:30:00+02:00,,,,,
+missing_in_secondary,bbc1,What Happened at the Somme,2026-07-11T04:30:00+02:00,2026-07-11T05:00:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC News,2026-07-11T05:00:00+02:00,2026-07-11T05:30:00+02:00,,,,,
+missing_in_secondary,bbc1,The Media Show,2026-07-11T05:30:00+02:00,2026-07-11T06:00:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC News,2026-07-11T06:00:00+02:00,2026-07-11T06:30:00+02:00,,,,,
+missing_in_secondary,bbc1,The Travel Show,2026-07-11T06:30:00+02:00,2026-07-11T07:00:00+02:00,,,,,
+missing_in_secondary,bbc1,Breakfast,2026-07-11T07:00:00+02:00,2026-07-11T11:00:00+02:00,,,,,
+missing_in_secondary,bbc1,Saturday Kitchen Live,2026-07-11T11:00:00+02:00,2026-07-11T12:30:00+02:00,,,,,
+missing_in_secondary,bbc1,Anna Haugh's Big Irish Food Tour,2026-07-11T12:30:00+02:00,2026-07-11T13:00:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC Weekend News,2026-07-11T13:00:00+02:00,2026-07-11T13:10:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC London,2026-07-11T13:10:00+02:00,2026-07-11T13:15:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC Weather,2026-07-11T13:15:00+02:00,2026-07-11T13:20:00+02:00,,,,,
+missing_in_secondary,bbc1,Day 13,2026-07-11T13:20:00+02:00,2026-07-11T17:00:00+02:00,,,,,
+missing_in_secondary,bbc1,Ladies' Final,2026-07-11T17:00:00+02:00,2026-07-11T20:00:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC Weekend News,2026-07-11T20:00:00+02:00,2026-07-11T20:10:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC Weather,2026-07-11T20:10:00+02:00,2026-07-11T20:15:00+02:00,,,,,
+missing_in_secondary,bbc1,Pointless Celebrities,2026-07-11T20:15:00+02:00,2026-07-11T21:05:00+02:00,,,,,
+missing_in_secondary,bbc1,The Weakest Link,2026-07-11T21:05:00+02:00,2026-07-11T21:50:00+02:00,,,,,
+missing_in_secondary,bbc1,Casualty,2026-07-11T21:50:00+02:00,2026-07-11T22:40:00+02:00,,,,,
+missing_in_secondary,bbc1,How Are You? It's Alan (Partridge),2026-07-11T22:40:00+02:00,2026-07-11T23:05:00+02:00,,,,,
+missing_in_secondary,bbc1,BBC Weekend News,2026-07-11T23:05:00+02:00,2026-07-11T23:25:00+02:00,,,,,
+missing_in_secondary,bbc1,Pretty Woman,2026-07-11T23:25:00+02:00,2026-07-12T01:20:00+02:00,,,,,
+missing_in_secondary,bbc2,Day 12,2026-07-10T12:00:00+02:00,2026-07-10T16:00:00+02:00,,,,,
+missing_in_secondary,bbc2,Day 12,2026-07-10T16:00:00+02:00,2026-07-10T20:30:00+02:00,,,,,
+missing_in_secondary,bbc2,Day 12,2026-07-10T20:30:00+02:00,2026-07-10T22:00:00+02:00,,,,,
+missing_in_secondary,bbc2,Gardeners' World,2026-07-10T22:00:00+02:00,2026-07-10T23:00:00+02:00,,,,,
+missing_in_secondary,bbc2,QI,2026-07-10T23:00:00+02:00,2026-07-10T23:30:00+02:00,,,,,
+missing_in_secondary,bbc2,Newsnight,2026-07-10T23:30:00+02:00,2026-07-11T00:03:00+02:00,,,,,
+missing_in_secondary,bbc2,BBC Weather,2026-07-11T00:03:00+02:00,2026-07-11T00:05:00+02:00,,,,,
+missing_in_secondary,bbc2,Today at Wimbledon,2026-07-11T00:05:00+02:00,2026-07-11T00:55:00+02:00,,,,,
+missing_in_secondary,bbc2,Atonement,2026-07-11T00:55:00+02:00,2026-07-11T02:50:00+02:00,,,,,
+missing_in_secondary,bbc2,Lost and Found in the Lakes,2026-07-11T02:50:00+02:00,2026-07-11T03:20:00+02:00,,,,,
+missing_in_secondary,bbc2,Natalie Cassidy: Caring Together,2026-07-11T03:20:00+02:00,2026-07-11T03:50:00+02:00,,,,,
+missing_in_secondary,bbc2,This Is BBC TWO,2026-07-11T03:50:00+02:00,2026-07-11T07:20:00+02:00,,,,,
+missing_in_secondary,bbc2,Piripenguins,2026-07-11T07:20:00+02:00,2026-07-11T07:30:00+02:00,,,,,
+missing_in_secondary,bbc2,Big Lizard,2026-07-11T07:30:00+02:00,2026-07-11T07:40:00+02:00,,,,,
+missing_in_secondary,bbc2,Weasy Family,2026-07-11T07:40:00+02:00,2026-07-11T07:45:00+02:00,,,,,
+missing_in_secondary,bbc2,Super Happy Magic Forest,2026-07-11T07:45:00+02:00,2026-07-11T08:00:00+02:00,,,,,
+missing_in_secondary,bbc2,Grizzy and the Lemmings,2026-07-11T08:00:00+02:00,2026-07-11T08:05:00+02:00,,,,,
+missing_in_secondary,bbc2,Duck and Frog,2026-07-11T08:05:00+02:00,2026-07-11T08:15:00+02:00,,,,,
+missing_in_secondary,bbc2,Pokémon Horizons: The Series,2026-07-11T08:15:00+02:00,2026-07-11T08:35:00+02:00,,,,,
+missing_in_secondary,bbc2,Winx Club: The Magic Is Back,2026-07-11T08:35:00+02:00,2026-07-11T09:00:00+02:00,,,,,
+missing_in_secondary,bbc2,The Next Step: Cheer,2026-07-11T09:00:00+02:00,2026-07-11T09:25:00+02:00,,,,,
+missing_in_secondary,bbc2,Blue Peter,2026-07-11T09:25:00+02:00,2026-07-11T09:50:00+02:00,,,,,
+missing_in_secondary,bbc2,Newsround,2026-07-11T09:50:00+02:00,2026-07-11T10:00:00+02:00,,,,,
+missing_in_secondary,bbc2,Gardeners' World,2026-07-11T10:00:00+02:00,2026-07-11T11:00:00+02:00,,,,,
+missing_in_secondary,bbc2,This Wild Life,2026-07-11T11:00:00+02:00,2026-07-11T11:30:00+02:00,,,,,
+missing_in_secondary,bbc2,Talking Tennis,2026-07-11T11:30:00+02:00,2026-07-11T12:00:00+02:00,,,,,
+missing_in_secondary,bbc2,Day 13,2026-07-11T12:00:00+02:00,2026-07-11T14:15:00+02:00,,,,,
+missing_in_secondary,bbc2,Bargain Hunt,2026-07-11T14:15:00+02:00,2026-07-11T15:15:00+02:00,,,,,
+missing_in_secondary,bbc2,North by Northwest,2026-07-11T15:15:00+02:00,2026-07-11T17:25:00+02:00,,,,,
+missing_in_secondary,bbc2,Vertigo,2026-07-11T17:25:00+02:00,2026-07-11T19:30:00+02:00,,,,,
+missing_in_secondary,bbc2,Flog It!,2026-07-11T19:30:00+02:00,2026-07-11T20:15:00+02:00,,,,,
+missing_in_secondary,bbc2,Celebrity Antiques Road Trip,2026-07-11T20:15:00+02:00,2026-07-11T21:20:00+02:00,,,,,
+missing_in_secondary,bbc2,Dad's Army,2026-07-11T21:20:00+02:00,2026-07-11T21:50:00+02:00,,,,,
+missing_in_secondary,bbc2,Top of the Pops,2026-07-11T21:50:00+02:00,2026-07-11T22:50:00+02:00,,,,,
+missing_in_secondary,bbc2,Top of the Pops,2026-07-11T22:50:00+02:00,2026-07-11T23:50:00+02:00,,,,,
+missing_in_secondary,bbc2,Radio 2 In Concert,2026-07-11T23:50:00+02:00,2026-07-12T00:50:00+02:00,,,,,
+replaced,bbcnl,Murdoch Mysteries,2026-07-10T13:00:00+02:00,2026-07-10T13:55:00+02:00,Murdoch Mysteries: Sir. Sir? Sir!!!,2026-07-10T11:00:00+00:00,2026-07-10T11:55:00+00:00,0,0
+replaced,bbcnl,Cooper and Fry,2026-07-10T13:55:00+02:00,2026-07-10T14:55:00+02:00,Cooper & Fry,2026-07-10T11:55:00+00:00,2026-07-10T12:55:00+00:00,0,0
+replaced,bbcnl,Hudson And Rex,2026-07-10T14:55:00+02:00,2026-07-10T15:50:00+02:00,Hudson & Rex: The Mourning Show,2026-07-10T12:55:00+00:00,2026-07-10T13:50:00+00:00,0,0
+replaced,bbcnl,Hudson And Rex,2026-07-10T15:50:00+02:00,2026-07-10T16:45:00+02:00,Hudson & Rex: Art of Darkness,2026-07-10T13:50:00+00:00,2026-07-10T14:45:00+00:00,0,0
+confirmed,bbcnl,Hope Street,2026-07-10T16:45:00+02:00,2026-07-10T17:40:00+02:00,Hope Street,2026-07-10T14:45:00+00:00,2026-07-10T15:40:00+00:00,0,0
+replaced,bbcnl,Death in Paradise,2026-07-10T17:40:00+02:00,2026-07-10T18:45:00+02:00,Death in Paradise: Murder on the Honore Express,2026-07-10T15:40:00+00:00,2026-07-10T16:45:00+00:00,0,0
+replaced,bbcnl,Death in Paradise,2026-07-10T18:45:00+02:00,2026-07-10T19:55:00+02:00,Death in Paradise: Murder Most Animal,2026-07-10T16:45:00+00:00,2026-07-10T17:55:00+00:00,0,0
+replaced,bbcnl,The Doctor Blake Mysteries,2026-07-10T19:55:00+02:00,2026-07-10T21:00:00+02:00,The Doctor Blake Mysteries: If the Shoe Fits,2026-07-10T17:55:00+00:00,2026-07-10T19:00:00+00:00,0,0
+replaced,bbcnl,Silent Witness,2026-07-10T21:00:00+02:00,2026-07-10T22:10:00+02:00,Silent Witness: Shame,2026-07-10T19:00:00+00:00,2026-07-10T20:10:00+00:00,0,0
+replaced,bbcnl,Silent Witness,2026-07-10T22:10:00+02:00,2026-07-10T23:30:00+02:00,Silent Witness: Shame,2026-07-10T20:10:00+00:00,2026-07-10T21:30:00+00:00,0,0
+replaced,bbcnl,Cooper and Fry,2026-07-10T23:30:00+02:00,2026-07-11T00:30:00+02:00,Cooper & Fry,2026-07-10T21:30:00+00:00,2026-07-10T22:30:00+00:00,0,0
+replaced,bbcnl,London Kills,2026-07-11T00:30:00+02:00,2026-07-11T01:30:00+02:00,London Kills: Connected,2026-07-10T22:30:00+00:00,2026-07-10T23:30:00+00:00,0,0
+replaced,bbcnl,London Kills,2026-07-11T01:30:00+02:00,2026-07-11T02:20:00+02:00,London Kills: The Dark,2026-07-10T23:30:00+00:00,2026-07-11T00:20:00+00:00,0,0
+replaced,bbcnl,Hudson And Rex,2026-07-11T02:20:00+02:00,2026-07-11T03:05:00+02:00,Hudson & Rex: The Mourning Show,2026-07-11T00:20:00+00:00,2026-07-11T01:05:00+00:00,0,0
+replaced,bbcnl,Rosemary and Thyme,2026-07-11T03:05:00+02:00,2026-07-11T03:55:00+02:00,Rozemarijn en Tijm: The Italian Rapscallion,2026-07-11T01:05:00+00:00,2026-07-11T01:55:00+00:00,0,0
+replaced,bbcnl,Sister Boniface Mysteries,2026-07-11T03:55:00+02:00,2026-07-11T04:40:00+02:00,Sister Boniface Mysteries: St George's Defence,2026-07-11T01:55:00+00:00,2026-07-11T02:40:00+00:00,0,0
+replaced,bbcnl,Scott And Bailey,2026-07-11T04:40:00+02:00,2026-07-11T05:30:00+02:00,Scott & Bailey: Superficial,2026-07-11T02:40:00+00:00,2026-07-11T03:30:00+00:00,0,0
+replaced,bbcnl,Ghosts,2026-07-11T05:30:00+02:00,2026-07-11T06:00:00+02:00,Ghosts: Something to Share?,2026-07-11T03:30:00+00:00,2026-07-11T04:00:00+00:00,0,0
+replaced,bbcnl,Death in Paradise,2026-07-11T06:00:00+02:00,2026-07-11T07:05:00+02:00,Death in Paradise: Murder Most Animal,2026-07-11T04:00:00+00:00,2026-07-11T05:05:00+00:00,0,0
+confirmed,bbcnl,Call the Midwife,2026-07-11T07:05:00+02:00,2026-07-11T08:10:00+02:00,Call the Midwife,2026-07-11T05:05:00+00:00,2026-07-11T06:10:00+00:00,0,0
+replaced,bbcnl,Agatha Christie's Marple,2026-07-11T08:10:00+02:00,2026-07-11T10:05:00+02:00,Agatha Christie's Marple: Endless Night,2026-07-11T06:10:00+00:00,2026-07-11T08:05:00+00:00,0,0
+replaced,bbcnl,Father Brown,2026-07-11T10:05:00+02:00,2026-07-11T11:00:00+02:00,Father Brown: The Dance of Death,2026-07-11T08:05:00+00:00,2026-07-11T09:00:00+00:00,0,0
+replaced,bbcnl,Father Brown,2026-07-11T11:00:00+02:00,2026-07-11T12:00:00+02:00,Father Brown: The Cat of Mastigatus,2026-07-11T09:00:00+00:00,2026-07-11T10:00:00+00:00,0,0
+replaced,bbcnl,McDonald and Dodds,2026-07-11T12:00:00+02:00,2026-07-11T13:55:00+02:00,McDonald & Dodds: Belvedere,2026-07-11T10:00:00+00:00,2026-07-11T11:55:00+00:00,0,0
+replaced,bbcnl,Death in Paradise,2026-07-11T13:55:00+02:00,2026-07-11T15:00:00+02:00,Death in Paradise: Switcharoo,2026-07-11T11:55:00+00:00,2026-07-11T13:00:00+00:00,0,0
+replaced,bbcnl,Death in Paradise,2026-07-11T15:00:00+02:00,2026-07-11T16:05:00+02:00,Death in Paradise: Murder on Mosquito Island,2026-07-11T13:00:00+00:00,2026-07-11T14:05:00+00:00,0,0
+confirmed,bbcnl,Beyond Paradise,2026-07-11T16:05:00+02:00,2026-07-11T17:05:00+02:00,Beyond Paradise,2026-07-11T14:05:00+00:00,2026-07-11T15:05:00+00:00,0,0
+replaced,bbcnl,Cooper and Fry,2026-07-11T17:05:00+02:00,2026-07-11T18:10:00+02:00,Cooper & Fry,2026-07-11T15:05:00+00:00,2026-07-11T16:10:00+00:00,0,0
+replaced,bbcnl,Cooper and Fry,2026-07-11T18:10:00+02:00,2026-07-11T19:05:00+02:00,Cooper & Fry,2026-07-11T16:10:00+00:00,2026-07-11T17:05:00+00:00,0,0
+replaced,bbcnl,Murdoch Mysteries,2026-07-11T19:05:00+02:00,2026-07-11T20:00:00+02:00,Murdoch Mysteries: Another Brick in the Wall,2026-07-11T17:05:00+00:00,2026-07-11T18:00:00+00:00,0,0
+confirmed,bbcnl,Hope Street,2026-07-11T20:00:00+02:00,2026-07-11T21:00:00+02:00,Hope Street,2026-07-11T18:00:00+00:00,2026-07-11T19:00:00+00:00,0,0
+confirmed,bbcnl,Whitechapel,2026-07-11T21:00:00+02:00,2026-07-11T22:00:00+02:00,Whitechapel,2026-07-11T19:00:00+00:00,2026-07-11T20:00:00+00:00,0,0
+replaced,bbcnl,The Doctor Blake Mysteries,2026-07-11T22:00:00+02:00,2026-07-11T23:05:00+02:00,The Doctor Blake Mysteries: A Night to Remember,2026-07-11T20:00:00+00:00,2026-07-11T21:05:00+00:00,0,0
+replaced,bbcnl,The Doctor Blake Mysteries,2026-07-11T23:05:00+02:00,2026-07-12T00:15:00+02:00,The Doctor Blake Mysteries: Women and Children,2026-07-11T21:05:00+00:00,2026-07-11T22:15:00+00:00,0,0
+missing_in_secondary,vrt1,Iedereen zomert,2026-07-10T13:30:00+02:00,2026-07-10T13:55:00+02:00,,,,,
+missing_in_secondary,vrt1,Thuis,2026-07-10T13:55:00+02:00,2026-07-10T14:25:00+02:00,,,,,
+missing_in_secondary,vrt1,Sporza: Ronde van Frankrijk 2026,2026-07-10T14:25:00+02:00,2026-07-10T17:55:00+02:00,,,,,
+missing_in_secondary,vrt1,Clips,2026-07-10T17:55:00+02:00,2026-07-10T18:13:00+02:00,,,,,
+missing_in_secondary,vrt1,VRT NWS Update,2026-07-10T18:13:00+02:00,2026-07-10T18:15:00+02:00,,,,,
+missing_in_secondary,vrt1,Het weer (vooravond),2026-07-10T18:15:00+02:00,2026-07-10T18:20:00+02:00,,,,,
+missing_in_secondary,vrt1,Chateau Planckaert,2026-07-10T18:20:00+02:00,2026-07-10T19:00:00+02:00,,,,,
+missing_in_secondary,vrt1,VRT NWS journaal 19u,2026-07-10T19:00:00+02:00,2026-07-10T19:40:00+02:00,,,,,
+missing_in_secondary,vrt1,Het weer,2026-07-10T19:40:00+02:00,2026-07-10T19:50:00+02:00,,,,,
+missing_in_secondary,vrt1,Vive le vélo,2026-07-10T19:50:00+02:00,2026-07-10T20:35:00+02:00,,,,,
+missing_in_secondary,vrt1,Kwartfinale: Spanje - België,2026-07-10T20:35:00+02:00,2026-07-10T23:20:00+02:00,,,,,
+missing_in_secondary,vrt1,VRT NWS laat,2026-07-10T23:20:00+02:00,2026-07-10T23:36:00+02:00,,,,,
+missing_in_secondary,vrt1,Keno,2026-07-10T23:36:00+02:00,2026-07-10T23:37:00+02:00,,,,,
+missing_in_secondary,vrt1,Euromillions,2026-07-10T23:37:00+02:00,2026-07-10T23:40:00+02:00,,,,,
+missing_in_secondary,vrt1,Het weer (laat),2026-07-10T23:40:00+02:00,2026-07-10T23:45:00+02:00,,,,,
+missing_in_secondary,vrt1,Het Huis,2026-07-10T23:45:00+02:00,2026-07-11T01:00:00+02:00,,,,,
+missing_in_secondary,vrt1,Journaallus,2026-07-11T01:00:00+02:00,2026-07-11T06:00:00+02:00,,,,,
+missing_in_secondary,vrt1,Mr. Magoo,2026-07-11T06:00:00+02:00,2026-07-11T06:05:00+02:00,,,,,
+missing_in_secondary,vrt1,Coop Troep,2026-07-11T06:05:00+02:00,2026-07-11T06:15:00+02:00,,,,,
+missing_in_secondary,vrt1,Sisters,2026-07-11T06:15:00+02:00,2026-07-11T06:25:00+02:00,,,,,
+missing_in_secondary,vrt1,Lou,2026-07-11T06:25:00+02:00,2026-07-11T06:40:00+02:00,,,,,
+missing_in_secondary,vrt1,Dodo,2026-07-11T06:40:00+02:00,2026-07-11T06:50:00+02:00,,,,,
+missing_in_secondary,vrt1,2 kleine vogels,2026-07-11T06:50:00+02:00,2026-07-11T06:55:00+02:00,,,,,
+missing_in_secondary,vrt1,Karrewiet met VGT,2026-07-11T06:55:00+02:00,2026-07-11T07:05:00+02:00,,,,,
+missing_in_secondary,vrt1,De regels van Floor,2026-07-11T07:05:00+02:00,2026-07-11T07:15:00+02:00,,,,,
+missing_in_secondary,vrt1,Nerdland voor Kleine Nerds,2026-07-11T07:15:00+02:00,2026-07-11T07:30:00+02:00,,,,,
+missing_in_secondary,vrt1,De Raad van Soekie,2026-07-11T07:30:00+02:00,2026-07-11T07:45:00+02:00,,,,,
+missing_in_secondary,vrt1,De Hoppers,2026-07-11T07:45:00+02:00,2026-07-11T08:00:00+02:00,,,,,
+missing_in_secondary,vrt1,#LikeMe,2026-07-11T08:00:00+02:00,2026-07-11T08:30:00+02:00,,,,,
+missing_in_secondary,vrt1,Louise lives large,2026-07-11T08:30:00+02:00,2026-07-11T08:55:00+02:00,,,,,
+missing_in_secondary,vrt1,Zomerbeelden,2026-07-11T08:55:00+02:00,2026-07-11T09:00:00+02:00,,,,,
+missing_in_secondary,vrt1,Sporza: FIFA WK voetbal 2026 magazine,2026-07-11T09:00:00+02:00,2026-07-11T09:30:00+02:00,,,,,
+missing_in_secondary,vrt1,Zomerbeelden,2026-07-11T09:30:00+02:00,2026-07-11T10:00:00+02:00,,,,,
+missing_in_secondary,vrt1,Sporza: FIFA WK voetbal 2026 magazine,2026-07-11T10:00:00+02:00,2026-07-11T10:30:00+02:00,,,,,
+missing_in_secondary,vrt1,Zomerbeelden,2026-07-11T10:30:00+02:00,2026-07-11T11:00:00+02:00,,,,,
+missing_in_secondary,vrt1,Villa Politica,2026-07-11T11:00:00+02:00,2026-07-11T12:30:00+02:00,,,,,
+missing_in_secondary,vrt1,De week van Bruzz,2026-07-11T12:30:00+02:00,2026-07-11T13:00:00+02:00,,,,,
+missing_in_secondary,vrt1,VRT NWS journaal 13u,2026-07-11T13:00:00+02:00,2026-07-11T13:25:00+02:00,,,,,
+missing_in_secondary,vrt1,Het weer (middag),2026-07-11T13:25:00+02:00,2026-07-11T13:30:00+02:00,,,,,
+missing_in_secondary,vrt1,Kijk uit,2026-07-11T13:30:00+02:00,2026-07-11T13:35:00+02:00,,,,,
+missing_in_secondary,vrt1,De playlist,2026-07-11T13:35:00+02:00,2026-07-11T14:10:00+02:00,,,,,
+missing_in_secondary,vrt1,Clips,2026-07-11T14:10:00+02:00,2026-07-11T14:25:00+02:00,,,,,
+missing_in_secondary,vrt1,Sporza: Ronde van Frankrijk 2026,2026-07-11T14:25:00+02:00,2026-07-11T17:55:00+02:00,,,,,
+missing_in_secondary,vrt1,VRT NWS Update,2026-07-11T17:55:00+02:00,2026-07-11T18:05:00+02:00,,,,,
+missing_in_secondary,vrt1,Down The Road,2026-07-11T18:05:00+02:00,2026-07-11T19:00:00+02:00,,,,,
+missing_in_secondary,vrt1,VRT NWS journaal 19u,2026-07-11T19:00:00+02:00,2026-07-11T19:37:00+02:00,,,,,
+missing_in_secondary,vrt1,Het weer,2026-07-11T19:37:00+02:00,2026-07-11T19:40:00+02:00,,,,,
+missing_in_secondary,vrt1,Joker+ en Lotto,2026-07-11T19:40:00+02:00,2026-07-11T19:45:00+02:00,,,,,
+missing_in_secondary,vrt1,F.C. De Kampioenen,2026-07-11T19:45:00+02:00,2026-07-11T20:20:00+02:00,,,,,
+missing_in_secondary,vrt1,Vlaanderen feest,2026-07-11T20:20:00+02:00,2026-07-11T21:20:00+02:00,,,,,
+missing_in_secondary,vrt1,Vive le vélo,2026-07-11T21:20:00+02:00,2026-07-11T22:20:00+02:00,,,,,
+missing_in_secondary,vrt1,Kwartfinale: Noorwegen - Engeland,2026-07-11T22:20:00+02:00,2026-07-12T01:25:00+02:00,,,,,
+confirmed,vrtcanvas,Radio 1: Sporza Tour,2026-07-10T13:00:00+02:00,2026-07-10T17:45:00+02:00,Radio 1: Sporza Tour,2026-07-10T11:00:00+00:00,2026-07-10T15:45:00+00:00,0,0
+replaced,vrtcanvas,Stanley Tucci: Searching for Italy,2026-07-10T17:45:00+02:00,2026-07-10T18:25:00+02:00,Stanley Tucci: Searching for Italy: Umbria,2026-07-10T15:45:00+00:00,2026-07-10T16:25:00+00:00,0,0
+replaced,vrtcanvas,Force of Nature,2026-07-10T18:25:00+02:00,2026-07-10T19:15:00+02:00,Force of Nature: Extreme Earth,2026-07-10T16:25:00+00:00,2026-07-10T17:15:00+00:00,0,0
+replaced,vrtcanvas,Roman empire by train,2026-07-10T19:15:00+02:00,2026-07-10T20:00:00+02:00,Roman Empire by Train: Up Pompeii,2026-07-10T17:15:00+00:00,2026-07-10T18:00:00+00:00,0,0
+confirmed,vrtcanvas,Terzake,2026-07-10T20:00:00+02:00,2026-07-10T20:30:00+02:00,Terzake,2026-07-10T18:00:00+00:00,2026-07-10T18:30:00+00:00,0,0
+confirmed,vrtcanvas,Het weer,2026-07-10T20:30:00+02:00,2026-07-10T20:35:00+02:00,Het weer,2026-07-10T18:30:00+00:00,2026-07-10T18:35:00+00:00,0,0
+confirmed,vrtcanvas,Monsieur Spade,2026-07-10T20:35:00+02:00,2026-07-10T21:40:00+02:00,Monsieur Spade,2026-07-10T18:35:00+00:00,2026-07-10T19:40:00+00:00,0,0
+confirmed,vrtcanvas,Monsieur Spade,2026-07-10T21:40:00+02:00,2026-07-10T22:25:00+02:00,Monsieur Spade,2026-07-10T19:40:00+00:00,2026-07-10T20:25:00+00:00,0,0
+confirmed,vrtcanvas,Road to Perdition,2026-07-10T22:25:00+02:00,2026-07-11T00:17:00+02:00,Road to Perdition,2026-07-10T20:25:00+00:00,2026-07-10T22:17:00+00:00,0,0
+confirmed,vrtcanvas,Het weer,2026-07-11T00:17:00+02:00,2026-07-11T00:20:00+02:00,Het weer,2026-07-10T22:17:00+00:00,2026-07-10T22:20:00+00:00,0,0
+replaced,vrtcanvas,Nachtlus,2026-07-11T00:20:00+02:00,2026-07-11T06:00:00+02:00,Nachtlus: Doorlopende herhaling tot de start van de ochtenduitzendingen,2026-07-10T22:20:00+00:00,2026-07-11T04:00:00+00:00,0,0
+replaced,vrtcanvas,Radio 2 Zomerweekend,2026-07-11T06:00:00+02:00,2026-07-11T08:00:00+02:00,Radio 2 op VRT Canvas: Camping Karolien,2026-07-11T04:00:00+00:00,2026-07-11T06:00:00+00:00,0,0
+replaced,vrtcanvas,Radio 2 Camping Karolien,2026-07-11T08:00:00+02:00,2026-07-11T11:00:00+02:00,Radio 2 op VRT Canvas: Camping Karolien,2026-07-11T06:00:00+00:00,2026-07-11T09:00:00+00:00,0,0
+replaced,vrtcanvas,Radio 2 Top 30,2026-07-11T11:00:00+02:00,2026-07-11T13:00:00+02:00,Radio 2 op VRT Canvas: Camping Karolien,2026-07-11T09:00:00+00:00,2026-07-11T11:00:00+00:00,0,0
+confirmed,vrtcanvas,Radio 1: Sporza Tour,2026-07-11T13:00:00+02:00,2026-07-11T16:40:00+02:00,Radio 1: Sporza Tour,2026-07-11T11:00:00+00:00,2026-07-11T14:40:00+00:00,0,0
+replaced,vrtcanvas,Jamie Cooks the Mediterranean,2026-07-11T16:40:00+02:00,2026-07-11T17:25:00+02:00,Jamie Cooks the Mediterranean: France,2026-07-11T14:40:00+00:00,2026-07-11T15:25:00+00:00,0,0
+replaced,vrtcanvas,"Justine Henin, nummer 1 tegen elke prijs",2026-07-11T17:25:00+02:00,2026-07-11T18:25:00+02:00,Justine Henin,2026-07-11T15:25:00+00:00,2026-07-11T16:25:00+00:00,0,0
+replaced,vrtcanvas,DI Ray,2026-07-11T18:25:00+02:00,2026-07-11T19:15:00+02:00,D.I. Ray: The Hunt for Rav,2026-07-11T16:25:00+00:00,2026-07-11T17:15:00+00:00,0,0
+replaced,vrtcanvas,DI Ray,2026-07-11T19:15:00+02:00,2026-07-11T20:00:00+02:00,D.I. Ray: A Test of Wills,2026-07-11T17:15:00+00:00,2026-07-11T18:00:00+00:00,0,0
+confirmed,vrtcanvas,VRT NWS Update,2026-07-11T20:00:00+02:00,2026-07-11T20:08:00+02:00,VRT NWS Update,2026-07-11T18:00:00+00:00,2026-07-11T18:08:00+00:00,0,0
+confirmed,vrtcanvas,Het weer,2026-07-11T20:08:00+02:00,2026-07-11T20:15:00+02:00,Het weer,2026-07-11T18:08:00+00:00,2026-07-11T18:15:00+00:00,0,0
+confirmed,vrtcanvas,The Vanishing Triangle,2026-07-11T20:15:00+02:00,2026-07-11T20:55:00+02:00,The Vanishing Triangle,2026-07-11T18:15:00+00:00,2026-07-11T18:55:00+00:00,0,0
+confirmed,vrtcanvas,The Vanishing Triangle,2026-07-11T20:55:00+02:00,2026-07-11T21:40:00+02:00,The Vanishing Triangle,2026-07-11T18:55:00+00:00,2026-07-11T19:40:00+00:00,0,0
+confirmed,vrtcanvas,Ammonite,2026-07-11T21:40:00+02:00,2026-07-11T23:32:00+02:00,Ammonite,2026-07-11T19:40:00+00:00,2026-07-11T21:32:00+00:00,0,0
+replaced,vrtcanvas,Het weer,2026-07-11T23:32:00+02:00,2026-07-11T23:35:00+02:00,Nachtlus: Doorlopende herhaling tot de start van de ochtenduitzendingen,2026-07-11T21:32:00+00:00,2026-07-12T05:00:00+00:00,0,445
+missing_in_secondary,vrtcanvas,Nachtlus,2026-07-11T23:35:00+02:00,2026-07-12T07:00:00+02:00,,,,,
+missing_in_secondary,ard,ARD-Mittagsmagazin,2026-07-10T12:00:00+02:00,2026-07-10T14:00:00+02:00,,,,,
+missing_in_secondary,ard,Tagesschau,2026-07-10T14:00:00+02:00,2026-07-10T14:05:00+02:00,,,,,
+missing_in_secondary,ard,"Tour de France, 7. Etappe: Hagetmau - Bordeaux",2026-07-10T14:05:00+02:00,2026-07-10T17:30:00+02:00,,,,,
+missing_in_secondary,ard,Brisant,2026-07-10T17:30:00+02:00,2026-07-10T18:00:00+02:00,,,,,
+missing_in_secondary,ard,Gefragt - Gejagt,2026-07-10T18:00:00+02:00,2026-07-10T18:50:00+02:00,,,,,
+missing_in_secondary,ard,Quizduell - Olymp,2026-07-10T18:50:00+02:00,2026-07-10T19:45:00+02:00,,,,,
+missing_in_secondary,ard,Wissen vor acht - Zukunft,2026-07-10T19:45:00+02:00,2026-07-10T19:50:00+02:00,,,,,
+missing_in_secondary,ard,Wetter vor acht,2026-07-10T19:50:00+02:00,2026-07-10T19:55:00+02:00,,,,,
+missing_in_secondary,ard,Wirtschaft vor acht,2026-07-10T19:55:00+02:00,2026-07-10T20:00:00+02:00,,,,,
+missing_in_secondary,ard,Tagesschau,2026-07-10T20:00:00+02:00,2026-07-10T20:15:00+02:00,,,,,
+missing_in_secondary,ard,Steirertod,2026-07-10T20:15:00+02:00,2026-07-10T21:45:00+02:00,,,,,
+missing_in_secondary,ard,Tagesthemen,2026-07-10T21:45:00+02:00,2026-07-10T22:20:00+02:00,,,,,
+missing_in_secondary,ard,Tatort,2026-07-10T22:20:00+02:00,2026-07-10T23:50:00+02:00,,,,,
+missing_in_secondary,ard,"Maria Wern, Kripo Gotland",2026-07-10T23:50:00+02:00,2026-07-11T01:20:00+02:00,,,,,
+missing_in_secondary,ard,Tagesschau,2026-07-11T01:20:00+02:00,2026-07-11T01:25:00+02:00,,,,,
+missing_in_secondary,ard,Steirertod,2026-07-11T01:25:00+02:00,2026-07-11T02:58:00+02:00,,,,,
+missing_in_secondary,ard,Tagesschau,2026-07-11T02:58:00+02:00,2026-07-11T03:00:00+02:00,,,,,
+missing_in_secondary,ard,"Maria Wern, Kripo Gotland",2026-07-11T03:00:00+02:00,2026-07-11T04:30:00+02:00,,,,,
+missing_in_secondary,ard,Deutschlandbilder,2026-07-11T04:30:00+02:00,2026-07-11T04:43:00+02:00,,,,,
+missing_in_secondary,ard,Tagesschau,2026-07-11T04:43:00+02:00,2026-07-11T04:45:00+02:00,,,,,
+missing_in_secondary,ard,Morden im Norden,2026-07-11T04:45:00+02:00,2026-07-11T05:30:00+02:00,,,,,
+missing_in_secondary,ard,Arthur und die Freunde der Tafelrunde,2026-07-11T05:30:00+02:00,2026-07-11T05:40:00+02:00,,,,,
+missing_in_secondary,ard,Arthur und die Freunde der Tafelrunde,2026-07-11T05:40:00+02:00,2026-07-11T05:55:00+02:00,,,,,
+missing_in_secondary,ard,HobbyMania - Tausch mit mir dein Hobby!,2026-07-11T05:55:00+02:00,2026-07-11T06:20:00+02:00,,,,,
+missing_in_secondary,ard,"Elefant, Tiger And Kids",2026-07-11T06:20:00+02:00,2026-07-11T06:45:00+02:00,,,,,
+missing_in_secondary,ard,"Elefant, Tiger And Kids",2026-07-11T06:45:00+02:00,2026-07-11T07:10:00+02:00,,,,,
+missing_in_secondary,ard,"Shaun, das Schaf",2026-07-11T07:10:00+02:00,2026-07-11T07:15:00+02:00,,,,,
+missing_in_secondary,ard,Nina und die wilden Tiere,2026-07-11T07:15:00+02:00,2026-07-11T07:40:00+02:00,,,,,
+missing_in_secondary,ard,Nina und die Haustiere,2026-07-11T07:40:00+02:00,2026-07-11T07:55:00+02:00,,,,,
+missing_in_secondary,ard,Checkerin Marina,2026-07-11T07:55:00+02:00,2026-07-11T08:20:00+02:00,,,,,
+missing_in_secondary,ard,Wissen macht Ah!,2026-07-11T08:20:00+02:00,2026-07-11T08:45:00+02:00,,,,,
+missing_in_secondary,ard,POV - Deine Geschichte zählt,2026-07-11T08:45:00+02:00,2026-07-11T08:55:00+02:00,,,,,
+missing_in_secondary,ard,Die Pfefferkörner,2026-07-11T08:55:00+02:00,2026-07-11T09:20:00+02:00,,,,,
+missing_in_secondary,ard,Die Pfefferkörner,2026-07-11T09:20:00+02:00,2026-07-11T09:50:00+02:00,,,,,
+missing_in_secondary,ard,Tagesschau,2026-07-11T09:50:00+02:00,2026-07-11T09:55:00+02:00,,,,,
+missing_in_secondary,ard,"Panda, Gorilla And Co.",2026-07-11T09:55:00+02:00,2026-07-11T10:40:00+02:00,,,,,
+missing_in_secondary,ard,"Panda, Gorilla And Co.",2026-07-11T10:40:00+02:00,2026-07-11T11:30:00+02:00,,,,,
+missing_in_secondary,ard,Quarks,2026-07-11T11:30:00+02:00,2026-07-11T12:00:00+02:00,,,,,
+missing_in_secondary,ard,Tagesschau,2026-07-11T12:00:00+02:00,2026-07-11T12:15:00+02:00,,,,,
+missing_in_secondary,ard,Die Tierärzte - Retter mit Herz,2026-07-11T12:15:00+02:00,2026-07-11T13:00:00+02:00,,,,,
+missing_in_secondary,ard,Die Tierärzte - Retter mit Herz,2026-07-11T13:00:00+02:00,2026-07-11T13:45:00+02:00,,,,,
+missing_in_secondary,ard,Tagesschau,2026-07-11T13:45:00+02:00,2026-07-11T14:00:00+02:00,,,,,
+missing_in_secondary,ard,"Tour de France, 8. Etappe / Diamond League",2026-07-11T14:00:00+02:00,2026-07-11T18:25:00+02:00,,,,,
+missing_in_secondary,ard,Deutsch. Jüdisch. Sicher? Maccabiah - Sportfest im Krieg,2026-07-11T18:25:00+02:00,2026-07-11T18:55:00+02:00,,,,,
+missing_in_secondary,ard,Tagesschau,2026-07-11T18:55:00+02:00,2026-07-11T19:00:00+02:00,,,,,
+missing_in_secondary,ard,Morden im Norden,2026-07-11T19:00:00+02:00,2026-07-11T19:50:00+02:00,,,,,
+missing_in_secondary,ard,Wetter vor acht,2026-07-11T19:50:00+02:00,2026-07-11T19:57:00+02:00,,,,,
+missing_in_secondary,ard,Lotto am Samstag,2026-07-11T19:57:00+02:00,2026-07-11T20:00:00+02:00,,,,,
+missing_in_secondary,ard,Tagesschau,2026-07-11T20:00:00+02:00,2026-07-11T20:15:00+02:00,,,,,
+missing_in_secondary,ard,Blutspur Antwerpen,2026-07-11T20:15:00+02:00,2026-07-11T21:45:00+02:00,,,,,
+missing_in_secondary,ard,Tagesthemen,2026-07-11T21:45:00+02:00,2026-07-11T22:05:00+02:00,,,,,
+missing_in_secondary,ard,Seeland - Ein Krimi vom Bodensee,2026-07-11T22:05:00+02:00,2026-07-11T23:35:00+02:00,,,,,
+missing_in_secondary,ard,Das Wort zum Sonntag,2026-07-11T23:35:00+02:00,2026-07-11T23:40:00+02:00,,,,,
+missing_in_secondary,ard,Der Zürich-Krimi,2026-07-11T23:40:00+02:00,2026-07-12T01:10:00+02:00,,,,,
+missing_in_secondary,zdf,ARD-Mittagsmagazin,2026-07-10T12:00:00+02:00,2026-07-10T14:00:00+02:00,,,,,
+missing_in_secondary,zdf,heute - in deutschland,2026-07-10T14:00:00+02:00,2026-07-10T14:15:00+02:00,,,,,
+missing_in_secondary,zdf,Die Küchenschlacht,2026-07-10T14:15:00+02:00,2026-07-10T15:00:00+02:00,,,,,
+missing_in_secondary,zdf,heute Xpress,2026-07-10T15:00:00+02:00,2026-07-10T15:05:00+02:00,,,,,
+missing_in_secondary,zdf,Bares für Rares,2026-07-10T15:05:00+02:00,2026-07-10T16:00:00+02:00,,,,,
+missing_in_secondary,zdf,heute - in Europa,2026-07-10T16:00:00+02:00,2026-07-10T16:10:00+02:00,,,,,
+missing_in_secondary,zdf,Die Rosenheim-Cops,2026-07-10T16:10:00+02:00,2026-07-10T17:00:00+02:00,,,,,
+missing_in_secondary,zdf,heute,2026-07-10T17:00:00+02:00,2026-07-10T17:10:00+02:00,,,,,
+missing_in_secondary,zdf,hallo deutschland,2026-07-10T17:10:00+02:00,2026-07-10T18:00:00+02:00,,,,,
+missing_in_secondary,zdf,SOKO Linz,2026-07-10T18:00:00+02:00,2026-07-10T19:00:00+02:00,,,,,
+missing_in_secondary,zdf,heute,2026-07-10T19:00:00+02:00,2026-07-10T19:20:00+02:00,,,,,
+missing_in_secondary,zdf,Wetter,2026-07-10T19:20:00+02:00,2026-07-10T19:25:00+02:00,,,,,
+missing_in_secondary,zdf,Bettys Diagnose,2026-07-10T19:25:00+02:00,2026-07-10T20:15:00+02:00,,,,,
+missing_in_secondary,zdf,FIFA WM 2026 (Samenvatting),2026-07-10T20:15:00+02:00,2026-07-10T21:00:00+02:00,,,,,
+missing_in_secondary,zdf,Viertelfinale: Spanien - Belgien,2026-07-10T21:00:00+02:00,2026-07-10T23:00:00+02:00,,,,,
+missing_in_secondary,zdf,ZDFsportstudio live,2026-07-10T23:00:00+02:00,2026-07-10T23:35:00+02:00,,,,,
+missing_in_secondary,zdf,heute show,2026-07-10T23:35:00+02:00,2026-07-11T00:05:00+02:00,,,,,
+missing_in_secondary,zdf,aspekte,2026-07-11T00:05:00+02:00,2026-07-11T00:50:00+02:00,,,,,
+missing_in_secondary,zdf,Schuld And Sühne mit Paulina Krasa,2026-07-11T00:50:00+02:00,2026-07-11T01:35:00+02:00,,,,,
+missing_in_secondary,zdf,Terra X History,2026-07-11T01:35:00+02:00,2026-07-11T02:20:00+02:00,,,,,
+missing_in_secondary,zdf,Terra X: Asien,2026-07-11T02:20:00+02:00,2026-07-11T03:05:00+02:00,,,,,
+missing_in_secondary,zdf,Terra X,2026-07-11T03:05:00+02:00,2026-07-11T03:50:00+02:00,,,,,
+missing_in_secondary,zdf,Der Alte,2026-07-11T03:50:00+02:00,2026-07-11T04:50:00+02:00,,,,,
+missing_in_secondary,zdf,hallo deutschland,2026-07-11T04:50:00+02:00,2026-07-11T05:30:00+02:00,,,,,
+missing_in_secondary,zdf,Die Mädchen-WG,2026-07-11T05:30:00+02:00,2026-07-11T05:55:00+02:00,,,,,
+missing_in_secondary,zdf,Die Mädchen-WG,2026-07-11T05:55:00+02:00,2026-07-11T06:20:00+02:00,,,,,
+missing_in_secondary,zdf,Dylans Spielkiste,2026-07-11T06:20:00+02:00,2026-07-11T06:30:00+02:00,,,,,
+missing_in_secondary,zdf,Dylans Spielkiste,2026-07-11T06:30:00+02:00,2026-07-11T06:40:00+02:00,,,,,
+missing_in_secondary,zdf,Meine Freundin Conni,2026-07-11T06:40:00+02:00,2026-07-11T06:55:00+02:00,,,,,
+missing_in_secondary,zdf,Meine Freundin Conni,2026-07-11T06:55:00+02:00,2026-07-11T07:05:00+02:00,,,,,
+missing_in_secondary,zdf,Die Biene Maja,2026-07-11T07:05:00+02:00,2026-07-11T07:20:00+02:00,,,,,
+missing_in_secondary,zdf,Die Biene Maja,2026-07-11T07:20:00+02:00,2026-07-11T07:30:00+02:00,,,,,
+missing_in_secondary,zdf,Bibi Blocksberg,2026-07-11T07:30:00+02:00,2026-07-11T07:55:00+02:00,,,,,
+missing_in_secondary,zdf,Bibi Blocksberg,2026-07-11T07:55:00+02:00,2026-07-11T08:25:00+02:00,,,,,
+missing_in_secondary,zdf,Robin Hood: Schlitzohr von Sherwood,2026-07-11T08:25:00+02:00,2026-07-11T08:35:00+02:00,,,,,
+missing_in_secondary,zdf,Robin Hood: Schlitzohr von Sherwood,2026-07-11T08:35:00+02:00,2026-07-11T08:45:00+02:00,,,,,
+missing_in_secondary,zdf,H2O: Abenteuer Meerjungfrau,2026-07-11T08:45:00+02:00,2026-07-11T09:10:00+02:00,,,,,
+missing_in_secondary,zdf,Bibi und Tina,2026-07-11T09:10:00+02:00,2026-07-11T09:35:00+02:00,,,,,
+missing_in_secondary,zdf,Pippi Langstrumpf,2026-07-11T09:35:00+02:00,2026-07-11T10:00:00+02:00,,,,,
+missing_in_secondary,zdf,Pippi Langstrumpf,2026-07-11T10:00:00+02:00,2026-07-11T10:25:00+02:00,,,,,
+missing_in_secondary,zdf,Notruf Hafenkante,2026-07-11T10:25:00+02:00,2026-07-11T11:10:00+02:00,,,,,
+missing_in_secondary,zdf,SOKO Stuttgart,2026-07-11T11:10:00+02:00,2026-07-11T11:55:00+02:00,,,,,
+missing_in_secondary,zdf,heute Xpress,2026-07-11T11:55:00+02:00,2026-07-11T12:00:00+02:00,,,,,
+missing_in_secondary,zdf,einfach Mensch,2026-07-11T12:00:00+02:00,2026-07-11T12:15:00+02:00,,,,,
+missing_in_secondary,zdf,Von Erholung war nie die Rede,2026-07-11T12:15:00+02:00,2026-07-11T13:40:00+02:00,,,,,
+missing_in_secondary,zdf,Triathlon: WM-Serie Männer und Frauen,2026-07-11T13:40:00+02:00,2026-07-11T16:10:00+02:00,,,,,
+missing_in_secondary,zdf,Die Rosenheim-Cops,2026-07-11T16:10:00+02:00,2026-07-11T17:00:00+02:00,,,,,
+missing_in_secondary,zdf,heute Xpress,2026-07-11T17:00:00+02:00,2026-07-11T17:05:00+02:00,,,,,
+missing_in_secondary,zdf,Länderspiegel,2026-07-11T17:05:00+02:00,2026-07-11T17:35:00+02:00,,,,,
+missing_in_secondary,zdf,ZDF.reportage,2026-07-11T17:35:00+02:00,2026-07-11T18:05:00+02:00,,,,,
+missing_in_secondary,zdf,SOKO München,2026-07-11T18:05:00+02:00,2026-07-11T19:00:00+02:00,,,,,
+missing_in_secondary,zdf,heute,2026-07-11T19:00:00+02:00,2026-07-11T19:20:00+02:00,,,,,
+missing_in_secondary,zdf,Wetter,2026-07-11T19:20:00+02:00,2026-07-11T19:25:00+02:00,,,,,
+missing_in_secondary,zdf,Der Bergdoktor,2026-07-11T19:25:00+02:00,2026-07-11T20:15:00+02:00,,,,,
+missing_in_secondary,zdf,Ein starkes Team,2026-07-11T20:15:00+02:00,2026-07-11T21:45:00+02:00,,,,,
+missing_in_secondary,zdf,heute journal,2026-07-11T21:45:00+02:00,2026-07-11T22:00:00+02:00,,,,,
+missing_in_secondary,zdf,Ein starkes Team,2026-07-11T22:00:00+02:00,2026-07-11T23:30:00+02:00,,,,,
+missing_in_secondary,zdf,Bombshell - Das Ende des Schweigens,2026-07-11T23:30:00+02:00,2026-07-12T01:10:00+02:00,,,,,
+replaced,wdr,"Pinguin, Löwe And Co.",2026-07-10T13:00:00+02:00,2026-07-10T13:50:00+02:00,"Pinguin, Löwe & Co.: Nasenbären sorgen für Freude, das Gorillababy für Abschiedsschmerz",2026-07-10T11:00:00+00:00,2026-07-10T11:50:00+00:00,0,0
+replaced,wdr,"Panda, Gorilla And Co.",2026-07-10T13:50:00+02:00,2026-07-10T14:20:00+02:00,"Panda, Gorilla & Co.: Reisevorbereitungen",2026-07-10T11:50:00+00:00,2026-07-10T12:20:00+00:00,0,0
+replaced,wdr,Hubert und Staller,2026-07-10T14:20:00+02:00,2026-07-10T15:10:00+02:00,Hubert und Staller: Der letzte Tango,2026-07-10T12:20:00+00:00,2026-07-10T13:10:00+00:00,0,0
+replaced,wdr,Hubert und Staller,2026-07-10T15:10:00+02:00,2026-07-10T16:00:00+02:00,Hubert und Staller: Ein ehrenwertes Haus,2026-07-10T13:10:00+00:00,2026-07-10T14:00:00+00:00,0,0
+confirmed,wdr,WDR aktuell,2026-07-10T16:00:00+02:00,2026-07-10T16:15:00+02:00,WDR aktuell,2026-07-10T14:00:00+00:00,2026-07-10T14:15:00+00:00,0,0
+confirmed,wdr,Hier und heute,2026-07-10T16:15:00+02:00,2026-07-10T18:00:00+02:00,Hier und heute,2026-07-10T14:15:00+00:00,2026-07-10T16:00:00+00:00,0,0
+confirmed,wdr,WDR aktuell / Lokalzeit,2026-07-10T18:00:00+02:00,2026-07-10T18:15:00+02:00,WDR aktuell / Lokalzeit,2026-07-10T16:00:00+00:00,2026-07-10T16:15:00+00:00,0,0
+replaced,wdr,Grenzenlos köstlich mit Björn Freitag und Tamina Kallert,2026-07-10T18:15:00+02:00,2026-07-10T18:45:00+02:00,Grenzenlos köstlich: Wien - eine Genussreise zu den Klassikern der Wiener Küche,2026-07-10T16:15:00+00:00,2026-07-10T16:45:00+00:00,0,0
+confirmed,wdr,Aktuelle Stunde,2026-07-10T18:45:00+02:00,2026-07-10T19:30:00+02:00,Aktuelle Stunde,2026-07-10T16:45:00+00:00,2026-07-10T17:30:00+00:00,0,0
+replaced,wdr,Regionalprogramm,2026-07-10T19:30:00+02:00,2026-07-10T20:00:00+02:00,Lokalzeit,2026-07-10T17:30:00+00:00,2026-07-10T18:00:00+00:00,0,0
+confirmed,wdr,Tagesschau,2026-07-10T20:00:00+02:00,2026-07-10T20:15:00+02:00,Tagesschau,2026-07-10T18:00:00+00:00,2026-07-10T18:15:00+00:00,0,0
+confirmed,wdr,Parookaville - Das größte Festival in NRW,2026-07-10T20:15:00+02:00,2026-07-10T21:00:00+02:00,Parookaville - Das größte Festival in NRW,2026-07-10T18:15:00+00:00,2026-07-10T19:00:00+00:00,0,0
+replaced,wdr,Mord mit Aussicht,2026-07-10T21:00:00+02:00,2026-07-10T21:45:00+02:00,Mord mit Aussicht: Marie rennt,2026-07-10T19:00:00+00:00,2026-07-10T19:45:00+00:00,0,0
+confirmed,wdr,WDR aktuell,2026-07-10T21:45:00+02:00,2026-07-10T22:00:00+02:00,WDR aktuell,2026-07-10T19:45:00+00:00,2026-07-10T20:00:00+00:00,0,0
+replaced,wdr,Kölner Treff,2026-07-10T22:00:00+02:00,2026-07-11T00:00:00+02:00,Kölner Treff: Best of - Heimatgeschichten,2026-07-10T20:00:00+00:00,2026-07-10T22:00:00+00:00,0,0
+confirmed,wdr,"Bernd Stelter - Reg' dich nicht auf, gibt nur Falten!",2026-07-11T00:00:00+02:00,2026-07-11T01:30:00+02:00,"Bernd Stelter - Reg' dich nicht auf, gibt nur Falten!",2026-07-10T22:00:00+00:00,2026-07-10T23:30:00+00:00,0,0
+replaced,wdr,Kölner Treff,2026-07-11T01:30:00+02:00,2026-07-11T03:25:00+02:00,Kölner Treff: Best of - Heimatgeschichten,2026-07-10T23:30:00+00:00,2026-07-11T01:25:00+00:00,0,0
+confirmed,wdr,Lokalzeit aus Köln,2026-07-11T03:25:00+02:00,2026-07-11T03:55:00+02:00,Lokalzeit aus Köln,2026-07-11T01:25:00+00:00,2026-07-11T01:55:00+00:00,0,0
+confirmed,wdr,Lokalzeit aus Aachen,2026-07-11T03:55:00+02:00,2026-07-11T04:25:00+02:00,Lokalzeit aus Aachen,2026-07-11T01:55:00+00:00,2026-07-11T02:25:00+00:00,0,0
+confirmed,wdr,Lokalzeit aus Düsseldorf,2026-07-11T04:25:00+02:00,2026-07-11T04:55:00+02:00,Lokalzeit aus Düsseldorf,2026-07-11T02:25:00+00:00,2026-07-11T02:55:00+00:00,0,0
+confirmed,wdr,Lokalzeit Bergisches Land,2026-07-11T04:55:00+02:00,2026-07-11T05:25:00+02:00,Lokalzeit Bergisches Land,2026-07-11T02:55:00+00:00,2026-07-11T03:25:00+00:00,0,0
+confirmed,wdr,Lokalzeit Ruhr,2026-07-11T05:25:00+02:00,2026-07-11T05:50:00+02:00,Lokalzeit Ruhr,2026-07-11T03:25:00+00:00,2026-07-11T03:50:00+00:00,0,0
+confirmed,wdr,Lokalzeit aus Dortmund,2026-07-11T05:50:00+02:00,2026-07-11T06:20:00+02:00,Lokalzeit aus Dortmund,2026-07-11T03:50:00+00:00,2026-07-11T04:20:00+00:00,0,0
+confirmed,wdr,Lokalzeit Münsterland,2026-07-11T06:20:00+02:00,2026-07-11T06:50:00+02:00,Lokalzeit Münsterland,2026-07-11T04:20:00+00:00,2026-07-11T04:50:00+00:00,0,0
+replaced,wdr,Unsere Tipps - Ausflugs-Highlights im Westen,2026-07-11T06:50:00+02:00,2026-07-11T07:05:00+02:00,Unsere Tipps - Ausflugs-Highlights im Westen: Von der Adlerwarte bis zum Freizeitpark Irrland,2026-07-11T04:50:00+00:00,2026-07-11T05:05:00+00:00,0,0
+confirmed,wdr,Sehen statt Hören,2026-07-11T07:05:00+02:00,2026-07-11T07:35:00+02:00,Sehen statt Hören,2026-07-11T05:05:00+00:00,2026-07-11T05:35:00+00:00,0,0
+confirmed,wdr,Erlebnisreisen,2026-07-11T07:35:00+02:00,2026-07-11T07:55:00+02:00,Erlebnisreisen,2026-07-11T05:35:00+00:00,2026-07-11T05:55:00+00:00,0,0
+replaced,wdr,Die Sendung mit dem Elefanten,2026-07-11T07:55:00+02:00,2026-07-11T08:20:00+02:00,Die Sendung mit dem Elefanten: Lach- und Sachgeschichten für Fernsehanfänger,2026-07-11T05:55:00+00:00,2026-07-11T06:20:00+00:00,0,0
+replaced,wdr,Die Sendung mit der Maus,2026-07-11T08:20:00+02:00,2026-07-11T08:50:00+02:00,Die Sendung mit der Maus: Lach- und Sachgeschichten,2026-07-11T06:20:00+00:00,2026-07-11T06:50:00+00:00,0,0
+confirmed,wdr,Tiere suchen ein Zuhause,2026-07-11T08:50:00+02:00,2026-07-11T09:35:00+02:00,Tiere suchen ein Zuhause,2026-07-11T06:50:00+00:00,2026-07-11T07:35:00+00:00,0,0
+replaced,wdr,Quarks im Ersten,2026-07-11T09:35:00+02:00,2026-07-11T10:05:00+02:00,Quarks,2026-07-11T07:35:00+00:00,2026-07-11T08:05:00+00:00,0,0
+replaced,wdr,Handwerkskunst!,2026-07-11T10:05:00+02:00,2026-07-11T10:35:00+02:00,Handwerkskunst!: Wie man mit Sauerteig backt,2026-07-11T08:05:00+00:00,2026-07-11T08:35:00+00:00,0,0
+replaced,wdr,Raus aufs Land,2026-07-11T10:35:00+02:00,2026-07-11T11:15:00+02:00,Raus aufs Land: Häuslebauer sucht Frau - Familienplanung auf dem Land,2026-07-11T08:35:00+00:00,2026-07-11T09:15:00+00:00,0,0
+replaced,wdr,Schnittgut. Alles aus dem Garten,2026-07-11T11:15:00+02:00,2026-07-11T11:45:00+02:00,Schnittgut. Alles aus dem Garten: Küchengarten - Naturnahes Gärtnern - Weiße Stauden,2026-07-11T09:15:00+00:00,2026-07-11T09:45:00+00:00,0,0
+replaced,wdr,Kochen mit Martina und Moritz,2026-07-11T11:45:00+02:00,2026-07-11T12:15:00+02:00,"Kochen mit Martina und Moritz: Salat: Knackig, frisch und schlank",2026-07-11T09:45:00+00:00,2026-07-11T10:15:00+00:00,0,0
+replaced,wdr,Einfach und köstlich - Heimatküche mit Björn Freitag,2026-07-11T12:15:00+02:00,2026-07-11T12:45:00+02:00,Einfach und köstlich - Kochen mit Björn Freitag: Nordisch kochen mit Zora Klipp,2026-07-11T10:15:00+00:00,2026-07-11T10:45:00+00:00,0,0
+confirmed,wdr,WDR aktuell,2026-07-11T12:45:00+02:00,2026-07-11T13:00:00+02:00,WDR aktuell,2026-07-11T10:45:00+00:00,2026-07-11T11:00:00+00:00,0,0
+replaced,wdr,Käthe und ich,2026-07-11T13:00:00+02:00,2026-07-11T14:30:00+02:00,Käthe und ich: Freundinnen für immer,2026-07-11T11:00:00+00:00,2026-07-11T12:30:00+00:00,0,0
+replaced,wdr,Wir werden Camper,2026-07-11T14:30:00+02:00,2026-07-11T15:15:00+02:00,Wir werden Camper: Von Unna nach Albanien,2026-07-11T12:30:00+00:00,2026-07-11T13:15:00+00:00,0,0
+replaced,wdr,Der Vorkoster,2026-07-11T15:15:00+02:00,2026-07-11T16:00:00+02:00,"Der Vorkoster: Aufbackbrötchen im Check: Fluffig, knusprig, lecker?",2026-07-11T13:15:00+00:00,2026-07-11T14:00:00+00:00,0,0
+confirmed,wdr,WDR aktuell,2026-07-11T16:00:00+02:00,2026-07-11T16:15:00+02:00,WDR aktuell,2026-07-11T14:00:00+00:00,2026-07-11T14:15:00+00:00,0,0
+replaced,wdr,Wir werden Camper,2026-07-11T16:15:00+02:00,2026-07-11T17:00:00+02:00,Wir werden Camper!: Rabea und Yannik aus Moers,2026-07-11T14:15:00+00:00,2026-07-11T15:00:00+00:00,0,0
+replaced,wdr,Garten und lecker,2026-07-11T17:00:00+02:00,2026-07-11T17:45:00+02:00,Garten & Lecker: Natur-Moosgarten in Staudernheim,2026-07-11T15:00:00+00:00,2026-07-11T15:45:00+00:00,0,0
+confirmed,wdr,Meisterküche,2026-07-11T17:45:00+02:00,2026-07-11T18:15:00+02:00,Meisterküche,2026-07-11T15:45:00+00:00,2026-07-11T16:15:00+00:00,0,0
+replaced,wdr,Lecker an Bord,2026-07-11T18:15:00+02:00,2026-07-11T18:45:00+02:00,Lecker an Bord: Smutje trifft Seemann,2026-07-11T16:15:00+00:00,2026-07-11T16:45:00+00:00,0,0
+confirmed,wdr,Aktuelle Stunde,2026-07-11T18:45:00+02:00,2026-07-11T19:30:00+02:00,Aktuelle Stunde,2026-07-11T16:45:00+00:00,2026-07-11T17:30:00+00:00,0,0
+confirmed,wdr,Lokalzeit,2026-07-11T19:30:00+02:00,2026-07-11T20:00:00+02:00,Lokalzeit,2026-07-11T17:30:00+00:00,2026-07-11T18:00:00+00:00,0,0
+confirmed,wdr,Tagesschau,2026-07-11T20:00:00+02:00,2026-07-11T20:15:00+02:00,Tagesschau,2026-07-11T18:00:00+00:00,2026-07-11T18:15:00+00:00,0,0
+replaced,wdr,LEGENDÄR: Unsere Schlagerhits der 70er - Die Countdown-Show,2026-07-11T20:15:00+02:00,2026-07-11T21:45:00+02:00,Die Countdown-Show: Die 25 größten Schlager der 70er mit Musik und Gästen!,2026-07-11T18:15:00+00:00,2026-07-11T19:45:00+00:00,0,0
+confirmed,wdr,ABBA - Die ganze Geschichte,2026-07-11T21:45:00+02:00,2026-07-11T23:15:00+02:00,ABBA - Die ganze Geschichte,2026-07-11T19:45:00+00:00,2026-07-11T21:15:00+00:00,0,0
+replaced,wdr,Die verrückten 70er,2026-07-11T23:15:00+02:00,2026-07-12T00:45:00+02:00,Die verrückten 70er - Das wilde Jahrzehnt der Deutschen,2026-07-11T21:15:00+00:00,2026-07-11T22:45:00+00:00,0,0
+missing_in_secondary,rtl8,Telvero,2026-07-10T11:30:00+02:00,2026-07-10T16:30:00+02:00,,,,,
+missing_in_secondary,rtl8,"Goede Tijden, Slechte Tijden",2026-07-10T16:30:00+02:00,2026-07-10T17:00:00+02:00,,,,,
+missing_in_secondary,rtl8,Undercover Boss Canada,2026-07-10T17:00:00+02:00,2026-07-10T18:05:00+02:00,,,,,
+missing_in_secondary,rtl8,"The Bold And The Beautiful, The Beginning",2026-07-10T18:05:00+02:00,2026-07-10T18:30:00+02:00,,,,,
+missing_in_secondary,rtl8,"The Bold And The Beautiful, The Beginning",2026-07-10T18:30:00+02:00,2026-07-10T19:00:00+02:00,,,,,
+missing_in_secondary,rtl8,"The Bold And The Beautiful, The Beginning",2026-07-10T19:00:00+02:00,2026-07-10T19:25:00+02:00,,,,,
+missing_in_secondary,rtl8,Bed And Breakfast Belgie,2026-07-10T19:25:00+02:00,2026-07-10T20:25:00+02:00,,,,,
+missing_in_secondary,rtl8,Endeavour,2026-07-10T20:25:00+02:00,2026-07-10T22:30:00+02:00,,,,,
+missing_in_secondary,rtl8,Law And Order: Special Victims Unit,2026-07-10T22:30:00+02:00,2026-07-10T23:25:00+02:00,,,,,
+missing_in_secondary,rtl8,Law And Order: Special Victims Unit,2026-07-10T23:25:00+02:00,2026-07-11T00:25:00+02:00,,,,,
+missing_in_secondary,rtl8,CSI: Crime Scene Investigation,2026-07-11T00:25:00+02:00,2026-07-11T01:25:00+02:00,,,,,
+missing_in_secondary,rtl8,Telvero,2026-07-11T01:25:00+02:00,2026-07-11T02:00:00+02:00,,,,,
+missing_in_secondary,rtl8,Telvero,2026-07-11T02:00:00+02:00,2026-07-11T06:15:00+02:00,,,,,
+missing_in_secondary,rtl8,Tommy Teleshopping,2026-07-11T06:15:00+02:00,2026-07-11T13:00:00+02:00,,,,,
+missing_in_secondary,rtl8,Telvero,2026-07-11T13:00:00+02:00,2026-07-11T17:00:00+02:00,,,,,
+missing_in_secondary,rtl8,Cruisen Over De Middellandse Zee,2026-07-11T17:00:00+02:00,2026-07-11T18:00:00+02:00,,,,,
+missing_in_secondary,rtl8,Cruisen Over De Middellandse Zee,2026-07-11T18:00:00+02:00,2026-07-11T19:00:00+02:00,,,,,
+missing_in_secondary,rtl8,Cruisen Over De Middellandse Zee,2026-07-11T19:00:00+02:00,2026-07-11T20:00:00+02:00,,,,,
+missing_in_secondary,rtl8,Aspe,2026-07-11T20:00:00+02:00,2026-07-11T22:00:00+02:00,,,,,
+missing_in_secondary,rtl8,Law And Order: Special Victims Unit,2026-07-11T22:00:00+02:00,2026-07-11T22:55:00+02:00,,,,,
+missing_in_secondary,rtl8,Law And Order: Special Victims Unit,2026-07-11T22:55:00+02:00,2026-07-11T23:55:00+02:00,,,,,
+missing_in_secondary,rtl8,Endeavour,2026-07-11T23:55:00+02:00,2026-07-12T01:50:00+02:00,,,,,
+confirmed,rtlz,RTL Z Nieuws - 13:00 uur,2026-07-10T13:45:00+02:00,2026-07-10T14:00:00+02:00,RTL Z Nieuws,2026-07-10T11:45:00+00:00,2026-07-10T12:00:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 14:00 uur,2026-07-10T14:00:00+02:00,2026-07-10T14:15:00+02:00,RTL Z Nieuws,2026-07-10T12:00:00+00:00,2026-07-10T12:15:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 14:00 uur,2026-07-10T14:15:00+02:00,2026-07-10T14:30:00+02:00,RTL Z Nieuws,2026-07-10T12:15:00+00:00,2026-07-10T12:30:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 14:00 uur,2026-07-10T14:30:00+02:00,2026-07-10T14:45:00+02:00,RTL Z Nieuws,2026-07-10T12:30:00+00:00,2026-07-10T12:45:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 14:00 uur,2026-07-10T14:45:00+02:00,2026-07-10T15:00:00+02:00,RTL Z Nieuws,2026-07-10T12:45:00+00:00,2026-07-10T13:00:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 15:00 uur,2026-07-10T15:00:00+02:00,2026-07-10T15:15:00+02:00,RTL Z Nieuws,2026-07-10T13:00:00+00:00,2026-07-10T13:15:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 15:00 uur,2026-07-10T15:15:00+02:00,2026-07-10T15:30:00+02:00,RTL Z Nieuws,2026-07-10T13:15:00+00:00,2026-07-10T13:30:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 15:00 uur,2026-07-10T15:30:00+02:00,2026-07-10T15:45:00+02:00,RTL Z Nieuws,2026-07-10T13:30:00+00:00,2026-07-10T13:45:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 15:00 uur,2026-07-10T15:45:00+02:00,2026-07-10T16:00:00+02:00,RTL Z Nieuws,2026-07-10T13:45:00+00:00,2026-07-10T14:00:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 16:00 uur,2026-07-10T16:00:00+02:00,2026-07-10T16:15:00+02:00,RTL Z Nieuws,2026-07-10T14:00:00+00:00,2026-07-10T14:15:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 16:00 uur,2026-07-10T16:15:00+02:00,2026-07-10T16:30:00+02:00,RTL Z Nieuws,2026-07-10T14:15:00+00:00,2026-07-10T14:30:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 16:00 uur,2026-07-10T16:30:00+02:00,2026-07-10T16:45:00+02:00,RTL Z Nieuws,2026-07-10T14:30:00+00:00,2026-07-10T14:45:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 16:00 uur,2026-07-10T16:45:00+02:00,2026-07-10T17:00:00+02:00,RTL Z Nieuws,2026-07-10T14:45:00+00:00,2026-07-10T15:00:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 17:00 uur,2026-07-10T17:00:00+02:00,2026-07-10T17:15:00+02:00,RTL Z Nieuws,2026-07-10T15:00:00+00:00,2026-07-10T15:15:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 17:00 uur,2026-07-10T17:15:00+02:00,2026-07-10T17:30:00+02:00,RTL Z Nieuws,2026-07-10T15:15:00+00:00,2026-07-10T15:30:00+00:00,0,0
+confirmed,rtlz,RTL Z Nieuws - 17:30 uur,2026-07-10T17:30:00+02:00,2026-07-10T17:45:00+02:00,RTL Z Nieuws,2026-07-10T15:30:00+00:00,2026-07-10T15:49:00+00:00,0,4
+replaced,rtlz,RTL Z Nieuws - 17:30 uur,2026-07-10T17:45:00+02:00,2026-07-10T17:50:00+02:00,Storage Hunters: New Bidders On the Block,2026-07-10T15:49:00+00:00,2026-07-10T16:10:00+00:00,4,20
+title_mismatch,rtlz,Storage Hunters,2026-07-10T17:50:00+02:00,2026-07-10T18:05:00+02:00,Storage Hunters: Rhinestones and Thrones,2026-07-10T16:10:00+00:00,2026-07-10T16:39:00+00:00,20,34
+title_mismatch,rtlz,Storage Hunters,2026-07-10T18:05:00+02:00,2026-07-10T18:30:00+02:00,Storage Hunters: Bear Hunters,2026-07-10T16:39:00+00:00,2026-07-10T17:07:00+00:00,34,37
+title_mismatch,rtlz,Storage Hunters,2026-07-10T18:30:00+02:00,2026-07-10T19:00:00+02:00,Storage Hunters: Risky Business,2026-07-10T17:07:00+00:00,2026-07-10T17:35:00+00:00,37,35
+title_mismatch,rtlz,Storage Hunters,2026-07-10T19:00:00+02:00,2026-07-10T19:30:00+02:00,Storage Hunters: Going for Broke,2026-07-10T17:35:00+00:00,2026-07-10T18:03:00+00:00,35,33
+title_mismatch,rtlz,Storage Hunters,2026-07-10T19:30:00+02:00,2026-07-10T20:00:00+02:00,Storage Hunters: Deceptive Deals,2026-07-10T18:03:00+00:00,2026-07-10T18:30:00+00:00,33,30
+title_mismatch,rtlz,Storage Hunters,2026-07-10T20:00:00+02:00,2026-07-10T20:30:00+02:00,Deurwaarders,2026-07-10T18:30:00+00:00,2026-07-10T19:26:00+00:00,30,56
+title_mismatch,rtlz,Deurwaarders UK,2026-07-10T20:30:00+02:00,2026-07-10T21:30:00+02:00,Deurwaarders,2026-07-10T19:26:00+00:00,2026-07-10T20:24:00+00:00,56,54
+title_mismatch,rtlz,Deurwaarders UK,2026-07-10T21:30:00+02:00,2026-07-10T22:30:00+02:00,Deurwaarders,2026-07-10T20:24:00+00:00,2026-07-10T21:22:00+00:00,54,52
+title_mismatch,rtlz,Deurwaarders UK,2026-07-10T22:30:00+02:00,2026-07-10T23:30:00+02:00,Zo Wordt Het Gemaakt: Cider,2026-07-10T21:22:00+00:00,2026-07-10T22:35:00+00:00,52,65
+missing_in_secondary,rtlz,Zo wordt het gemaakt,2026-07-10T23:30:00+02:00,2026-07-11T00:30:00+02:00,,,,,
+replaced,rtlz,Zo wordt het gemaakt,2026-07-11T00:30:00+02:00,2026-07-11T01:30:00+02:00,Zo Wordt Het Gemaakt: Socks,2026-07-10T22:35:00+00:00,2026-07-10T23:33:00+00:00,5,3
+replaced,rtlz,Zo wordt het gemaakt,2026-07-11T01:30:00+02:00,2026-07-11T02:20:00+02:00,Zo Wordt Het Gemaakt: Yogurt,2026-07-10T23:33:00+00:00,2026-07-11T00:23:00+00:00,3,3
+confirmed,rtlz,RTL Nieuws - 19:30 uur,2026-07-11T02:20:00+02:00,2026-07-11T02:40:00+02:00,RTL Nieuws,2026-07-11T00:23:00+00:00,2026-07-11T00:43:00+00:00,3,3
+replaced,rtlz,RTL Nieuws - Laat,2026-07-11T02:40:00+02:00,2026-07-11T03:50:00+02:00,RTL Nieuws,2026-07-11T00:43:00+00:00,2026-07-11T01:43:00+00:00,3,-7
+confirmed,rtlz,RTL Nieuws - 19:30 uur,2026-07-11T03:50:00+02:00,2026-07-11T04:10:00+02:00,RTL Nieuws,2026-07-11T01:43:00+00:00,2026-07-11T02:03:00+00:00,-7,-7
+replaced,rtlz,RTL Nieuws - Laat,2026-07-11T04:10:00+02:00,2026-07-11T04:20:00+02:00,RTL Nieuws,2026-07-11T02:13:00+00:00,2026-07-11T02:33:00+00:00,3,13
+time_mismatch,rtlz,RTL Nieuws - 19:30 uur,2026-07-11T04:20:00+02:00,2026-07-11T04:40:00+02:00,RTL Nieuws,2026-07-11T02:33:00+00:00,2026-07-11T02:43:00+00:00,13,3
+replaced,rtlz,RTL Nieuws - Laat,2026-07-11T04:40:00+02:00,2026-07-11T04:50:00+02:00,RTL Nieuws,2026-07-11T02:43:00+00:00,2026-07-11T03:03:00+00:00,3,13
+time_mismatch,rtlz,RTL Nieuws - 19:30 uur,2026-07-11T04:50:00+02:00,2026-07-11T05:10:00+02:00,RTL Nieuws,2026-07-11T03:03:00+00:00,2026-07-11T03:13:00+00:00,13,3
+replaced,rtlz,RTL Nieuws - Laat,2026-07-11T05:10:00+02:00,2026-07-11T05:20:00+02:00,RTL Nieuws,2026-07-11T03:13:00+00:00,2026-07-11T03:33:00+00:00,3,13
+time_mismatch,rtlz,RTL Nieuws - 19:30 uur,2026-07-11T05:20:00+02:00,2026-07-11T05:40:00+02:00,RTL Nieuws,2026-07-11T03:33:00+00:00,2026-07-11T03:43:00+00:00,13,3
+replaced,rtlz,RTL Nieuws - Laat,2026-07-11T05:40:00+02:00,2026-07-11T05:50:00+02:00,RTL Nieuws,2026-07-11T03:43:00+00:00,2026-07-11T03:53:00+00:00,3,3
+replaced,rtlz,RTL Nieuws - Laat,2026-07-11T05:50:00+02:00,2026-07-11T06:00:00+02:00,Editie NL,2026-07-11T03:53:00+00:00,2026-07-11T04:09:00+00:00,3,9
+replaced,rtlz,EditieNL,2026-07-11T06:00:00+02:00,2026-07-11T06:15:00+02:00,Editie NL,2026-07-11T04:09:00+00:00,2026-07-11T04:25:00+00:00,9,10
+replaced,rtlz,EditieNL,2026-07-11T06:15:00+02:00,2026-07-11T06:30:00+02:00,Storage Hunters: Safe Bet,2026-07-11T04:25:00+00:00,2026-07-11T04:53:00+00:00,10,23
+title_mismatch,rtlz,Storage Hunters,2026-07-11T06:30:00+02:00,2026-07-11T07:00:00+02:00,Storage Hunters: Checkmate,2026-07-11T04:53:00+00:00,2026-07-11T05:21:00+00:00,23,21
+title_mismatch,rtlz,Storage Hunters,2026-07-11T07:00:00+02:00,2026-07-11T07:30:00+02:00,Storage Hunters: Double Cross,2026-07-11T05:21:00+00:00,2026-07-11T05:50:00+00:00,21,20
+title_mismatch,rtlz,Storage Hunters,2026-07-11T07:30:00+02:00,2026-07-11T08:00:00+02:00,Storage Hunters: Auction on Wheels,2026-07-11T05:50:00+00:00,2026-07-11T06:17:00+00:00,20,17
+title_mismatch,rtlz,Storage Hunters,2026-07-11T08:00:00+02:00,2026-07-11T08:30:00+02:00,Storage Hunters: Bird Brained,2026-07-11T06:17:00+00:00,2026-07-11T06:45:00+00:00,17,15
+replaced,rtlz,Storage Hunters,2026-07-11T08:30:00+02:00,2026-07-11T09:00:00+02:00,Storage Hunters: Torching the Competition,2026-07-11T06:45:00+00:00,2026-07-11T07:06:00+00:00,15,6
+replaced,rtlz,Storage Hunters,2026-07-11T09:00:00+02:00,2026-07-11T09:30:00+02:00,"Storage Hunters: Big Money, No Whammies",2026-07-11T07:06:00+00:00,2026-07-11T07:34:00+00:00,6,4
+replaced,rtlz,Storage Hunters,2026-07-11T09:30:00+02:00,2026-07-11T10:00:00+02:00,Storage Hunters: High Noon,2026-07-11T07:34:00+00:00,2026-07-11T08:03:00+00:00,4,3
+replaced,rtlz,Zo wordt het gemaakt,2026-07-11T10:00:00+02:00,2026-07-11T11:00:00+02:00,Zo Wordt Het Gemaakt: Cider,2026-07-11T08:03:00+00:00,2026-07-11T09:15:00+00:00,3,15
+title_mismatch,rtlz,Zo wordt het gemaakt,2026-07-11T11:00:00+02:00,2026-07-11T12:00:00+02:00,Zo Wordt Het Gemaakt: Socks,2026-07-11T09:15:00+00:00,2026-07-11T10:14:00+00:00,15,14
+replaced,rtlz,Zo wordt het gemaakt,2026-07-11T12:00:00+02:00,2026-07-11T13:00:00+02:00,Zo Wordt Het Gemaakt: Yogurt,2026-07-11T10:14:00+00:00,2026-07-11T11:10:00+00:00,14,10
+replaced,rtlz,Gordon Ramsay: Oorlog in de keuken!,2026-07-11T13:00:00+02:00,2026-07-11T14:00:00+02:00,Gordon Ramsay: Oorlog In De Keuken!: Burger Kitchen: Part 1,2026-07-11T11:10:00+00:00,2026-07-11T12:05:00+00:00,10,5
+replaced,rtlz,Gordon Ramsay: Oorlog in de keuken!,2026-07-11T14:00:00+02:00,2026-07-11T15:00:00+02:00,Gordon Ramsay: Oorlog In De Keuken!: Burger Kitchen,2026-07-11T12:05:00+00:00,2026-07-11T12:59:00+00:00,5,-1
+replaced,rtlz,Gordon Ramsay: Oorlog in de keuken!,2026-07-11T15:00:00+02:00,2026-07-11T16:00:00+02:00,Gordon Ramsay: Oorlog In De Keuken!: El Greco,2026-07-11T12:59:00+00:00,2026-07-11T13:53:00+00:00,-1,-7
+replaced,rtlz,Storage Hunters,2026-07-11T16:00:00+02:00,2026-07-11T16:30:00+02:00,Storage Hunters: Abracadabra,2026-07-11T13:53:00+00:00,2026-07-11T14:22:00+00:00,-7,-8
+replaced,rtlz,Storage Hunters,2026-07-11T16:30:00+02:00,2026-07-11T17:00:00+02:00,Storage Hunters: This Can't Be!,2026-07-11T14:22:00+00:00,2026-07-11T14:49:00+00:00,-8,-11
+title_mismatch,rtlz,Storage Hunters,2026-07-11T17:00:00+02:00,2026-07-11T17:30:00+02:00,Storage Hunters: Sting Like a Bee,2026-07-11T14:49:00+00:00,2026-07-11T15:17:00+00:00,-11,-13
+title_mismatch,rtlz,Storage Hunters,2026-07-11T17:30:00+02:00,2026-07-11T18:00:00+02:00,Storage Hunters: Door Number One,2026-07-11T15:17:00+00:00,2026-07-11T15:45:00+00:00,-13,-15
+replaced,rtlz,Storage Hunters,2026-07-11T18:00:00+02:00,2026-07-11T18:30:00+02:00,Storage Hunters: Fasten Your Seatbelts,2026-07-11T16:07:00+00:00,2026-07-11T16:35:00+00:00,7,5
+replaced,rtlz,Storage Hunters,2026-07-11T18:30:00+02:00,2026-07-11T19:00:00+02:00,Storage Hunters: Men at War,2026-07-11T16:35:00+00:00,2026-07-11T17:03:00+00:00,5,3
+replaced,rtlz,Storage Hunters,2026-07-11T19:00:00+02:00,2026-07-11T19:30:00+02:00,Storage Hunters: Claws for Cash,2026-07-11T17:03:00+00:00,2026-07-11T17:31:00+00:00,3,1
+replaced,rtlz,Storage Hunters,2026-07-11T19:30:00+02:00,2026-07-11T20:00:00+02:00,Storage Hunters: Auction on Wheels,2026-07-11T17:31:00+00:00,2026-07-11T17:59:00+00:00,1,-1
+replaced,rtlz,Gordon Ramsay: Oorlog in de keuken!,2026-07-11T20:00:00+02:00,2026-07-11T21:00:00+02:00,Gordon Ramsay: Oorlog In De Keuken!: Michon's,2026-07-11T17:59:00+00:00,2026-07-11T18:55:00+00:00,-1,-5
+replaced,rtlz,Gordon Ramsay: Oorlog in de keuken!,2026-07-11T21:00:00+02:00,2026-07-11T22:00:00+02:00,Gordon Ramsay: Oorlog In De Keuken!: Park's Edge,2026-07-11T18:55:00+00:00,2026-07-11T19:50:00+00:00,-5,-10
+replaced,rtlz,Gordon Ramsay: Oorlog in de keuken!,2026-07-11T22:00:00+02:00,2026-07-11T23:00:00+02:00,Gordon Ramsay: Oorlog In De Keuken!: Revisit,2026-07-11T19:50:00+00:00,2026-07-11T20:45:00+00:00,-10,-15
+title_mismatch,rtlz,Gordon Ramsay: Oorlog in de keuken!,2026-07-11T23:00:00+02:00,2026-07-12T00:00:00+02:00,Gordon Ramsay: Oorlog In De Keuken!: Revisit (part 2),2026-07-11T20:45:00+00:00,2026-07-11T21:39:00+00:00,-15,-21
+missing_in_secondary,sbs9,Telvero,2026-07-10T12:50:00+02:00,2026-07-10T14:50:00+02:00,,,,,
+missing_in_secondary,sbs9,The Mentalist,2026-07-10T14:50:00+02:00,2026-07-10T15:35:00+02:00,,,,,
+missing_in_secondary,sbs9,The Mentalist,2026-07-10T15:35:00+02:00,2026-07-10T16:30:00+02:00,,,,,
+missing_in_secondary,sbs9,Rizzoli And Isles,2026-07-10T16:30:00+02:00,2026-07-10T17:25:00+02:00,,,,,
+missing_in_secondary,sbs9,Rizzoli And Isles,2026-07-10T17:25:00+02:00,2026-07-10T18:20:00+02:00,,,,,
+missing_in_secondary,sbs9,Een Jaar Van Je Leven,2026-07-10T18:20:00+02:00,2026-07-10T19:30:00+02:00,,,,,
+missing_in_secondary,sbs9,Mr. Frank Visser: wordt u al geholpen?,2026-07-10T19:30:00+02:00,2026-07-10T20:00:00+02:00,,,,,
+missing_in_secondary,sbs9,Mr. Frank Visser: wordt u al geholpen?,2026-07-10T20:00:00+02:00,2026-07-10T20:30:00+02:00,,,,,
+missing_in_secondary,sbs9,Reminiscence,2026-07-10T20:30:00+02:00,2026-07-10T22:45:00+02:00,,,,,
+missing_in_secondary,sbs9,Fantasy Island,2026-07-10T22:45:00+02:00,2026-07-11T00:55:00+02:00,,,,,
+missing_in_secondary,sbs9,Twisted Metal,2026-07-11T00:55:00+02:00,2026-07-11T01:25:00+02:00,,,,,
+missing_in_secondary,sbs9,Twisted Metal,2026-07-11T01:25:00+02:00,2026-07-11T01:55:00+02:00,,,,,
+missing_in_secondary,sbs9,Telvero,2026-07-11T01:55:00+02:00,2026-07-11T04:25:00+02:00,,,,,
+missing_in_secondary,sbs9,Hart van Nederland,2026-07-11T04:25:00+02:00,2026-07-11T06:00:00+02:00,,,,,
+missing_in_secondary,sbs9,Hart van Nederland,2026-07-11T06:00:00+02:00,2026-07-11T06:45:00+02:00,,,,,
+missing_in_secondary,sbs9,Telvero,2026-07-11T06:45:00+02:00,2026-07-11T12:45:00+02:00,,,,,
+missing_in_secondary,sbs9,Telvero,2026-07-11T12:45:00+02:00,2026-07-11T14:45:00+02:00,,,,,
+missing_in_secondary,sbs9,De Grote Tuinverbouwing,2026-07-11T14:45:00+02:00,2026-07-11T15:55:00+02:00,,,,,
+missing_in_secondary,sbs9,"Clean It, Fix It",2026-07-11T15:55:00+02:00,2026-07-11T16:55:00+02:00,,,,,
+missing_in_secondary,sbs9,"Clean It, Fix It",2026-07-11T16:55:00+02:00,2026-07-11T17:50:00+02:00,,,,,
+missing_in_secondary,sbs9,Groundhog Day,2026-07-11T17:50:00+02:00,2026-07-11T20:00:00+02:00,,,,,
+missing_in_secondary,sbs9,Bridesmaids,2026-07-11T20:00:00+02:00,2026-07-11T22:25:00+02:00,,,,,
+missing_in_secondary,sbs9,Hot Tub Time Machine 2,2026-07-11T22:25:00+02:00,2026-07-12T00:15:00+02:00,,,,,
+replaced,ons,The Flying Doctors,2026-07-10T13:00:00+02:00,2026-07-10T13:57:00+02:00,The Flying Doctors: Lost Rainbows,2026-07-10T11:00:00+00:00,2026-07-10T11:57:00+00:00,0,0
+replaced,ons,Ballykissangel,2026-07-10T13:57:00+02:00,2026-07-10T14:59:00+02:00,Ballykissangel: River Dance,2026-07-10T11:57:00+00:00,2026-07-10T12:59:00+00:00,0,0
+replaced,ons,The Adventures of Robin Hood,2026-07-10T14:59:00+02:00,2026-07-10T15:30:00+02:00,The Adventures of Robin Hood: Pepper,2026-07-10T12:59:00+00:00,2026-07-10T13:30:00+00:00,0,0
+replaced,ons,Space Patrol,2026-07-10T15:30:00+02:00,2026-07-10T16:01:00+02:00,Space Patrol: The Slaves of Neptune,2026-07-10T13:30:00+00:00,2026-07-10T14:01:00+00:00,0,0
+replaced,ons,Commissaris Rex,2026-07-10T16:01:00+02:00,2026-07-10T17:00:00+02:00,Commissaris Rex: Baby in Danger,2026-07-10T14:01:00+00:00,2026-07-10T15:00:00+00:00,0,0
+replaced,ons,Fame,2026-07-10T17:00:00+02:00,2026-07-10T18:00:00+02:00,Fame: Class Act,2026-07-10T15:00:00+00:00,2026-07-10T16:00:00+00:00,0,0
+replaced,ons,"Dr. Quinn, Medicine Woman",2026-07-10T18:00:00+02:00,2026-07-10T19:00:00+02:00,"Dr. Quinn, Medicine Woman: Season of Miracles",2026-07-10T16:00:00+00:00,2026-07-10T17:00:00+00:00,0,0
+replaced,ons,The Flying Doctors,2026-07-10T19:00:00+02:00,2026-07-10T20:00:00+02:00,The Flying Doctors: Broken Promises,2026-07-10T17:00:00+00:00,2026-07-10T18:00:00+00:00,0,0
+replaced,ons,Der Bergdoktor,2026-07-10T20:00:00+02:00,2026-07-10T20:57:00+02:00,Der Bergdokter: Der Floh im Ohr,2026-07-10T18:00:00+00:00,2026-07-10T18:57:00+00:00,0,0
+confirmed,ons,Classic Cartoons,2026-07-10T20:57:00+02:00,2026-07-10T21:03:00+02:00,Classic Cartoons,2026-07-10T18:57:00+00:00,2026-07-10T19:03:00+00:00,0,0
+replaced,ons,Taggart,2026-07-10T21:03:00+02:00,2026-07-10T22:00:00+02:00,Taggart: Gingerbread Part One,2026-07-10T19:03:00+00:00,2026-07-10T20:00:00+00:00,0,0
+confirmed,ons,Sil de Strandjutter,2026-07-10T22:00:00+02:00,2026-07-10T23:00:00+02:00,Sil de Strandjutter,2026-07-10T20:00:00+00:00,2026-07-10T21:00:00+00:00,0,0
+replaced,ons,Dynasty,2026-07-10T23:00:00+02:00,2026-07-11T00:00:00+02:00,Dynasty: The New Moguls,2026-07-10T21:00:00+00:00,2026-07-10T22:00:00+00:00,0,0
+replaced,ons,Ons nostalgisch uur,2026-07-11T00:00:00+02:00,2026-07-11T01:03:00+02:00,Ons nostalgisch uur: Koken en Voeding - deel 1.,2026-07-10T22:00:00+00:00,2026-07-10T23:03:00+00:00,0,0
+replaced,ons,Fame,2026-07-11T01:03:00+02:00,2026-07-11T02:01:00+02:00,Fame: Class Act,2026-07-10T23:03:00+00:00,2026-07-11T00:01:00+00:00,0,0
+replaced,ons,Um Himmels Willen,2026-07-11T02:01:00+02:00,2026-07-11T03:01:00+02:00,Um Himmels Willen: Ausgebacken,2026-07-11T00:01:00+00:00,2026-07-11T01:01:00+00:00,0,0
+replaced,ons,Der Bergdoktor,2026-07-11T03:01:00+02:00,2026-07-11T03:59:00+02:00,Der Bergdokter: Der Floh im Ohr,2026-07-11T01:01:00+00:00,2026-07-11T01:59:00+00:00,0,0
+replaced,ons,Mijlpalen in de 20e Eeuw,2026-07-11T03:59:00+02:00,2026-07-11T04:31:00+02:00,Mijlpalen van de 20e Eeuw: 1980 tot 1989,2026-07-11T01:59:00+00:00,2026-07-11T02:31:00+00:00,0,0
+confirmed,ons,Betty Boop,2026-07-11T04:31:00+02:00,2026-07-11T04:37:00+02:00,Betty Boop,2026-07-11T02:31:00+00:00,2026-07-11T02:37:00+00:00,0,0
+confirmed,ons,Classic Cartoons,2026-07-11T04:37:00+02:00,2026-07-11T04:57:00+02:00,Classic Cartoons,2026-07-11T02:37:00+00:00,2026-07-11T02:57:00+00:00,0,0
+replaced,ons,Jack Irish,2026-07-11T04:57:00+02:00,2026-07-11T06:05:00+02:00,Jack Irish: Sins of Omission.,2026-07-11T02:57:00+00:00,2026-07-11T04:05:00+00:00,0,0
+replaced,ons,The Indian Doctor,2026-07-11T06:05:00+02:00,2026-07-11T07:00:00+02:00,The Indian Doctor: The Fete,2026-07-11T04:05:00+00:00,2026-07-11T05:00:00+00:00,0,0
+replaced,ons,Taggart,2026-07-11T07:00:00+02:00,2026-07-11T07:56:00+02:00,Taggart: Gingerbread Part One,2026-07-11T05:00:00+00:00,2026-07-11T05:56:00+00:00,0,0
+replaced,ons,Popeye the Sailor,2026-07-11T07:56:00+02:00,2026-07-11T08:00:00+02:00,Popeye,2026-07-11T05:56:00+00:00,2026-07-11T06:00:00+00:00,0,0
+confirmed,ons,Sil de Strandjutter,2026-07-11T08:00:00+02:00,2026-07-11T09:00:00+02:00,Sil de Strandjutter,2026-07-11T06:00:00+00:00,2026-07-11T07:00:00+00:00,0,0
+replaced,ons,Alarm für Cobra 11,2026-07-11T09:00:00+02:00,2026-07-11T09:59:00+02:00,Cobra 11,2026-07-11T07:00:00+00:00,2026-07-11T07:59:00+00:00,0,0
+replaced,ons,Bergerac,2026-07-11T09:59:00+02:00,2026-07-11T11:03:00+02:00,Bergerac: In Love and War,2026-07-11T07:59:00+00:00,2026-07-11T09:03:00+00:00,0,0
+replaced,ons,Jack Irish,2026-07-11T11:03:00+02:00,2026-07-11T12:11:00+02:00,Jack Irish: Sins of Omission.,2026-07-11T09:03:00+00:00,2026-07-11T10:11:00+00:00,0,0
+replaced,ons,Der Bergdoktor,2026-07-11T12:11:00+02:00,2026-07-11T13:08:00+02:00,Der Bergdokter: Der Floh im Ohr,2026-07-11T10:11:00+00:00,2026-07-11T11:08:00+00:00,0,0
+confirmed,ons,Vaterunser der Berge,2026-07-11T13:08:00+02:00,2026-07-11T14:21:00+02:00,Vaterunser der Berge,2026-07-11T11:08:00+00:00,2026-07-11T12:21:00+00:00,0,0
+confirmed,ons,A Star Is Born,2026-07-11T14:21:00+02:00,2026-07-11T16:30:00+02:00,A Star Is Born,2026-07-11T12:21:00+00:00,2026-07-11T14:30:00+00:00,0,0
+replaced,ons,The Travelling Auctioneers,2026-07-11T16:30:00+02:00,2026-07-11T17:27:00+02:00,The Travelling Auctioneers: Pattie And Tricia,2026-07-11T14:30:00+00:00,2026-07-11T15:27:00+00:00,0,0
+replaced,ons,Jack Irish,2026-07-11T17:27:00+02:00,2026-07-11T18:35:00+02:00,Jack Irish: Sins of Omission.,2026-07-11T15:27:00+00:00,2026-07-11T16:35:00+00:00,0,0
+replaced,ons,Rijk Verleden,2026-07-11T18:35:00+02:00,2026-07-11T19:00:00+02:00,Rijk verleden: Verstandig werken meer verdienen,2026-07-11T16:35:00+00:00,2026-07-11T17:00:00+00:00,0,0
+replaced,ons,Um Himmels Willen,2026-07-11T19:00:00+02:00,2026-07-11T20:00:00+02:00,Um Himmels Willen: Ausgebacken,2026-07-11T17:00:00+00:00,2026-07-11T18:00:00+00:00,0,0
+replaced,ons,Bergerac,2026-07-11T20:00:00+02:00,2026-07-11T21:05:00+02:00,Bergerac: In Love and War,2026-07-11T18:00:00+00:00,2026-07-11T19:05:00+00:00,0,0
+confirmed,ons,Rufus,2026-07-11T21:05:00+02:00,2026-07-11T22:45:00+02:00,Rufus,2026-07-11T19:05:00+00:00,2026-07-11T20:45:00+00:00,0,0
+replaced,ons,Superman,2026-07-11T22:45:00+02:00,2026-07-11T23:01:00+02:00,Superman Cartoons,2026-07-11T20:45:00+00:00,2026-07-11T21:01:00+00:00,0,0
+replaced,ons,Der Bergdoktor,2026-07-11T23:01:00+02:00,2026-07-12T00:00:00+02:00,Der Bergdokter: Der Floh im Ohr,2026-07-11T21:01:00+00:00,2026-07-11T22:00:00+00:00,0,0
+missing_in_primary,net5,,,,Love It or List It Australië: Windsor,2026-07-10T10:26:00+00:00,2026-07-10T11:32:00+00:00,,
+missing_in_primary,rtlz,,,,RTL Nieuws,2026-07-11T02:03:00+00:00,2026-07-11T02:13:00+00:00,,
+missing_in_primary,rtlz,,,,Storage Hunters: Truth or Dare,2026-07-11T15:45:00+00:00,2026-07-11T16:07:00+00:00,,
+missing_in_primary,rtlz,,,,Gordon Ramsay: Oorlog In De Keuken!: Luigi,2026-07-11T21:39:00+00:00,2026-07-11T22:27:00+00:00,,

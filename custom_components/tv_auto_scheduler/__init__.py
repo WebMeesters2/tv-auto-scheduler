@@ -5,17 +5,22 @@ from functools import partial
 
 import voluptuous as vol
 from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.util import dt as dt_util
 
 from .canalplus import CanalPlusClient
-from .canalplus_compare import build_canalplus_comparison_report
+from .canalplus_compare import (
+    build_canalplus_comparison_report,
+    load_canalplus_channel_map,
+)
 from .const import (
     CONF_CANALPLUS_AUTHORIZATION,
     CONF_CANALPLUS_CHANNELS,
     CONF_CHANGE_LOG,
     CONF_CHANGE_LOG_FILE,
+    CONF_CHANNELS_FILE,
     CONF_COMPARISON_REPORT_FILE,
     CONF_DRY_RUN,
     CONF_DRY_RUN_LOG,
@@ -24,6 +29,7 @@ from .const import (
     CONF_RULES_FILE,
     CONF_SHOW_MISSING_EPG,
     CONF_TV_CALENDAR,
+    DEFAULT_CHANNELS_FILE,
     DEFAULT_PRE_CALENDAR,
     DEFAULT_RULES_FILE,
     DEFAULT_TV_CALENDAR,
@@ -52,7 +58,8 @@ _LOGGER = logging.getLogger(__name__)
 SERVICE_COMPARE_CANALPLUS_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_CANALPLUS_AUTHORIZATION): cv.string,
-        vol.Required(CONF_CANALPLUS_CHANNELS): vol.Schema({cv.string: cv.string}),
+        vol.Optional(CONF_CANALPLUS_CHANNELS): vol.Schema({cv.string: cv.string}),
+        vol.Optional(CONF_CHANNELS_FILE, default=DEFAULT_CHANNELS_FILE): cv.path,
         vol.Optional(CONF_COMPARISON_REPORT_FILE): cv.path,
         vol.Optional(CONF_SHOW_MISSING_EPG, default=False): cv.boolean,
     }
@@ -390,14 +397,45 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         _LOGGER.debug("TV Auto Scheduler: Canal+ comparison service called")
 
         authorization = call.data[CONF_CANALPLUS_AUTHORIZATION]
-        channel_map = dict(call.data[CONF_CANALPLUS_CHANNELS])
+        channels_file = call.data.get(CONF_CHANNELS_FILE)
         report_file = call.data.get(CONF_COMPARISON_REPORT_FILE)
         show_missing_epg = call.data[CONF_SHOW_MISSING_EPG]
 
         try:
+            inline_channel_map = dict(call.data.get(CONF_CANALPLUS_CHANNELS, {}))
+            channel_map = {}
+            if channels_file:
+                try:
+                    channel_map.update(
+                        await hass.async_add_executor_job(
+                            load_canalplus_channel_map,
+                            channels_file,
+                        )
+                    )
+                except FileNotFoundError:
+                    if not inline_channel_map:
+                        raise
+                    _LOGGER.debug(
+                        "TV Auto Scheduler: Canal+ channels file not found: %s",
+                        channels_file,
+                    )
+            channel_map.update(inline_channel_map)
+            if not channel_map:
+                raise ValueError("No Canal+ channels configured for comparison")
+
+            _LOGGER.info(
+                "TV Auto Scheduler: Canal+ comparison using %s channel id(s)%s",
+                len(channel_map),
+                f" from {channels_file}" if channels_file else "",
+            )
+
             programmes = scan_epg(
                 hass,
                 show_missing_epg=show_missing_epg,
+            )
+            _LOGGER.info(
+                "TV Auto Scheduler: Canal+ comparison scanned %s Open EPG programme(s)",
+                len(programmes),
             )
             client = CanalPlusClient(authorization=authorization)
             report = await hass.async_add_executor_job(
@@ -412,7 +450,13 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
             _LOGGER.info(
                 "TV Auto Scheduler: Canal+ comparison complete "
-                "(%s comparison row(s), counts=%s%s)",
+                "(%s channel id(s), %s Open EPG programme(s), "
+                "%s Canal+ programme(s), %s fetch error(s), "
+                "%s comparison row(s), counts=%s%s)",
+                report.channel_count,
+                report.primary_count,
+                report.secondary_count,
+                report.fetch_error_count,
                 len(report.comparisons),
                 report.counts,
                 (
@@ -421,8 +465,11 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     else ""
                 ),
             )
-        except Exception:
+        except Exception as err:
             _LOGGER.exception("TV Auto Scheduler Canal+ comparison failed")
+            raise HomeAssistantError(
+                "TV Auto Scheduler Canal+ comparison failed; check home-assistant.log"
+            ) from err
 
     hass.services.async_register(
         DOMAIN,

@@ -1,0 +1,20 @@
+compare_canalplus_epg:
+  alias: Compare Canal+ EPG
+  mode: single
+  fields:
+    bearer_token:
+      name: Canal+ bearer token
+      required: true
+      selector:
+        text:
+          type: password
+  sequence:
+    - action: tv_auto_scheduler.compare_canalplus
+      data:
+        canalplus_authorization: "Bearer {{ bearer_token }}"
+        channels_file: /config/tv/channels.yaml
+        comparison_report_file: /config/tv_auto_scheduler/canalplus_comparison.csv
+    - action: persistent_notification.create
+      data:
+        title: Canal+ EPG comparison requested
+        message: The comparison service completed. Check /config/tv_auto_scheduler/canalplus_comparison.csv and home-assistant.log.

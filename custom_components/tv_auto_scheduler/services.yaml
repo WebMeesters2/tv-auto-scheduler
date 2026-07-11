@@ -73,12 +73,21 @@ compare_canalplus:
 
     canalplus_channels:
       name: Canal+ channels
-      description: Mapping from Open EPG channel keys to Canal+ channel IDs.
-      required: true
+      description: Optional mapping from Open EPG channel keys to Canal+ channel IDs. Values override channels_file entries.
+      required: false
       example:
         npo1: 9zhabdaigZd4WCwrn1Yyl7LtviNAKEgAgG6ysNpd
       selector:
         object:
+
+    channels_file:
+      name: Channels file
+      description: YAML channel database containing canalplus_id values.
+      required: false
+      default: /config/tv/channels.yaml
+      example: /config/tv/channels.yaml
+      selector:
+        text:
 
     comparison_report_file:
       name: Comparison report file

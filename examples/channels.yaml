@@ -1,0 +1,369 @@
+# =3=====================================================================
+
+npo1:
+  zap: "1"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_npo_1
+  canalplus_id: 9zhabdaigZd4WCwrn1Yyl7LtviNAKEgAgG6ysNpd
+  icon: "NPO1.svg"
+  aliases:
+    - NPO 1
+    - npo1
+
+npo2:
+  zap: "2"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_npo_2
+  canalplus_id: cmEptSYiJIyHWcaSP1PAWirLQUbXUqTm3Xeq-bF0
+  icon: "NPO2.svg"
+  aliases:
+    - NPO 2
+    - npo2
+
+npo3:
+  zap: "3"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_npo_3
+  canalplus_id: V5RGjx1PM7MLTQ1DO0hXYoifsBRBw6UySOrD9gCF
+  icon: "NPO3.svg"
+  aliases:
+    - NPO 3
+    - npo3
+
+# =3=====================================================================
+
+rtl4:
+  zap: "4"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_rtl_4
+  canalplus_id: UZ823Q9iXs61u7D-6MIM5VQ-ZSTbu8FY8ubr0YEc
+  icon: "RTL4.svg"
+  aliases:
+    - RTL 4
+    - rtl4
+
+rtl5:
+  zap: "5"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_rtl_5
+  canalplus_id: x9x7iVoIk8ROusuM4SLcO8rSOqSi1vZy3H0V9f2I
+  icon: "RTL5.svg"
+  aliases:
+    - RTL 5
+    - rtl5
+
+sbs6:
+  zap: "6"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_sbs6
+  canalplus_id: OssY0GeoV2dkfw9Fenbarxf8YPv4VgThF8dodH8d
+  icon: SBS6.svg
+  aliases:
+    - SBS 6
+    - sbs6
+
+# =3=====================================================================
+
+rtl7:
+  zap: "7"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_rtl_7
+  canalplus_id: pEutNIisD3zC0CITenaS_zIZSQIpdA_hJiawhD4h
+  icon: "RTL7.svg"
+  aliases:
+    - RTL 7
+    - rtl7
+
+veronica:
+  zap: "8"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_veronica
+  canalplus_id: 2AXpdDpJOwbUTYS0SldRmaYbiaxwET_bfrtV0UEz
+  icon: Veronica.svg
+  aliases:
+    - Veronica
+    - VERONICA
+
+net5:
+  zap: "9"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_net_5
+  canalplus_id: 2YcatfY8IgvnJ047HZwJN1mJgyx1hwj18Pv_3_RY
+  icon: NET5.svg
+  aliases:
+    - NET 5
+    - net5
+
+# =3=====================================================================
+
+bbc1:
+  zap: "67"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_bbc1
+  canalplus_id: Sie0X-VqN0eQUIhydiiCQWtPpcHfCj7kX-y4U6_t
+  icon: "BBC1.svg"
+  aliases:
+    - BBC1
+    - bbc1
+    - bbcone
+    - bbc one
+
+bbc2:
+  zap: "68"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_bbc2
+  canalplus_id: xWWrXQIZOlzzQ3l7Rh4AFVKblg5hv-xe8eGnoki4
+  icon: "BBC2.svg"
+  aliases:
+    - BBC2
+    - bbc2
+    - bbctwo
+    - bbc two
+
+bbcnl:
+  zap: "69"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_bbc_nl
+  canalplus_id: OKPgb3GEofLcJUy4jFPdsuLZe7hRH9WeDVbNkG-Q
+  icon: "BBCNL.svg"
+  aliases:
+    - BBC NL
+    - bbcnl
+
+# =3=====================================================================
+
+vrt1:
+  zap: "60"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_vrt_1
+  canalplus_id: JIY-fyHDkM1Rk260f-WNXlVD8iYnlDtWOQ4ah0hb
+  icon: "VRT_1.svg"
+  aliases:
+    - VRT 1
+    - vrt1
+
+vrtcanvas:
+  zap: "61"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_vrt_canvas
+  canalplus_id: xXyJW5JI58w41XLGd0MHryA15TC1u8hGoWE9Vl7Z
+  icon: "VRT_Canvas.svg"
+  aliases:
+    - VRT Canvas
+    - vrtcanvas
+
+ketnet:
+  zap: "85"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_vrt_ketnet
+  canalplus_id: ybB6s4EOBBNiuwIkowwP96dG-sh8PPvCwBLkS3sI
+  icon: "KETNET.svg"
+  aliases:
+    - KETNET
+    - Ketnet
+
+# =3=====================================================================
+
+ard:
+  zap: "64"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_ard
+  canalplus_id: 9XR0SZqHI_J6p7-uyA-MdfzAt_fo1x5Ad4Z1T5YP
+  icon: "Das_Erste.svg"
+  aliases:
+    - ARD
+    - ard
+
+zdf:
+  zap: "65"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_zdf
+  canalplus_id: eY_A-nCwden57XX-jzVz8VuON7LEcwfdTN20iXbk
+  icon: "ZDF.svg"
+  aliases:
+    - ZDF
+    - zdf
+
+wdr:
+  zap: "66"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_wdr
+  canalplus_id: EOmNC5aMc3Xm5fI1ZU8t3ChMkr0Rvvv36BCrBfIi
+  icon: "WDR.svg"
+  aliases:
+    - WDR
+    - wdr
+
+# =4=====================================================================
+
+rtl8:
+  zap: "10"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_rtl_8
+  canalplus_id: ps7Lvqxl4O_1RkifJVXq6A-jY7jvedsqUPmHEiwS
+  icon: "RTL8.svg"
+  aliases:
+    - RTL 8
+    - rtl8
+
+rtlz:
+  zap: "13"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_rtl_z
+  canalplus_id: E0uWRPUJXnpo2GXsWJIu5EFrAPiWGw4gCpXMIJOm
+  icon: "RTLZ.svg"
+  aliases:
+    - RTL Z
+    - rtlz
+
+sbs9:
+  zap: "12"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_sbs9
+  canalplus_id: b8gnog0dq_vwvdBkQH1KISTaIaTeMH5l24XoUO_s
+  icon: "SBS9.svg"
+  aliases:
+    - SBS9
+    - sbs9
+
+ons:
+  zap: "150"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_ons
+  canalplus_id: tHu29WPv-tRneEY2Jk_8s5Wu8aL1orKZIO9om2Fz
+  icon: "ONS.svg"
+  aliases:
+    - ONS
+    - ons
+
+# =4=====================================================================
+
+npo1extra:
+  zap: "32"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_npo_1_extra
+  icon: "NPO1_Extra.svg"
+  aliases:
+    - NPO 1 Extra
+    - npo1extra
+
+npo2extra:
+  zap: "33"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_npo_2_extra
+  icon: "NPO2_Extra.svg"
+  aliases:
+    - NPO 2 Extra
+    - npo2extra
+
+npopolitiekennieuws:
+  zap: "200"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_npo_politiek_en_nieuws
+  icon: "NPO_PolNws.svg"
+  aliases:
+    - NPO Politiek en Nieuws
+    - npopolitiekennieuws
+
+starchannel:
+  zap: "11"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_star_channel
+  icon: "StarChannel.svg"
+  aliases:
+    - STAR Channel
+    - starchannel
+
+# =4=====================================================================
+
+bbcnews:
+  zap: "208"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_bbc_news
+  icon: "BBC_News-2.svg"
+  aliases:
+    - BBC News
+    - bbcnews
+
+euronews:
+  zap: "205"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_euronews
+  icon: "Euronews-bevelled.svg"
+  aliases:
+    - Euronews
+    - euronews
+
+nationalgeographic:
+  zap: "26"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_national_geographic
+  icon: "NatGeo+tekst_light.svg"
+  aliases:
+    - National Geographic
+    - nationalgeographic
+
+natgeowild:
+  zap: "30"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_nat_geo_wild
+  icon: "National_Geographic_Wild_white.svg"
+  aliases:
+    - Nat Geo Wild
+    - natgeowild
+
+# =4=====================================================================
+
+omroepbrabant:
+  zap: ""
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_omroep_brabant
+  icon: "OmroepBrabant+tekst_light.svg"
+  aliases:
+    - Omroep Brabant
+    - OmroepBrabant
+
+comedycentral:
+  zap: "40"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_comedy_central
+  icon: "Comedy_Central.svg"
+  aliases:
+    - Comedy Central
+    - comedycentral
+
+canalplusaction:
+  zap: "21"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_canalplus_action
+  icon: "canalplus_action.svg"
+  aliases:
+    - CanalPlus Action
+    - canalplusaction
+
+canalplusaction2:
+  zap: "22"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_canalplus_action_2
+  icon: "canalplus_action.svg"
+  aliases:
+    - CanalPlus Action 2
+    - canalplusaction2
+
+# =4=====================================================================
+
+arte:
+  zap: "44"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_arte
+  icon: "Arte.svg"
+  aliases:
+    - ARTE
+    - arte
+
+museumtv:
+  zap: "58"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_museumtv
+  icon: "MuseumTV.svg"
+  aliases:
+    - MUSEUMTV
+    - Museum TV
+
+filmbox:
+  zap: "14"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_filmbox
+  icon: "Filmbox.svg"
+  aliases:
+    - FilmBox
+    - filmbox
+
+history:
+  zap: "27"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_history
+  icon: "History_wit.svg"
+  aliases:
+    - History
+    - history
+
+# =4=====================================================================
+
+disneychannel:
+  zap: "100"
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_disney_channel
+  icon: "DisneyChannel.svg"
+  aliases:
+    - Disney Channel
+    - disneychannel
+
+rtlcrime:
+  zap: ""
+  epg: sensor.woonkamer_epg_fmqn5gzdfv_rtl_crime
+  icon: "RTL_Crime.svg"
+  aliases:
+    - RTL Crime
+    - rtlcrime
