@@ -84,6 +84,9 @@ Default section order:
 - Do not rename files, entities, classes, functions, or configuration keys unless necessary.
 - Do not remove existing functionality without explicit instruction.
 - Update documentation when behavior changes.
+- When creating or updating release notes, use `.github/RELEASE_NOTES_TEMPLATE.md`
+  as the source format, set the concrete release version, keep applicable sections
+  in template order, and remove empty sections before publishing.
 
 ## Project Notes
 
