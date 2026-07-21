@@ -688,6 +688,53 @@ class SchedulerTests(unittest.TestCase):
         self.assertEqual(rows[0]["source_epg"], "sensor.epg_npo1")
         self.assertEqual(rows[0]["programme_description"], "Het laatste nieuws.")
 
+    def test_append_change_log_accepts_legacy_f4type_header(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            log_file = Path(temp_dir) / "tv_auto_scheduler_changes.csv"
+            log_file.write_text(
+                "F4type,run_at,start_at,end_at,timezone,calendar,channel,"
+                "channel_name,programme,rule,rule_row,source_epg,"
+                "programme_description\n",
+                encoding="utf-8",
+            )
+            rule = self.scheduler.ScheduleRule(
+                enabled=True,
+                channel_pattern=r"npo[12]",
+                programme="NOS Journaal",
+                pre=False,
+                tv=True,
+                row_number=7,
+                rule_id=7,
+            )
+            programme = self.scheduler.EpgProgramme(
+                channel_key="npo1",
+                channel_name="NPO 1",
+                epg_entity="sensor.epg_npo1",
+                title="NOS Journaal",
+                description="Het laatste nieuws.",
+                start="20:00",
+                end="20:30",
+                start_datetime=datetime(2026, 6, 10, 20, 0, tzinfo=timezone.utc),
+                end_datetime=datetime(2026, 6, 10, 20, 30, tzinfo=timezone.utc),
+            )
+            entry = self.scheduler.ChangeLogEntry(
+                change_type="Add",
+                run_datetime=datetime(2026, 6, 9, 6, 0, tzinfo=timezone.utc),
+                calendar_entity="calendar.televisie",
+                programme=programme,
+                rule=rule,
+            )
+
+            written = self.scheduler.append_change_log(str(log_file), [entry])
+
+            with log_file.open("r", newline="", encoding="utf-8") as file:
+                rows = list(csv.DictReader(file))
+
+        self.assertEqual(written, 1)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["F4type"], "Add")
+        self.assertEqual(rows[0]["rule_row"], "7")
+
 
     def test_remove_rules_by_row_numbers_removes_only_selected_rows(self) -> None:
         csv_content = "\n".join(

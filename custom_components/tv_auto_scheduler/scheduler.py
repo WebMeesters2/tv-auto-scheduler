@@ -1371,7 +1371,19 @@ def _build_change_log_row(
         row["rule_id"] = str(entry.rule.rule_id)
     if "rule_row" in fieldnames:
         row["rule_row"] = str(entry.rule.rule_id)
-    return row
+    # Only emit keys present in the active header to support legacy files safely.
+    return {fieldname: row.get(fieldname, "") for fieldname in fieldnames}
+
+
+def _normalize_change_log_fieldname(fieldname: str) -> str:
+    """Map known malformed legacy change-log header names to supported ones."""
+    normalized = _clean(fieldname)
+    lowered = normalized.lower()
+
+    if lowered in {"f4type", "\ufefftype"}:
+        return "type"
+
+    return normalized
 
 
 def _resolve_change_log_fieldnames(path: Path, write_header: bool) -> list[str]:
@@ -1397,11 +1409,22 @@ def _resolve_change_log_fieldnames(path: Path, write_header: bool) -> list[str]:
         reader = csv.reader(file)
         existing_header = next(reader, [])
 
-    if "rule_id" in existing_header:
-        return existing_header
+    normalized_header = [
+        _normalize_change_log_fieldname(fieldname)
+        for fieldname in existing_header
+    ]
 
-    if "rule_row" in existing_header:
-        return existing_header
+    if normalized_header != existing_header:
+        _LOGGER.warning(
+            "TV Auto Scheduler: normalized malformed change-log header in %s",
+            path,
+        )
+
+    if "rule_id" in normalized_header:
+        return normalized_header
+
+    if "rule_row" in normalized_header:
+        return normalized_header
 
     return [
         "type",
