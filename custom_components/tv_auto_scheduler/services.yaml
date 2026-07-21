@@ -58,6 +58,27 @@ scan:
       selector:
         text:
 
+export_open_epg:
+  name: Export Open EPG snapshot
+  description: Write the current normalized Open EPG sensor data to a JSON file for external tools.
+  fields:
+    open_epg_export_file:
+      name: Export file
+      description: JSON file path where the Open EPG snapshot is written.
+      required: false
+      default: /config/tv_auto_scheduler/open_epg_snapshot.json
+      example: /config/tv_auto_scheduler/open_epg_snapshot.json
+      selector:
+        text:
+
+    show_missing_epg:
+      name: Show missing EPG entities
+      description: Log every channel whose configured EPG entity is missing before exporting.
+      required: false
+      default: false
+      selector:
+        boolean:
+
 
 compare_canalplus:
   name: Compare Open EPG with Canal+

@@ -14,6 +14,8 @@ from .canalplus import CanalPlusClient
 from .canalplus_compare import (
     build_canalplus_comparison_report,
     load_canalplus_channel_map,
+    sanitize_canalplus_authorization,
+    write_open_epg_export_file,
 )
 from .const import (
     CONF_CANALPLUS_AUTHORIZATION,
@@ -25,15 +27,18 @@ from .const import (
     CONF_DRY_RUN,
     CONF_DRY_RUN_LOG,
     CONF_DRY_RUN_LOG_FILE,
+    CONF_OPEN_EPG_EXPORT_FILE,
     CONF_PRE_CALENDAR,
     CONF_RULES_FILE,
     CONF_SHOW_MISSING_EPG,
     CONF_TV_CALENDAR,
     DEFAULT_CHANNELS_FILE,
+    DEFAULT_OPEN_EPG_EXPORT_FILE,
     DEFAULT_PRE_CALENDAR,
     DEFAULT_RULES_FILE,
     DEFAULT_TV_CALENDAR,
     DOMAIN,
+    SERVICE_EXPORT_OPEN_EPG,
     SERVICE_COMPARE_CANALPLUS,
     SERVICE_SCAN,
 )
@@ -61,6 +66,16 @@ SERVICE_COMPARE_CANALPLUS_SCHEMA = vol.Schema(
         vol.Optional(CONF_CANALPLUS_CHANNELS): vol.Schema({cv.string: cv.string}),
         vol.Optional(CONF_CHANNELS_FILE, default=DEFAULT_CHANNELS_FILE): cv.path,
         vol.Optional(CONF_COMPARISON_REPORT_FILE): cv.path,
+        vol.Optional(CONF_SHOW_MISSING_EPG, default=False): cv.boolean,
+    }
+)
+
+SERVICE_EXPORT_OPEN_EPG_SCHEMA = vol.Schema(
+    {
+        vol.Optional(
+            CONF_OPEN_EPG_EXPORT_FILE,
+            default=DEFAULT_OPEN_EPG_EXPORT_FILE,
+        ): cv.path,
         vol.Optional(CONF_SHOW_MISSING_EPG, default=False): cv.boolean,
     }
 )
@@ -94,6 +109,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         show_missing_epg = call.data[CONF_SHOW_MISSING_EPG]
         change_log = call.data[CONF_CHANGE_LOG]
         change_log_file = call.data.get(CONF_CHANGE_LOG_FILE)
+        change_log_write_failed = False
         run_started_at = dt_util.now()
         _LOGGER.debug(
             "Starting scan (rules_file=%s, dry_run=%s)",
@@ -361,21 +377,35 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     )
 
                 logged_changes = 0
-                if change_log and change_log_entries:
+                if change_log:
                     resolved_change_log_file = resolve_change_log_path(
                         rules_file,
                         change_log_file,
                     )
-                    logged_changes = await hass.async_add_executor_job(
-                        append_change_log,
-                        resolved_change_log_file,
-                        change_log_entries,
-                    )
-                    _LOGGER.debug(
-                        "TV Auto Scheduler: wrote %s change log row(s) to %s",
-                        logged_changes,
-                        resolved_change_log_file,
-                    )
+                    if not change_log_entries:
+                        _LOGGER.info(
+                            "TV Auto Scheduler: change_log enabled but no new "
+                            "Add/Delete rows to write (all matches were skipped "
+                            "or no matches were found)"
+                        )
+                    else:
+                        try:
+                            logged_changes = await hass.async_add_executor_job(
+                                append_change_log,
+                                resolved_change_log_file,
+                                change_log_entries,
+                            )
+                            _LOGGER.debug(
+                                "TV Auto Scheduler: wrote %s change log row(s) to %s",
+                                logged_changes,
+                                resolved_change_log_file,
+                            )
+                        except Exception:
+                            change_log_write_failed = True
+                            _LOGGER.exception(
+                                "TV Auto Scheduler: failed to write change log to %s",
+                                resolved_change_log_file,
+                            )
 
                 _LOGGER.info(
                     "TV Auto Scheduler: created %s event(s), replaced %s shifted "
@@ -388,15 +418,56 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     removed_rules,
                     logged_changes,
                 )
+                if change_log and change_log_write_failed:
+                    _LOGGER.warning(
+                        "TV Auto Scheduler: calendar updates succeeded but "
+                        "change-log writing failed; inspect the previous error"
+                    )
 
         except Exception:
             _LOGGER.exception("TV Auto Scheduler scan failed")
 
 
+    async def async_export_open_epg(call: ServiceCall) -> None:
+        _LOGGER.debug("TV Auto Scheduler: export_open_epg service called")
+
+        export_file = call.data[CONF_OPEN_EPG_EXPORT_FILE]
+        show_missing_epg = call.data[CONF_SHOW_MISSING_EPG]
+
+        try:
+            programmes = scan_epg(
+                hass,
+                show_missing_epg=show_missing_epg,
+            )
+            _LOGGER.info(
+                "TV Auto Scheduler: exporting %s Open EPG programme(s) to %s",
+                len(programmes),
+                export_file,
+            )
+            rows_written = await hass.async_add_executor_job(
+                write_open_epg_export_file,
+                export_file,
+                programmes,
+            )
+            _LOGGER.info(
+                "TV Auto Scheduler: Open EPG export complete "
+                "(%s programme(s) written to %s)",
+                rows_written,
+                export_file,
+            )
+        except Exception as err:
+            _LOGGER.exception("TV Auto Scheduler Open EPG export failed")
+            raise HomeAssistantError(
+                "TV Auto Scheduler Open EPG export failed; check home-assistant.log"
+            ) from err
+
+
     async def async_compare_canalplus(call: ServiceCall) -> None:
         _LOGGER.debug("TV Auto Scheduler: Canal+ comparison service called")
 
-        authorization = call.data[CONF_CANALPLUS_AUTHORIZATION]
+        authorization = sanitize_canalplus_authorization(
+            call.data[CONF_CANALPLUS_AUTHORIZATION]
+        )
         channels_file = call.data.get(CONF_CHANNELS_FILE)
         report_file = call.data.get(CONF_COMPARISON_REPORT_FILE)
         show_missing_epg = call.data[CONF_SHOW_MISSING_EPG]
@@ -422,6 +493,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             channel_map.update(inline_channel_map)
             if not channel_map:
                 raise ValueError("No Canal+ channels configured for comparison")
+            if not authorization:
+                raise ValueError("Canal+ authorization token is empty")
 
             _LOGGER.info(
                 "TV Auto Scheduler: Canal+ comparison using %s channel id(s)%s",
@@ -476,6 +549,12 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         SERVICE_SCAN,
         async_scan,
         schema=SERVICE_SCAN_SCHEMA,
+    )
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_EXPORT_OPEN_EPG,
+        async_export_open_epg,
+        schema=SERVICE_EXPORT_OPEN_EPG_SCHEMA,
     )
     hass.services.async_register(
         DOMAIN,

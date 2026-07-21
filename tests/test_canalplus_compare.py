@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import importlib.util
+import json
 import sys
 import tempfile
 import types
@@ -249,6 +250,111 @@ class CanalPlusCompareTests(unittest.TestCase):
             [row["kind"] for row in rows if row["channel"] == "rtl4"],
         )
 
+    def test_write_open_epg_export_file_serializes_programmes(self) -> None:
+        open_epg_programmes = [
+            self.scheduler.EpgProgramme(
+                channel_key="npo1",
+                channel_name="NPO 1",
+                epg_entity="sensor.epg_npo1",
+                title="Export Me",
+                description="",
+                start="20:00",
+                end="21:00",
+                start_datetime=datetime(2026, 7, 9, 20, 0, tzinfo=timezone.utc),  # noqa: UP017
+                end_datetime=datetime(2026, 7, 9, 21, 0, tzinfo=timezone.utc),  # noqa: UP017
+            )
+        ]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            export_file = Path(temp_dir) / "open_epg_snapshot.json"
+            rows_written = self.compare.write_open_epg_export_file(
+                str(export_file),
+                open_epg_programmes,
+            )
+            payload = json.loads(export_file.read_text(encoding="utf-8"))
+
+        self.assertEqual(rows_written, 1)
+        self.assertEqual(payload["provider"], "open_epg")
+        self.assertEqual(payload["programme_count"], 1)
+        self.assertEqual(payload["programmes"][0]["channel_key"], "npo1")
+        self.assertEqual(payload["programmes"][0]["title"], "Export Me")
+
+    def test_build_export_comparison_report_compares_snapshot_files(self) -> None:
+        open_epg_programmes = [
+            self.scheduler.EpgProgramme(
+                channel_key="npo1",
+                channel_name="NPO 1",
+                epg_entity="sensor.epg_npo1",
+                title="Export Me",
+                description="",
+                start="20:00",
+                end="21:00",
+                start_datetime=datetime(2026, 7, 9, 20, 0, tzinfo=timezone.utc),  # noqa: UP017
+                end_datetime=datetime(2026, 7, 9, 21, 0, tzinfo=timezone.utc),  # noqa: UP017
+            )
+        ]
+
+        canalplus_snapshot = {
+            "provider": "canalplus",
+            "programmes": [
+                {
+                    "programme_id": "asset-1",
+                    "channel_id": "npo1",
+                    "title": "Export Me",
+                    "description": "",
+                    "start": "2026-07-09T20:00:00.000Z",
+                    "end": "2026-07-09T21:00:00.000Z",
+                }
+            ],
+        }
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            open_epg_file = Path(temp_dir) / "open_epg_snapshot.json"
+            canalplus_file = Path(temp_dir) / "canalplus_snapshot.json"
+            open_epg_file.write_text(
+                json.dumps(self.compare.build_open_epg_export_payload(open_epg_programmes)),
+                encoding="utf-8",
+            )
+            canalplus_file.write_text(
+                json.dumps(canalplus_snapshot),
+                encoding="utf-8",
+            )
+
+            report = self.compare.build_export_comparison_report(
+                str(open_epg_file),
+                str(canalplus_file),
+            )
+
+        self.assertEqual(report.counts, {"confirmed": 1})
+        self.assertEqual(report.primary_count, 1)
+        self.assertEqual(report.secondary_count, 1)
+
+    def test_build_canalplus_comparison_report_aligns_fetch_window(self) -> None:
+        client = FakeCanalPlusClient()
+        open_epg_programmes = [
+            self.scheduler.EpgProgramme(
+                channel_key="npo1",
+                channel_name="NPO 1",
+                epg_entity="sensor.epg_npo1",
+                title="Offset Listing",
+                description="",
+                start="20:03",
+                end="21:02",
+                start_datetime=datetime(2026, 7, 9, 20, 3, tzinfo=timezone.utc),  # noqa: UP017
+                end_datetime=datetime(2026, 7, 9, 21, 2, tzinfo=timezone.utc),  # noqa: UP017
+            )
+        ]
+
+        self.compare.build_canalplus_comparison_report(
+            open_epg_programmes,
+            client,
+            {"npo1": "canal-npo1"},
+        )
+
+        _channel_id, start_at, end_at = client.requests[0]
+        self.assertEqual(start_at, datetime(2026, 7, 9, 20, 0, tzinfo=timezone.utc))  # noqa: UP017
+        self.assertEqual(end_at, datetime(2026, 7, 9, 21, 15, tzinfo=timezone.utc))  # noqa: UP017
+
     def test_load_canalplus_channel_map_reads_ids_from_channels_file(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             channels_file = Path(temp_dir) / "channels.yaml"
@@ -277,6 +383,20 @@ rtl4:
                 "rtl4": "canal-rtl4",
             },
         )
+
+    def test_sanitize_canalplus_authorization_removes_duplicate_bearer(self) -> None:
+        sanitized = self.compare.sanitize_canalplus_authorization(
+            "Bearer Bearer abc.def.ghi"
+        )
+
+        self.assertEqual(sanitized, "Bearer abc.def.ghi")
+
+    def test_sanitize_canalplus_authorization_handles_pasted_prefixes(self) -> None:
+        sanitized = self.compare.sanitize_canalplus_authorization(
+            "Authorization: Bearer abc.def.ghi"
+        )
+
+        self.assertEqual(sanitized, "Bearer abc.def.ghi")
 
 
 if __name__ == "__main__":

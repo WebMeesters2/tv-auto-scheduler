@@ -136,10 +136,23 @@ Default section order:
 - Maintainability, transparency, and predictable behavior matter more than clever abstractions.
 - If uncertain, explain the uncertainty and ask for clarification rather than guessing.
 - Prefer preserving existing behavior.
+- When a task is blocked by missing tools, missing permissions, or authorization failures, stop promptly and ask the user whether they want to resolve access first before continuing with retries or workarounds.
+
+## Coding standards
+- Source files should include a module-level comment or docstring describing the file purpose, and functions should include concise purpose/input/output comments or docstrings where prudent.
+- Python: use type hints where practical, clear naming, and avoid unnecessary abstraction.
+- TypeScript: prefer strict typing, avoid `any` unless unavoidable, and keep component logic readable.
+- YAML: prefer modern Home Assistant syntax, use native `note:` fields where supported, and keep automations readable.
+
+## Releases
+Every meaningful change requires Release notes and a version number.
+Use `.github/RELEASE_NOTES_TEMPLATE.md` as a template for the release-notes
+after the release is comitted, always tag the new release.
 
 ## Child DOX Index
 
 - `.github/AGENTS.md`: GitHub workflow metadata and CI configuration.
+- `addons/AGENTS.md`: Local add-on scaffolds and containerized helper runtimes.
 - `custom_components/tv_auto_scheduler/AGENTS.md`: Home Assistant integration source, service schemas, Canal+ comparison support, scheduler logic, and integration constants.
 - `docs/AGENTS.md`: Durable project documentation and handover notes.
 - `examples/AGENTS.md`: Example CSV and YAML files users can adapt.

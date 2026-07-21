@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import csv
+import json
 import logging
+import re
 from collections import Counter
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Protocol
 
@@ -20,10 +22,35 @@ from .epg_compare import (
     ProgrammeComparison,
     compare_guides,
     guide_programme_from_open_epg,
+    guide_programme_from_canalplus_row,
 )
 from .scheduler import EpgProgramme
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def sanitize_canalplus_authorization(authorization: str) -> str:
+    cleaned = authorization.strip().strip("\"'")
+    if not cleaned:
+        return ""
+
+    # Prefer extracting a JWT-like token when copy/paste includes extra text.
+    jwt_matches = re.findall(
+        r"[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+",
+        cleaned,
+    )
+    if jwt_matches:
+        return f"Bearer {jwt_matches[-1]}"
+
+    cleaned = re.sub(
+        r"^(authorization|auth|token)\s*[:=]\s*",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    cleaned = re.sub(r"^(bearer\s+)+", "", cleaned, flags=re.IGNORECASE)
+    token = cleaned.split()[-1] if cleaned.split() else ""
+    return f"Bearer {token}" if token else ""
 
 
 class CanalPlusScheduleClient(Protocol):
@@ -56,6 +83,31 @@ class CanalPlusComparisonReport:
     fetch_error_count: int = 0
 
 
+def build_open_epg_export_payload(
+    open_epg_programmes: list[EpgProgramme],
+) -> dict[str, object]:
+    """Serialize normalized Open EPG programmes for export to JSON."""
+    return {
+        "provider": "open_epg",
+        "exported_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "programme_count": len(open_epg_programmes),
+        "programmes": [_programme_row(programme) for programme in open_epg_programmes],
+    }
+
+
+def write_open_epg_export_file(
+    export_file: str,
+    open_epg_programmes: list[EpgProgramme],
+) -> int:
+    """Write a normalized Open EPG snapshot as JSON and return the programme count."""
+    path = Path(export_file)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    payload = build_open_epg_export_payload(open_epg_programmes)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return len(open_epg_programmes)
+
+
 def load_canalplus_channel_map(channels_file: str) -> dict[str, str]:
     channels = _load_channels_yaml(channels_file)
     channel_map: dict[str, str] = {}
@@ -69,6 +121,95 @@ def load_canalplus_channel_map(channels_file: str) -> dict[str, str]:
             channel_map[str(channel_key)] = str(canalplus_id)
 
     return channel_map
+
+
+def load_open_epg_export_programmes(export_file: str) -> list[EpgProgramme]:
+    payload = _load_json_file(export_file)
+    programmes = payload.get("programmes")
+    if not isinstance(programmes, list):
+        return []
+
+    loaded: list[EpgProgramme] = []
+    for row in programmes:
+        if not isinstance(row, dict):
+            continue
+
+        start_datetime = _parse_iso_datetime(row.get("start_datetime"))
+        end_datetime = _parse_iso_datetime(row.get("end_datetime"))
+        title = _clean_string(row.get("title"))
+        channel_key = _clean_string(row.get("channel_key"))
+        epg_entity = _clean_string(row.get("epg_entity"))
+        if (
+            not channel_key
+            or not epg_entity
+            or not title
+            or start_datetime is None
+            or end_datetime is None
+        ):
+            continue
+
+        loaded.append(
+            EpgProgramme(
+                channel_key=channel_key,
+                channel_name=_clean_string(row.get("channel_name")),
+                epg_entity=epg_entity,
+                title=title,
+                description=_clean_string(row.get("description")),
+                start=_clean_string(row.get("start")),
+                end=_clean_string(row.get("end")),
+                start_datetime=start_datetime,
+                end_datetime=end_datetime,
+            )
+        )
+
+    return loaded
+
+
+def load_canalplus_export_programmes(export_file: str) -> list[GuideProgramme]:
+    payload = _load_json_file(export_file)
+    programmes = payload.get("programmes")
+    if not isinstance(programmes, list):
+        return []
+
+    loaded: list[GuideProgramme] = []
+    for row in programmes:
+        if not isinstance(row, dict):
+            continue
+
+        try:
+            loaded.append(guide_programme_from_canalplus_row(row))
+        except ValueError:
+            continue
+
+    return loaded
+
+
+def build_export_comparison_report(
+    open_epg_export_file: str,
+    canalplus_export_file: str,
+    *,
+    report_file: str | None = None,
+) -> CanalPlusComparisonReport:
+    open_epg_programmes = load_open_epg_export_programmes(open_epg_export_file)
+    canalplus_programmes = load_canalplus_export_programmes(canalplus_export_file)
+
+    primary = [guide_programme_from_open_epg(programme) for programme in open_epg_programmes]
+    comparisons = compare_guides(primary, canalplus_programmes)
+    counts = dict(Counter(comparison.kind for comparison in comparisons))
+
+    rows_written = 0
+    if report_file:
+        rows_written = write_comparison_report(report_file, comparisons)
+
+    return CanalPlusComparisonReport(
+        comparisons=comparisons,
+        counts=counts,
+        rows_written=rows_written,
+        channel_count=len({programme.channel_key for programme in open_epg_programmes}),
+        primary_count=len(open_epg_programmes),
+        secondary_count=len(canalplus_programmes),
+        fetch_error_count=0,
+    )
 
 
 def build_canalplus_comparison_report(
@@ -145,6 +286,15 @@ def _load_simple_channels_yaml(channels_file: str) -> dict[str, object]:
     return channels
 
 
+def _load_json_file(path: str) -> dict[str, object]:
+    loaded = json.loads(Path(path).read_text(encoding="utf-8"))
+    return loaded if isinstance(loaded, dict) else {}
+
+
+def _clean_string(value: object) -> str:
+    return value.strip() if isinstance(value, str) else ""
+
+
 def write_comparison_report(
     report_file: str,
     comparisons: list[ProgrammeComparison],
@@ -176,6 +326,30 @@ def write_comparison_report(
     return len(comparisons)
 
 
+def _programme_row(programme: EpgProgramme) -> dict[str, object]:
+    return {
+        "channel_key": programme.channel_key,
+        "channel_name": programme.channel_name,
+        "epg_entity": programme.epg_entity,
+        "title": programme.title,
+        "description": programme.description,
+        "start": programme.start,
+        "end": programme.end,
+        "start_datetime": programme.start_datetime.isoformat(),
+        "end_datetime": programme.end_datetime.isoformat(),
+    }
+
+
+def _parse_iso_datetime(value: object) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
 def _fetch_canalplus_programmes(
     primary: list[GuideProgramme],
     client: CanalPlusScheduleClient,
@@ -191,8 +365,12 @@ def _fetch_canalplus_programmes(
         if not channel_programmes:
             continue
 
-        start_at = min(programme.start_datetime for programme in channel_programmes)
-        end_at = max(programme.end_datetime for programme in channel_programmes)
+        start_at = _floor_to_quarter_hour(
+            min(programme.start_datetime for programme in channel_programmes)
+        )
+        end_at = _ceil_to_quarter_hour(
+            max(programme.end_datetime for programme in channel_programmes)
+        )
         _LOGGER.debug(
             "Fetching Canal+ schedule for %s (%s) from %s until %s",
             channel_key,
@@ -237,6 +415,28 @@ def _fetch_canalplus_programmes(
             secondary.append(_guide_programme_from_canalplus(programme, channel_key))
 
     return secondary, fetch_errors
+
+
+def _floor_to_quarter_hour(value: datetime) -> datetime:
+    return value.replace(
+        minute=(value.minute // 15) * 15,
+        second=0,
+        microsecond=0,
+    )
+
+
+def _ceil_to_quarter_hour(value: datetime) -> datetime:
+    if value.minute % 15 == 0 and value.second == 0 and value.microsecond == 0:
+        return value
+
+    minutes_to_add = 15 - (value.minute % 15)
+    if value.minute % 15 == 0:
+        minutes_to_add = 15
+
+    return (value + timedelta(minutes=minutes_to_add)).replace(
+        second=0,
+        microsecond=0,
+    )
 
 
 def _fetch_error_comparisons(

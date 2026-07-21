@@ -109,13 +109,42 @@ This is the best next step if the priority is turning the PoC into something run
 
 ## Current PoC Notes
 
-The PoC script currently expects:
+The PoC script supports two modes:
 
-- `CANALPLUS_AUTHORIZATION`
+- manual `CANALPLUS_AUTHORIZATION`
 
-via environment variable, copied from an authenticated browser request.
+  via environment variable, copied from an authenticated browser request.
 
-That is intentionally temporary. It avoids baking sensitive values into code and keeps the current work at “research/prototype” level.
+- `browser-normalized-epg`
+
+  which opens a local Playwright browser profile, waits for you to finish login,
+  and then reuses that session locally without surfacing the bearer token.
+
+  For HAOS or other locked-down environments, the repository now also ships a
+  dedicated add-on scaffold in `addons/canalplus-browser` and a wrapper script
+  at `scripts/run_canalplus_browser_container.sh`. That keeps Playwright and
+  Chromium outside the HAOS host while preserving the same browser-backed flow.
+
+  HAOS install procedure for that scaffold:
+
+  1. Expose the HAOS `/addons` share, for example with Samba or Studio Code Server.
+  2. Copy `addons/canalplus-browser` to `/addons/canalplus-browser` on the HAOS host.
+  3. In Home Assistant, open **Settings > Add-ons** and reload the add-on list if needed.
+  4. Open the local Canal+ Browser Helper add-on, install it, and start it.
+
+  The scaffold is intentionally idle by default. It is a packaged runtime base, not a finished interactive add-on yet, so the browser-session helper remains the primary way to use it right now.
+
+  The helper only covers the Canal+ fetch side of the workflow. It does not have access to Home Assistant Open EPG entities unless you build a separate HA API bridge. For comparison against the Open EPG sensors already in HA, keep using the `tv_auto_scheduler.compare_canalplus` service inside Home Assistant.
+
+## HA Bridge
+
+If you want an external tool to participate without losing the Open EPG data that lives in Home Assistant, use the `tv_auto_scheduler.export_open_epg` service to write a JSON snapshot to `/config/tv_auto_scheduler/open_epg_snapshot.json`. That file is the current bridge point for WSL or the container-based helper.
+
+To compare the exported HA snapshot with Canal+ outside HA, use `scripts/compare_open_epg_canalplus_exports.py` against the HA JSON export and the Canal+ `browser-normalized-epg` JSON output.
+
+The token-based path is still available for direct comparison work, but the
+browser-session path is the easier option when you want to avoid manual copy
+and paste. Both remain research/prototype level.
 
 ## Normalized EPG Prototype
 

@@ -371,7 +371,44 @@ Example:
 
 The `channels_file` should contain the normal channel entries with a `canalplus_id` value for every channel that should be compared. You can still pass `canalplus_channels` directly on the service call to override or add individual mappings.
 
+For the Canal+ PoC script, there is also a browser-session mode that keeps the login local to a persistent Playwright profile and makes the API calls from that session instead of asking you to copy a bearer token by hand:
+
+  python scripts/canalplus_poc.py browser-normalized-epg 2026-07-09T00:00:00+00:00 2026-07-10T00:00:00+00:00
+
+The first run opens Canal+ in a browser window, waits for you to finish login, and then reuses that local profile on later runs. Install Playwright first if you want to use this mode:
+
+  pip install playwright
+  playwright install chromium
+
+If you prefer to isolate the browser dependencies, there is also an add-on scaffold in `addons/canalplus-browser` and a wrapper script at `scripts/run_canalplus_browser_container.sh`. That keeps Playwright and Chromium out of the HAOS host and runs the browser-backed helper in its own container.
+
+That helper is only for the Canal+ side of the workflow. It does not see Home Assistant Open EPG entities on its own, so if you want to compare Canal+ against the Open EPG sensors that live in HA, run the `tv_auto_scheduler.compare_canalplus` service in Home Assistant itself.
+
+HAOS install procedure for the add-on scaffold:
+
+1. Expose the Home Assistant `/addons` share, for example with the Samba app or Studio Code Server.
+2. Copy `addons/canalplus-browser` into `/addons/canalplus-browser` on the HAOS host.
+3. Open Home Assistant and go to **Settings > Add-ons**.
+4. Reload the add-on list if needed, then open the local add-on for Canal+ Browser Helper.
+5. Install and start it.
+
+The add-on is an idle runtime base rather than a finished interactive app, so the practical way to use it today is still the browser-session helper command itself. The add-on just keeps the Playwright/Chromium runtime packaged separately from HAOS.
+
+If you need WSL or another external tool to participate in the workflow, use the new HA service `tv_auto_scheduler.export_open_epg` to write the current Open EPG snapshot to `/config/tv_auto_scheduler/open_epg_snapshot.json`, then consume that file from the external tool. That is the bridge that keeps HA as the source of truth for the Open EPG data.
+
+To compare outside HA, the current helper is:
+
+  python scripts/compare_open_epg_canalplus_exports.py /config/tv_auto_scheduler/open_epg_snapshot.json /path/to/canalplus_snapshot.json --report-file /path/to/comparison.csv
+
+The Canal+ snapshot is the JSON output from `scripts/canalplus_poc.py browser-normalized-epg`.
+
 The CSV report contains one row per comparison with the classification, channel, Open EPG title/time, Canal+ title/time, and start/end deltas. Current classifications include confirmed, missing_in_primary, missing_in_secondary, time_mismatch, duration_mismatch, title_mismatch, and replaced.
+
+For the scheduler change log (`tv_auto_scheduler_changes.csv`):
+
+- Rows are appended only when the scheduler adds or replaces events.
+- If all matched programmes are already present in the target calendars, the run can succeed with zero new change-log rows.
+- If writing the change-log file fails, the scheduler now logs an explicit warning after the run summary so the issue is visible in `home-assistant.log`.
 
 The example Home Assistant script in `examples/canalplus_compare_script.yaml` accepts a fresh bearer token and calls this service from Home Assistant. The Home Assistant script trace only shows the service call itself; the Python comparison details are written to `home-assistant.log`. For extra detail during investigation, temporarily enable debug logging:
 

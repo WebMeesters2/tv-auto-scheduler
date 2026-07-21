@@ -1,0 +1,17 @@
+name: Canal+ Browser Helper
+slug: canalplus_browser
+description: Browser runtime base for the Canal+ browser-session PoC.
+version: 0.1.0
+arch:
+  - amd64
+  - aarch64
+  - armv7
+  - i386
+startup: services
+boot: auto
+init: false
+host_network: false
+map:
+  - config:rw
+options: {}
+schema: {}

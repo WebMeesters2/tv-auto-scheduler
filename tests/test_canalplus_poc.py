@@ -78,6 +78,37 @@ class FakeCanalPlusClient:
         }
 
 
+class FakeBrowserPage:
+    def __init__(self) -> None:
+        self.calls: list[tuple[str, dict]] = []
+
+    def evaluate(self, script: str, payload: dict) -> dict:
+        self.calls.append((script, payload))
+        url = payload["url"]
+        if url.endswith("/bouquet"):
+            return FakeCanalPlusClient().get_bouquet()
+        if "/schedule?" in url:
+            channel_id = url.split("channels=")[1].split("&", 1)[0]
+            return {
+                "epg": {
+                    channel_id: [
+                        {
+                            "id": f"{channel_id}-programme",
+                            "title": "Evening News",
+                            "params": {
+                                "start": "2026-07-09T18:00:00Z",
+                                "end": "2026-07-09T18:30:00Z",
+                                "channelId": channel_id,
+                            },
+                        }
+                    ]
+                }
+            }
+        if "/assets/" in url:
+            return {"ok": True}
+        raise AssertionError(f"Unexpected browser request: {url}")
+
+
 class CanalPlusPocTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -113,6 +144,23 @@ class CanalPlusPocTests(unittest.TestCase):
         self.assertEqual(payload["programmes"][0]["start"], "2026-07-09T18:00:00.000Z")
         self.assertEqual(payload["programmes"][0]["series_episode"], 12)
         self.assertEqual(len(client.schedule_requests), 1)
+
+    def test_browser_session_client_uses_page_evaluate(self) -> None:
+        client = self.canalplus.BrowserSessionCanalPlusClient(FakeBrowserPage())
+        start_at = datetime(2026, 7, 9, tzinfo=timezone.utc)  # noqa: UP017
+        end_at = datetime(2026, 7, 10, tzinfo=timezone.utc)  # noqa: UP017
+
+        payload = self.canalplus.build_normalized_epg(
+            client,
+            start_at,
+            end_at,
+            channel_ids=["rtl4"],
+        )
+
+        self.assertEqual(payload["channels"][0]["channel_id"], "rtl4")
+        self.assertEqual(payload["programmes"][0]["programme_id"], "rtl4-programme")
+        self.assertEqual(len(client.page.calls), 2)
+        self.assertIn('credentials: "include"', client.page.calls[0][0])
 
 
 if __name__ == "__main__":

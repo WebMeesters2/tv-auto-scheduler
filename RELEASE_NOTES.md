@@ -1,3 +1,50 @@
+# Release v1.1.2
+
+This release adds a file-based Open EPG bridge and an external comparison script so the Canal+ workflow can be run outside Home Assistant when needed.
+
+## :boom: Breaking changes
+
+* None.
+
+## :sparkles: Added
+
+* Added `tv_auto_scheduler.export_open_epg` to write the current Open EPG snapshot to JSON.
+* Added `scripts/compare_open_epg_canalplus_exports.py` to compare exported Open EPG and Canal+ snapshot files.
+* Added a `browser-normalized-epg` Canal+ PoC mode that uses a local Playwright browser session.
+* Added a dedicated Canal+ browser helper add-on scaffold under `addons/canalplus-browser`.
+* Added a wrapper script for building and running the browser helper container locally.
+* Added HAOS install guidance for the browser helper scaffold.
+
+## :arrows_counterclockwise: Changed
+
+* Updated the Canal+ PoC docs to describe both token-based and browser-session flows.
+* Updated the Canal+ handover notes to reflect the containerized browser runtime.
+
+## :bug: Fixed
+
+* Fixed change-log appends for legacy/malformed headers (for example `F4type` instead of `type`) to prevent dropped Add/Delete rows.
+
+## :memo: Documentation
+
+* Documented the browser-session helper usage in README and handover notes.
+* Documented the Open EPG export bridge and the external comparison helper.
+
+## :wrench: Maintenance
+
+* Added tests for the Open EPG snapshot export helper and file-based comparison bridge.
+* Added tests for the browser-session Canal+ PoC client path.
+
+## :white_check_mark: Validation
+
+* `.venv/bin/python -m unittest tests.test_canalplus_compare tests.test_canalplus_poc`
+* `.venv/bin/python -m compileall custom_components tests scripts`
+* `bash -n scripts/run_canalplus_browser_container.sh`
+* `.venv/bin/python -m unittest tests.test_canalplus_poc`
+
+## Upgrade notes
+
+The HAOS add-on scaffold is a runtime base, not a complete interactive add-on. To use it on HAOS, copy the add-on folder into `/addons`, then install and start the local add-on from the Home Assistant UI.
+
 # Release v1.1.0
 
 This release improves the experimental Canal+ comparison workflow by loading channel IDs from a shared channels file, producing clearer partial reports when Canal+ fetches fail, and adding deployment-ready examples and documentation.
