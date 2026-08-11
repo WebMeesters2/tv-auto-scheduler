@@ -7,5 +7,5 @@
   "integration_type": "service",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/WebMeesters2/tv-auto-scheduler/issues",
-  "version": "1.2.0"
+  "version": "1.2.1"
 }

@@ -1,3 +1,24 @@
+# Release v1.2.1
+
+This maintenance release keeps local dated test captures out of version control.
+
+## :boom: Breaking changes
+
+* None.
+
+## :wrench: Maintenance
+
+* Ignored the local `tests/20260810/` test-data capture directory.
+
+## :white_check_mark: Validation
+
+* Verified `tests/20260810/` is ignored by Git.
+* `.venv/bin/python -m compileall .`
+
+## Upgrade notes
+
+No manual migration is required.
+
 # Release v1.2.0
 
 This release adds comparison filters so Canal+ reports can focus on scheduled calendar programmes and optional differences-only output.
