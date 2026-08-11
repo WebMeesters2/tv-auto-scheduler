@@ -1,3 +1,48 @@
+# Release v1.2.0
+
+This release adds comparison filters so Canal+ reports can focus on scheduled calendar programmes and optional differences-only output.
+
+## :boom: Breaking changes
+
+* None.
+
+## :sparkles: Added
+
+* Added `only_scheduled_programmes` to `tv_auto_scheduler.compare_canalplus` to restrict Open EPG comparison input to scheduler-created events already present in `pre_calendar` or `tv_calendar`.
+* Added `show_matching_programmes` to `tv_auto_scheduler.compare_canalplus` to include or exclude `confirmed` rows.
+* Added `--hide-matching-programmes` to `scripts/compare_open_epg_canalplus_exports.py` for differences-only external reports.
+
+## :arrows_counterclockwise: Changed
+
+* Extended `tv_auto_scheduler.compare_canalplus` with optional `pre_calendar` and `tv_calendar` parameters for scheduled-only filtering.
+* Added `comparison_window_start`, `comparison_window_end`, and `suppressed_secondary_only_count` columns to Canal+ comparison CSV rows.
+
+## :bug: Fixed
+
+* Fixed `only_scheduled_programmes` output to suppress secondary-only rows (`missing_in_primary`) so unrelated Canal+ guide items do not appear in scheduled-only reports.
+* Fixed deployment failures on CIFS mounts by synchronizing the integration directory in place instead of deleting and immediately recreating it.
+
+## :memo: Documentation
+
+* Updated README and service schema docs with the new Canal+ comparison filtering options.
+* Documented comparison CSV metadata columns for window timestamps and suppressed secondary-only counts.
+
+## :wrench: Maintenance
+
+* Added tests for hiding confirmed matches and filtering Open EPG exports by scheduled calendar slots.
+* Excluded and cleaned Python bytecode and cache directories from integration deployments.
+
+## :white_check_mark: Validation
+
+* `.venv/bin/python -m unittest tests.test_canalplus_compare`
+* `.venv/bin/python -m compileall .`
+* `bash -n scripts/deploy.sh`
+* Isolated deployment sync verified stale-file deletion and Python cache cleanup.
+
+## Upgrade notes
+
+No manual migration is required.
+
 # Release v1.1.2
 
 This release adds a file-based Open EPG bridge and an external comparison script so the Canal+ workflow can be run outside Home Assistant when needed.

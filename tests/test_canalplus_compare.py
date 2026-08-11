@@ -183,6 +183,166 @@ class CanalPlusCompareTests(unittest.TestCase):
         self.assertEqual(rows[0]["channel"], "npo1")
         self.assertEqual(rows[0]["primary_title"], "Old Listing")
         self.assertEqual(rows[0]["secondary_title"], "Current Listing")
+        self.assertEqual(
+            rows[0]["comparison_window_start"],
+            "2026-07-09T20:00:00+00:00",
+        )
+        self.assertEqual(
+            rows[0]["comparison_window_end"],
+            "2026-07-09T21:00:00+00:00",
+        )
+        self.assertEqual(rows[0]["suppressed_secondary_only_count"], "0")
+
+    def test_build_canalplus_comparison_report_hides_confirmed_when_requested(self) -> None:
+        client = FakeCanalPlusClient()
+        open_epg_programmes = [
+            self.scheduler.EpgProgramme(
+                channel_key="npo1",
+                channel_name="NPO 1",
+                epg_entity="sensor.epg_npo1",
+                title="Current Listing",
+                description="",
+                start="20:00",
+                end="21:00",
+                start_datetime=datetime(2026, 7, 9, 20, 0, tzinfo=timezone.utc),  # noqa: UP017
+                end_datetime=datetime(2026, 7, 9, 21, 0, tzinfo=timezone.utc),  # noqa: UP017
+            )
+        ]
+
+        report = self.compare.build_canalplus_comparison_report(
+            open_epg_programmes,
+            client,
+            {"npo1": "canal-npo1"},
+            show_matching_programmes=False,
+        )
+
+        self.assertEqual(report.counts, {})
+        self.assertEqual(report.primary_count, 1)
+        self.assertEqual(report.secondary_count, 1)
+        self.assertEqual(len(report.comparisons), 0)
+
+    def test_build_canalplus_comparison_report_can_exclude_secondary_only_rows(self) -> None:
+        class ExtraProgrammeCanalPlusClient(FakeCanalPlusClient):
+            def get_schedule(
+                self,
+                channel_id: str,
+                start_at: datetime,
+                end_at: datetime,
+            ) -> dict:
+                self.requests.append((channel_id, start_at, end_at))
+                return {
+                    "epg": {
+                        channel_id: [
+                            {
+                                "id": "asset-1",
+                                "title": "Current Listing",
+                                "params": {
+                                    "channelId": channel_id,
+                                    "start": "2026-07-09T20:00:00.000Z",
+                                    "end": "2026-07-09T21:00:00.000Z",
+                                },
+                            },
+                            {
+                                "id": "asset-2",
+                                "title": "Canal Extra",
+                                "params": {
+                                    "channelId": channel_id,
+                                    "start": "2026-07-09T21:00:00.000Z",
+                                    "end": "2026-07-09T21:30:00.000Z",
+                                },
+                            },
+                        ]
+                    }
+                }
+
+        client = ExtraProgrammeCanalPlusClient()
+        open_epg_programmes = [
+            self.scheduler.EpgProgramme(
+                channel_key="npo1",
+                channel_name="NPO 1",
+                epg_entity="sensor.epg_npo1",
+                title="Old Listing",
+                description="",
+                start="20:00",
+                end="21:00",
+                start_datetime=datetime(2026, 7, 9, 20, 0, tzinfo=timezone.utc),  # noqa: UP017
+                end_datetime=datetime(2026, 7, 9, 21, 0, tzinfo=timezone.utc),  # noqa: UP017
+            )
+        ]
+
+        report = self.compare.build_canalplus_comparison_report(
+            open_epg_programmes,
+            client,
+            {"npo1": "canal-npo1"},
+            include_secondary_only_programmes=False,
+        )
+
+        self.assertEqual(report.counts, {"replaced": 1})
+        self.assertEqual(len(report.comparisons), 1)
+        self.assertEqual(report.suppressed_secondary_only_count, 1)
+
+    def test_build_canalplus_comparison_report_writes_suppressed_count_to_csv(self) -> None:
+        class ExtraProgrammeCanalPlusClient(FakeCanalPlusClient):
+            def get_schedule(
+                self,
+                channel_id: str,
+                start_at: datetime,
+                end_at: datetime,
+            ) -> dict:
+                self.requests.append((channel_id, start_at, end_at))
+                return {
+                    "epg": {
+                        channel_id: [
+                            {
+                                "id": "asset-1",
+                                "title": "Current Listing",
+                                "params": {
+                                    "channelId": channel_id,
+                                    "start": "2026-07-09T20:00:00.000Z",
+                                    "end": "2026-07-09T21:00:00.000Z",
+                                },
+                            },
+                            {
+                                "id": "asset-2",
+                                "title": "Canal Extra",
+                                "params": {
+                                    "channelId": channel_id,
+                                    "start": "2026-07-09T21:00:00.000Z",
+                                    "end": "2026-07-09T21:30:00.000Z",
+                                },
+                            },
+                        ]
+                    }
+                }
+
+        client = ExtraProgrammeCanalPlusClient()
+        open_epg_programmes = [
+            self.scheduler.EpgProgramme(
+                channel_key="npo1",
+                channel_name="NPO 1",
+                epg_entity="sensor.epg_npo1",
+                title="Old Listing",
+                description="",
+                start="20:00",
+                end="21:00",
+                start_datetime=datetime(2026, 7, 9, 20, 0, tzinfo=timezone.utc),  # noqa: UP017
+                end_datetime=datetime(2026, 7, 9, 21, 0, tzinfo=timezone.utc),  # noqa: UP017
+            )
+        ]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            report_file = Path(temp_dir) / "comparison.csv"
+            self.compare.build_canalplus_comparison_report(
+                open_epg_programmes,
+                client,
+                {"npo1": "canal-npo1"},
+                include_secondary_only_programmes=False,
+                report_file=str(report_file),
+            )
+            with report_file.open("r", newline="", encoding="utf-8") as file:
+                rows = list(csv.DictReader(file))
+
+        self.assertEqual(rows[0]["suppressed_secondary_only_count"], "1")
 
 
     def test_build_canalplus_comparison_report_skips_failed_channel(self) -> None:
@@ -328,6 +488,95 @@ class CanalPlusCompareTests(unittest.TestCase):
         self.assertEqual(report.counts, {"confirmed": 1})
         self.assertEqual(report.primary_count, 1)
         self.assertEqual(report.secondary_count, 1)
+
+    def test_build_export_comparison_report_can_hide_confirmed(self) -> None:
+        open_epg_programmes = [
+            self.scheduler.EpgProgramme(
+                channel_key="npo1",
+                channel_name="NPO 1",
+                epg_entity="sensor.epg_npo1",
+                title="Export Me",
+                description="",
+                start="20:00",
+                end="21:00",
+                start_datetime=datetime(2026, 7, 9, 20, 0, tzinfo=timezone.utc),  # noqa: UP017
+                end_datetime=datetime(2026, 7, 9, 21, 0, tzinfo=timezone.utc),  # noqa: UP017
+            )
+        ]
+
+        canalplus_snapshot = {
+            "provider": "canalplus",
+            "programmes": [
+                {
+                    "programme_id": "asset-1",
+                    "channel_id": "npo1",
+                    "title": "Export Me",
+                    "description": "",
+                    "start": "2026-07-09T20:00:00.000Z",
+                    "end": "2026-07-09T21:00:00.000Z",
+                }
+            ],
+        }
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            open_epg_file = Path(temp_dir) / "open_epg_snapshot.json"
+            canalplus_file = Path(temp_dir) / "canalplus_snapshot.json"
+            open_epg_file.write_text(
+                json.dumps(self.compare.build_open_epg_export_payload(open_epg_programmes)),
+                encoding="utf-8",
+            )
+            canalplus_file.write_text(
+                json.dumps(canalplus_snapshot),
+                encoding="utf-8",
+            )
+
+            report = self.compare.build_export_comparison_report(
+                str(open_epg_file),
+                str(canalplus_file),
+                show_matching_programmes=False,
+            )
+
+        self.assertEqual(report.counts, {})
+        self.assertEqual(len(report.comparisons), 0)
+
+    def test_filter_open_epg_programmes_by_scheduled_slots(self) -> None:
+        scheduled = self.scheduler.EpgProgramme(
+            channel_key="npo1",
+            channel_name="NPO 1",
+            epg_entity="sensor.epg_npo1",
+            title="Scheduled",
+            description="",
+            start="20:00",
+            end="21:00",
+            start_datetime=datetime(2026, 7, 9, 20, 0, tzinfo=timezone.utc),  # noqa: UP017
+            end_datetime=datetime(2026, 7, 9, 21, 0, tzinfo=timezone.utc),  # noqa: UP017
+        )
+        unscheduled = self.scheduler.EpgProgramme(
+            channel_key="rtl4",
+            channel_name="RTL 4",
+            epg_entity="sensor.epg_rtl4",
+            title="Not Scheduled",
+            description="",
+            start="20:00",
+            end="21:00",
+            start_datetime=datetime(2026, 7, 9, 20, 0, tzinfo=timezone.utc),  # noqa: UP017
+            end_datetime=datetime(2026, 7, 9, 21, 0, tzinfo=timezone.utc),  # noqa: UP017
+        )
+
+        scheduled_slots = {
+            (
+                "NPO 1 | Scheduled",
+                scheduled.start_datetime.isoformat(),
+                scheduled.end_datetime.isoformat(),
+            )
+        }
+
+        filtered = self.compare.filter_open_epg_programmes_by_scheduled_slots(
+            [scheduled, unscheduled],
+            scheduled_slots,
+        )
+
+        self.assertEqual(filtered, [scheduled])
 
     def test_build_canalplus_comparison_report_aligns_fetch_window(self) -> None:
         client = FakeCanalPlusClient()

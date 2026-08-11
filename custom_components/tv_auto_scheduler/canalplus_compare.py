@@ -17,6 +17,7 @@ except ImportError:  # pragma: no cover - only used by standalone tests
 
 from .canalplus import CanalPlusProgramme, fetch_channel_schedule
 from .epg_compare import (
+    CONFIRMED,
     SECONDARY_FETCH_FAILED,
     GuideProgramme,
     ProgrammeComparison,
@@ -24,7 +25,7 @@ from .epg_compare import (
     guide_programme_from_open_epg,
     guide_programme_from_canalplus_row,
 )
-from .scheduler import EpgProgramme
+from .scheduler import EpgProgramme, build_event_summary
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -81,6 +82,7 @@ class CanalPlusComparisonReport:
     primary_count: int = 0
     secondary_count: int = 0
     fetch_error_count: int = 0
+    suppressed_secondary_only_count: int = 0
 
 
 def build_open_epg_export_payload(
@@ -189,17 +191,34 @@ def build_export_comparison_report(
     canalplus_export_file: str,
     *,
     report_file: str | None = None,
+    show_matching_programmes: bool = True,
+    include_secondary_only_programmes: bool = True,
 ) -> CanalPlusComparisonReport:
     open_epg_programmes = load_open_epg_export_programmes(open_epg_export_file)
     canalplus_programmes = load_canalplus_export_programmes(canalplus_export_file)
 
     primary = [guide_programme_from_open_epg(programme) for programme in open_epg_programmes]
-    comparisons = compare_guides(primary, canalplus_programmes)
+    raw_comparisons = compare_guides(primary, canalplus_programmes)
+    comparisons = _filter_comparisons(
+        raw_comparisons,
+        show_matching_programmes=show_matching_programmes,
+        include_secondary_only_programmes=include_secondary_only_programmes,
+    )
+    suppressed_secondary_only_count = _secondary_only_count(raw_comparisons) - _secondary_only_count(
+        comparisons
+    )
+    window_start, window_end = _comparison_window(primary)
     counts = dict(Counter(comparison.kind for comparison in comparisons))
 
     rows_written = 0
     if report_file:
-        rows_written = write_comparison_report(report_file, comparisons)
+        rows_written = write_comparison_report(
+            report_file,
+            comparisons,
+            comparison_window_start=window_start,
+            comparison_window_end=window_end,
+            suppressed_secondary_only_count=suppressed_secondary_only_count,
+        )
 
     return CanalPlusComparisonReport(
         comparisons=comparisons,
@@ -209,6 +228,7 @@ def build_export_comparison_report(
         primary_count=len(open_epg_programmes),
         secondary_count=len(canalplus_programmes),
         fetch_error_count=0,
+        suppressed_secondary_only_count=suppressed_secondary_only_count,
     )
 
 
@@ -218,6 +238,8 @@ def build_canalplus_comparison_report(
     channel_map: dict[str, str],
     *,
     report_file: str | None = None,
+    show_matching_programmes: bool = True,
+    include_secondary_only_programmes: bool = True,
 ) -> CanalPlusComparisonReport:
     primary = [
         guide_programme_from_open_epg(programme)
@@ -235,13 +257,28 @@ def build_canalplus_comparison_report(
         for programme in primary
         if programme.channel_key not in failed_channel_keys
     ]
-    comparisons = compare_guides(comparable_primary, secondary)
+    raw_comparisons = compare_guides(comparable_primary, secondary)
+    comparisons = _filter_comparisons(
+        raw_comparisons,
+        show_matching_programmes=show_matching_programmes,
+        include_secondary_only_programmes=include_secondary_only_programmes,
+    )
     comparisons.extend(_fetch_error_comparisons(fetch_errors))
+    suppressed_secondary_only_count = _secondary_only_count(raw_comparisons) - _secondary_only_count(
+        comparisons
+    )
+    window_start, window_end = _comparison_window(primary)
     counts = dict(Counter(comparison.kind for comparison in comparisons))
 
     rows_written = 0
     if report_file:
-        rows_written = write_comparison_report(report_file, comparisons)
+        rows_written = write_comparison_report(
+            report_file,
+            comparisons,
+            comparison_window_start=window_start,
+            comparison_window_end=window_end,
+            suppressed_secondary_only_count=suppressed_secondary_only_count,
+        )
 
     return CanalPlusComparisonReport(
         comparisons=comparisons,
@@ -251,6 +288,7 @@ def build_canalplus_comparison_report(
         primary_count=len(primary),
         secondary_count=len(secondary),
         fetch_error_count=len(fetch_errors),
+        suppressed_secondary_only_count=suppressed_secondary_only_count,
     )
 
 
@@ -298,6 +336,10 @@ def _clean_string(value: object) -> str:
 def write_comparison_report(
     report_file: str,
     comparisons: list[ProgrammeComparison],
+    *,
+    comparison_window_start: str = "",
+    comparison_window_end: str = "",
+    suppressed_secondary_only_count: int = 0,
 ) -> int:
     path = Path(report_file)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -317,11 +359,21 @@ def write_comparison_report(
                 "start_delta_minutes",
                 "end_delta_minutes",
                 "note",
+                "comparison_window_start",
+                "comparison_window_end",
+                "suppressed_secondary_only_count",
             ],
         )
         writer.writeheader()
         for comparison in comparisons:
-            writer.writerow(_comparison_row(comparison))
+            writer.writerow(
+                _comparison_row(
+                    comparison,
+                    comparison_window_start=comparison_window_start,
+                    comparison_window_end=comparison_window_end,
+                    suppressed_secondary_only_count=suppressed_secondary_only_count,
+                )
+            )
 
     return len(comparisons)
 
@@ -340,6 +392,21 @@ def _programme_row(programme: EpgProgramme) -> dict[str, object]:
     }
 
 
+def filter_open_epg_programmes_by_scheduled_slots(
+    open_epg_programmes: list[EpgProgramme],
+    scheduled_slots: set[tuple[str, str, str]],
+) -> list[EpgProgramme]:
+    """Filter Open EPG programmes to scheduler slot keys read from calendars."""
+    if not scheduled_slots:
+        return []
+
+    return [
+        programme
+        for programme in open_epg_programmes
+        if _programme_slot_key(programme) in scheduled_slots
+    ]
+
+
 def _parse_iso_datetime(value: object) -> datetime | None:
     if not isinstance(value, str) or not value.strip():
         return None
@@ -348,6 +415,45 @@ def _parse_iso_datetime(value: object) -> datetime | None:
         return datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError:
         return None
+
+
+def _programme_slot_key(programme: EpgProgramme) -> tuple[str, str, str]:
+    return (
+        build_event_summary(programme),
+        programme.start_datetime.isoformat(),
+        programme.end_datetime.isoformat(),
+    )
+
+
+def _filter_comparisons(
+    comparisons: list[ProgrammeComparison],
+    *,
+    show_matching_programmes: bool,
+    include_secondary_only_programmes: bool,
+) -> list[ProgrammeComparison]:
+    filtered = comparisons
+
+    if not include_secondary_only_programmes:
+        filtered = [comparison for comparison in filtered if comparison.primary is not None]
+
+    if show_matching_programmes:
+        return filtered
+
+    return [comparison for comparison in filtered if comparison.kind != CONFIRMED]
+
+
+def _secondary_only_count(comparisons: list[ProgrammeComparison]) -> int:
+    return sum(1 for comparison in comparisons if comparison.primary is None)
+
+
+def _comparison_window(programmes: list[GuideProgramme]) -> tuple[str, str]:
+    if not programmes:
+        return "", ""
+
+    return (
+        min(programme.start_datetime for programme in programmes).isoformat(),
+        max(programme.end_datetime for programme in programmes).isoformat(),
+    )
 
 
 def _fetch_canalplus_programmes(
@@ -476,7 +582,13 @@ def _guide_programme_from_canalplus(
     )
 
 
-def _comparison_row(comparison: ProgrammeComparison) -> dict[str, object]:
+def _comparison_row(
+    comparison: ProgrammeComparison,
+    *,
+    comparison_window_start: str,
+    comparison_window_end: str,
+    suppressed_secondary_only_count: int,
+) -> dict[str, object]:
     primary = comparison.primary
     secondary = comparison.secondary
 
@@ -492,6 +604,9 @@ def _comparison_row(comparison: ProgrammeComparison) -> dict[str, object]:
         "start_delta_minutes": comparison.start_delta_minutes,
         "end_delta_minutes": comparison.end_delta_minutes,
         "note": comparison.note,
+        "comparison_window_start": comparison_window_start,
+        "comparison_window_end": comparison_window_end,
+        "suppressed_secondary_only_count": suppressed_secondary_only_count,
     }
 
 

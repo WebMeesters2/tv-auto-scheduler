@@ -66,11 +66,15 @@ echo "Target: $HA_CONFIG_DIR"
 echo
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
-  echo "DRY-RUN: would recreate $TARGET_INTEGRATION"
+  echo "DRY-RUN: would synchronize $TARGET_INTEGRATION"
 else
-  mkdir -p "$TARGET_CUSTOM_COMPONENTS_DIR"
-  rm -rf "$TARGET_INTEGRATION"
-  cp -a "$SOURCE_INTEGRATION" "$TARGET_CUSTOM_COMPONENTS_DIR/"
+  mkdir -p "$TARGET_INTEGRATION"
+  rsync -a --delete --delete-excluded \
+    --exclude '__pycache__' \
+    --exclude '.pytest_cache' \
+    --exclude '*.pyc' \
+    "$SOURCE_INTEGRATION/" \
+    "$TARGET_INTEGRATION/"
 fi
 
 if [[ -f "$SOURCE_EXAMPLE_RULES" ]]; then

@@ -23,6 +23,8 @@ CONF_CANALPLUS_CHANNELS = "canalplus_channels"
 CONF_CHANNELS_FILE = "channels_file"
 CONF_COMPARISON_REPORT_FILE = "comparison_report_file"
 CONF_OPEN_EPG_EXPORT_FILE = "open_epg_export_file"
+CONF_ONLY_SCHEDULED_PROGRAMMES = "only_scheduled_programmes"
+CONF_SHOW_MATCHING_PROGRAMMES = "show_matching_programmes"
 
 SERVICE_SCAN = "scan"
 SERVICE_COMPARE_CANALPLUS = "compare_canalplus"

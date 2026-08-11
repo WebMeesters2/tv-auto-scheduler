@@ -47,3 +47,4 @@ UNCPath
 # Local EPG/API captures
 tests/data/*.json
 tests/data/*.txt
+tests/20260721/

@@ -118,6 +118,42 @@ compare_canalplus:
       selector:
         text:
 
+    pre_calendar:
+      name: Pre calendar
+      description: Calendar used when only_scheduled_programmes is enabled.
+      required: false
+      default: calendar.pre_tv
+      example: calendar.pre_tv
+      selector:
+        entity:
+          domain: calendar
+
+    tv_calendar:
+      name: TV calendar
+      description: Calendar used when only_scheduled_programmes is enabled.
+      required: false
+      default: calendar.televisie
+      example: calendar.televisie
+      selector:
+        entity:
+          domain: calendar
+
+    only_scheduled_programmes:
+      name: Only scheduled programmes
+      description: Compare only Open EPG programmes that already exist as scheduler-created events in pre_calendar or tv_calendar.
+      required: false
+      default: false
+      selector:
+        boolean:
+
+    show_matching_programmes:
+      name: Show matching programmes
+      description: Include confirmed matches in the comparison output. Disable to report only differences and fetch errors.
+      required: false
+      default: true
+      selector:
+        boolean:
+
     show_missing_epg:
       name: Show missing EPG entities
       description: Log every channel whose configured Open EPG entity is missing before comparison.

@@ -13,6 +13,7 @@ from homeassistant.util import dt as dt_util
 from .canalplus import CanalPlusClient
 from .canalplus_compare import (
     build_canalplus_comparison_report,
+    filter_open_epg_programmes_by_scheduled_slots,
     load_canalplus_channel_map,
     sanitize_canalplus_authorization,
     write_open_epg_export_file,
@@ -28,8 +29,10 @@ from .const import (
     CONF_DRY_RUN_LOG,
     CONF_DRY_RUN_LOG_FILE,
     CONF_OPEN_EPG_EXPORT_FILE,
+    CONF_ONLY_SCHEDULED_PROGRAMMES,
     CONF_PRE_CALENDAR,
     CONF_RULES_FILE,
+    CONF_SHOW_MATCHING_PROGRAMMES,
     CONF_SHOW_MISSING_EPG,
     CONF_TV_CALENDAR,
     DEFAULT_CHANNELS_FILE,
@@ -43,6 +46,7 @@ from .const import (
     SERVICE_SCAN,
 )
 from .scheduler import (
+    AUTO_MARKER,
     ChangeLogEntry,
     append_change_log,
     create_calendar_event,
@@ -66,6 +70,10 @@ SERVICE_COMPARE_CANALPLUS_SCHEMA = vol.Schema(
         vol.Optional(CONF_CANALPLUS_CHANNELS): vol.Schema({cv.string: cv.string}),
         vol.Optional(CONF_CHANNELS_FILE, default=DEFAULT_CHANNELS_FILE): cv.path,
         vol.Optional(CONF_COMPARISON_REPORT_FILE): cv.path,
+        vol.Optional(CONF_PRE_CALENDAR, default=DEFAULT_PRE_CALENDAR): cv.entity_id,
+        vol.Optional(CONF_TV_CALENDAR, default=DEFAULT_TV_CALENDAR): cv.entity_id,
+        vol.Optional(CONF_ONLY_SCHEDULED_PROGRAMMES, default=False): cv.boolean,
+        vol.Optional(CONF_SHOW_MATCHING_PROGRAMMES, default=True): cv.boolean,
         vol.Optional(CONF_SHOW_MISSING_EPG, default=False): cv.boolean,
     }
 )
@@ -97,6 +105,56 @@ SERVICE_SCAN_SCHEMA = vol.Schema(
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    async def _load_scheduled_programme_slots(
+        programmes,
+        calendar_entities: list[str],
+    ) -> set[tuple[str, str, str]]:
+        if not programmes or not calendar_entities:
+            return set()
+
+        query_start = min(programme.start_datetime for programme in programmes)
+        query_end = max(programme.end_datetime for programme in programmes)
+        slots: set[tuple[str, str, str]] = set()
+
+        for calendar_entity in set(calendar_entities):
+            try:
+                response = await hass.services.async_call(
+                    "calendar",
+                    "get_events",
+                    {
+                        "entity_id": calendar_entity,
+                        "start_date_time": query_start.isoformat(),
+                        "end_date_time": query_end.isoformat(),
+                    },
+                    blocking=True,
+                    return_response=True,
+                )
+            except HomeAssistantError:
+                _LOGGER.exception(
+                    "TV Auto Scheduler: failed to read scheduled events from %s",
+                    calendar_entity,
+                )
+                continue
+
+            for event in _extract_calendar_events(response, calendar_entity):
+                summary = _event_value_text(event.get("summary"))
+                start = _event_datetime_text(event.get("start"))
+                end = _event_datetime_text(event.get("end"))
+                description = _event_value_text(event.get("description"))
+
+                if (
+                    not summary
+                    or not start
+                    or not end
+                    or AUTO_MARKER not in description
+                ):
+                    continue
+
+                slots.add((summary, start, end))
+
+        return slots
+
+
     async def async_scan(call: ServiceCall) -> None:
         _LOGGER.debug("TV Auto Scheduler: scan service called")
 
@@ -470,6 +528,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         )
         channels_file = call.data.get(CONF_CHANNELS_FILE)
         report_file = call.data.get(CONF_COMPARISON_REPORT_FILE)
+        pre_calendar = call.data[CONF_PRE_CALENDAR]
+        tv_calendar = call.data[CONF_TV_CALENDAR]
+        only_scheduled_programmes = call.data[CONF_ONLY_SCHEDULED_PROGRAMMES]
+        show_matching_programmes = call.data[CONF_SHOW_MATCHING_PROGRAMMES]
         show_missing_epg = call.data[CONF_SHOW_MISSING_EPG]
 
         try:
@@ -510,6 +572,29 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 "TV Auto Scheduler: Canal+ comparison scanned %s Open EPG programme(s)",
                 len(programmes),
             )
+
+            if only_scheduled_programmes:
+                scheduled_slots = await _load_scheduled_programme_slots(
+                    programmes,
+                    [pre_calendar, tv_calendar],
+                )
+                scheduled_count = len(scheduled_slots)
+                filtered_programmes = filter_open_epg_programmes_by_scheduled_slots(
+                    programmes,
+                    scheduled_slots,
+                )
+                _LOGGER.info(
+                    "TV Auto Scheduler: Canal+ comparison filtered Open EPG "
+                    "programme set from %s to %s using %s scheduled slot(s) "
+                    "from %s and %s",
+                    len(programmes),
+                    len(filtered_programmes),
+                    scheduled_count,
+                    pre_calendar,
+                    tv_calendar,
+                )
+                programmes = filtered_programmes
+
             client = CanalPlusClient(authorization=authorization)
             report = await hass.async_add_executor_job(
                 partial(
@@ -518,20 +603,46 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     client,
                     channel_map,
                     report_file=report_file,
+                    show_matching_programmes=show_matching_programmes,
+                    include_secondary_only_programmes=(
+                        not only_scheduled_programmes
+                    ),
                 )
             )
+
+            if only_scheduled_programmes:
+                _LOGGER.debug(
+                    "TV Auto Scheduler: Canal+ comparison suppressed %s "
+                    "secondary-only row(s) in scheduled-only mode",
+                    report.suppressed_secondary_only_count,
+                )
+
+            window_start = ""
+            window_end = ""
+            if programmes:
+                window_start = min(
+                    programme.start_datetime for programme in programmes
+                ).isoformat()
+                window_end = max(
+                    programme.end_datetime for programme in programmes
+                ).isoformat()
 
             _LOGGER.info(
                 "TV Auto Scheduler: Canal+ comparison complete "
                 "(%s channel id(s), %s Open EPG programme(s), "
                 "%s Canal+ programme(s), %s fetch error(s), "
-                "%s comparison row(s), counts=%s%s)",
+                "%s comparison row(s), counts=%s, "
+                "suppressed_secondary_only=%s, "
+                "window_start=%s, window_end=%s%s)",
                 report.channel_count,
                 report.primary_count,
                 report.secondary_count,
                 report.fetch_error_count,
                 len(report.comparisons),
                 report.counts,
+                report.suppressed_secondary_only_count,
+                window_start,
+                window_end,
                 (
                     f", wrote {report.rows_written} row(s) to {report_file}"
                     if report_file
@@ -564,3 +675,40 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     )
 
     return True
+
+
+def _extract_calendar_events(
+    response: object,
+    calendar_entity: str,
+) -> list[dict[str, object]]:
+    if not isinstance(response, dict):
+        return []
+
+    calendar_data = response.get(calendar_entity)
+    if isinstance(calendar_data, dict):
+        events = calendar_data.get("events")
+        if isinstance(events, list):
+            return [event for event in events if isinstance(event, dict)]
+
+    events = response.get("events")
+    if isinstance(events, list):
+        return [event for event in events if isinstance(event, dict)]
+
+    return []
+
+
+def _event_value_text(value: object) -> str:
+    return value.strip() if isinstance(value, str) else ""
+
+
+def _event_datetime_text(value: object) -> str:
+    if isinstance(value, str):
+        return value.strip()
+
+    if isinstance(value, dict):
+        for key in ("dateTime", "date"):
+            nested = value.get(key)
+            if isinstance(nested, str) and nested.strip():
+                return nested.strip()
+
+    return ""

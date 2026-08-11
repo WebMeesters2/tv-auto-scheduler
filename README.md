@@ -368,8 +368,18 @@ Example:
       canalplus_authorization: !secret canalplus_authorization
       channels_file: /config/tv/channels.yaml
       comparison_report_file: /config/tv_auto_scheduler/canalplus_comparison.csv
+      only_scheduled_programmes: true
+      pre_calendar: calendar.pre_tv
+      tv_calendar: calendar.televisie
+      show_matching_programmes: false
 
 The `channels_file` should contain the normal channel entries with a `canalplus_id` value for every channel that should be compared. You can still pass `canalplus_channels` directly on the service call to override or add individual mappings.
+
+Useful comparison toggles:
+
+- `only_scheduled_programmes`: when enabled, the integration first checks `pre_calendar` and `tv_calendar` and compares only Open EPG programmes that already exist there as scheduler-created events.
+- With `only_scheduled_programmes: true`, secondary-only Canal+ rows (`missing_in_primary`) are excluded so the report stays focused on scheduled Open EPG items.
+- `show_matching_programmes`: when disabled, `confirmed` rows are excluded so the report focuses on differences and fetch failures.
 
 For the Canal+ PoC script, there is also a browser-session mode that keeps the login local to a persistent Playwright profile and makes the API calls from that session instead of asking you to copy a bearer token by hand:
 
@@ -400,9 +410,17 @@ To compare outside HA, the current helper is:
 
   python scripts/compare_open_epg_canalplus_exports.py /config/tv_auto_scheduler/open_epg_snapshot.json /path/to/canalplus_snapshot.json --report-file /path/to/comparison.csv
 
+Add `--hide-matching-programmes` if you only want differences in that external report.
+
 The Canal+ snapshot is the JSON output from `scripts/canalplus_poc.py browser-normalized-epg`.
 
 The CSV report contains one row per comparison with the classification, channel, Open EPG title/time, Canal+ title/time, and start/end deltas. Current classifications include confirmed, missing_in_primary, missing_in_secondary, time_mismatch, duration_mismatch, title_mismatch, and replaced.
+
+Each row also includes run-level metadata columns:
+
+- `comparison_window_start`: earliest Open EPG start timestamp that was part of the compared input set.
+- `comparison_window_end`: latest Open EPG end timestamp that was part of the compared input set.
+- `suppressed_secondary_only_count`: number of secondary-only (`missing_in_primary`) rows suppressed for the run (for example when `only_scheduled_programmes: true`).
 
 For the scheduler change log (`tv_auto_scheduler_changes.csv`):
 

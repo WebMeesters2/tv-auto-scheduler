@@ -27,6 +27,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "--report-file",
         help="Optional CSV file where comparison rows are written.",
     )
+    parser.add_argument(
+        "--hide-matching-programmes",
+        action="store_true",
+        help="Exclude confirmed matching programmes from the result and optional CSV report.",
+    )
     return parser
 
 
@@ -38,6 +43,7 @@ def main() -> int:
         args.open_epg_export_file,
         args.canalplus_export_file,
         report_file=args.report_file,
+        show_matching_programmes=not args.hide_matching_programmes,
     )
 
     print(
