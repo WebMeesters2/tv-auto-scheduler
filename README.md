@@ -428,7 +428,7 @@ For the scheduler change log (`tv_auto_scheduler_changes.csv`):
 - If all matched programmes are already present in the target calendars, the run can succeed with zero new change-log rows.
 - If writing the change-log file fails, the scheduler now logs an explicit warning after the run summary so the issue is visible in `home-assistant.log`.
 
-The example Home Assistant script in `examples/canalplus_compare_script.yaml` accepts a fresh bearer token and calls this service from Home Assistant. The Home Assistant script trace only shows the service call itself; the Python comparison details are written to `home-assistant.log`. For extra detail during investigation, temporarily enable debug logging:
+The example Home Assistant script in `examples/canalplus_compare_script.yaml` accepts a fresh bearer token, writes a dated report file such as `YYMMDD_HHMM_canalplus_comparison.csv`, and calls this service from Home Assistant. The Home Assistant script trace only shows the service call itself; the Python comparison details are written to `home-assistant.log`. For extra detail during investigation, temporarily enable debug logging:
 
     logger:
       logs:

@@ -1,3 +1,29 @@
+# Release v1.2.2
+
+This documentation release plans the native Windows-to-Home Assistant MQTT
+bridge for launching Canal+ comparisons with a clipboard bearer token.
+
+## :boom: Breaking changes
+
+* None.
+
+## :memo: Documentation
+
+* Added a Canal+ MQTT clipboard bridge implementation plan covering the TV
+  Channel Display Windows app, MQTT payload contract, Home Assistant receiver
+  automation, security notes, and validation steps.
+* Added a Home Assistant MQTT receiver automation example for the TV Channel Display compare request topic.
+* Updated the Canal+ comparison script example to write dated report filenames.
+* Clarified that the MQTT receiver delegates only to script.compare_canalplus_epg.
+
+## :white_check_mark: Validation
+
+* Documentation-only change; checked filenames and examples during edit.
+
+## Upgrade notes
+
+No manual migration is required.
+
 # Release v1.2.1
 
 This maintenance release keeps local dated test captures out of version control.

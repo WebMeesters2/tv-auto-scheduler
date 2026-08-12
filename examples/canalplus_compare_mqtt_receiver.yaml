@@ -1,0 +1,18 @@
+alias: Canal+ Compare From TV Channel Display
+mode: single
+triggers:
+  - trigger: mqtt
+    topic: tv_auto_scheduler/canalplus/compare/request
+conditions:
+  - condition: template
+    value_template: >
+      {{ (trigger.payload_json.canalplus_authorization
+          | default(trigger.payload_json.bearer_token, true)
+          | default("", true)
+          | trim) != "" }}
+actions:
+  - action: script.compare_canalplus_epg
+    data:
+      bearer_token: >
+        {{ trigger.payload_json.canalplus_authorization
+           | default(trigger.payload_json.bearer_token, true) }}
