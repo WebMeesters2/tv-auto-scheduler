@@ -1,7 +1,7 @@
-# DOX framework
+# DOX Framework
 
-- DOX is highly performant AGENTS.md hierarchy installed here.
-- Agent must follow DOX instructions across any edits.
+- DOX is the AGENTS.md instruction hierarchy for this repository.
+- Agents must follow the applicable DOX chain before making edits.
 
 ## Core Contract
 
@@ -121,6 +121,14 @@ Default section order:
 - Use `/mnt/d/Users/Ruben/Documents`, `/mnt/d/Users/Ruben/Pictures`, and similar paths for user-library content.
 - Use `/mnt/c/Users/Ruben` only for Windows profile or app state such as `.codex` and `AppData`.
 
+## Work Guidance
+
+- Prefer Bash or the repository-documented shell on WSL/Linux projects; use PowerShell only when the project requires it or it is the practical path for Windows-specific work.
+- If required tools, credentials, host details, or source material are missing, explain the gap and ask the user instead of guessing.
+- Keep behavior configurable where configuration adds practical value without unnecessary complexity.
+- Follow functional requirements and user-facing behavior documented in README.md unless a closer instruction overrides it.
+- For UI-facing work, propose interface improvements when they are necessary to satisfy the documented requirements or materially improve usability.
+
 ## Closeout
 
 1. Re-check changed paths against the DOX chain.
@@ -138,16 +146,11 @@ Default section order:
 - Prefer preserving existing behavior.
 - When a task is blocked by missing tools, missing permissions, or authorization failures, stop promptly and ask the user whether they want to resolve access first before continuing with retries or workarounds.
 
-## Coding standards
-- Source files should include a module-level comment or docstring describing the file purpose, and functions should include concise purpose/input/output comments or docstrings where prudent.
-- Python: use type hints where practical, clear naming, and avoid unnecessary abstraction.
-- TypeScript: prefer strict typing, avoid `any` unless unavoidable, and keep component logic readable.
-- YAML: prefer modern Home Assistant syntax, use native `note:` fields where supported, and keep automations readable.
-
 ## Releases
-Every meaningful change requires Release notes and a version number.
-Use `.github/RELEASE_NOTES_TEMPLATE.md` as a template for the release-notes
-after the release is comitted, always tag the new release.
+
+- Every meaningful released change should have release notes and a version number.
+- Use `.github/RELEASE_NOTES_TEMPLATE.md` as the release-notes template when the project has no more specific release process.
+- Tag releases when the project release workflow calls for tags.
 
 ## Child DOX Index
 
