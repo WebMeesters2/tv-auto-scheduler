@@ -69,7 +69,7 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
   echo "DRY-RUN: would synchronize $TARGET_INTEGRATION"
 else
   mkdir -p "$TARGET_INTEGRATION"
-  rsync -a --delete --delete-excluded \
+  rsync -a --delete --delete-excluded --inplace \
     --exclude '__pycache__' \
     --exclude '.pytest_cache' \
     --exclude '*.pyc' \
