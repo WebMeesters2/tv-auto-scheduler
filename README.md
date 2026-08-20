@@ -259,6 +259,7 @@ data:
   pre_calendar: calendar.pre_tv
   tv_calendar: calendar.televisie
   show_missing_epg: false
+  calendar_description_mode: programme
   change_log: true
   change_log_file: /config/tv_auto_scheduler/tv_auto_scheduler_changes.csv
 ```
@@ -285,7 +286,9 @@ You may want to start with `dry_run: true` until the rule file behaves the way y
 
 ## Duplicate Protection
 
-Created events are tagged in the event description using an internal marker. The description also includes the matching rule, the source EPG entity, and the EPG programme description when one is available. When the integration finds an existing event with the same summary and time range that it previously created, it skips creating a duplicate.
+Created events use the programme description as the calendar description by default, so dashboard calendar cards can show only the programme detail. Scheduler metadata (`TV_AUTO_SCHEDULER`, matching rule, source EPG entity, and programme detail) is stored in the calendar event location for duplicate and replacement detection. Set `calendar_description_mode: debug` on `tv_auto_scheduler.scan` to restore the legacy debug block in the visible description.
+
+When the integration finds an existing event with the same summary and time range that it previously created, it skips creating a duplicate.
 
 ## Change Log
 

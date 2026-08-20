@@ -9,7 +9,6 @@ import unittest
 from datetime import datetime, timezone
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_DIR = REPO_ROOT / "custom_components" / "tv_auto_scheduler"
 
@@ -148,10 +147,12 @@ class FakeCalendarEvent:
         start_datetime: datetime,
         end_datetime: datetime,
         recurrence_id: str | None = None,
+        location: str = "",
     ):
         self.uid = uid
         self.summary = summary
         self.description = description
+        self.location = location
         self.start_datetime_local = start_datetime
         self.end_datetime_local = end_datetime
         self.recurrence_id = recurrence_id
@@ -568,7 +569,7 @@ class SchedulerTests(unittest.TestCase):
 
         self.assertEqual(result, frozenset({4, 5, 6, 0}))
 
-    def test_create_calendar_event_appends_epg_description(self) -> None:
+    def test_create_calendar_event_uses_programme_description_by_default(self) -> None:
         hass = FakeHass({})
         rule = self.scheduler.ScheduleRule(
             enabled=True,
@@ -603,10 +604,49 @@ class SchedulerTests(unittest.TestCase):
         self.assertEqual(len(hass.service_calls), 1)
         _, _, data, _, _ = hass.service_calls[0]
         self.assertEqual(data["summary"], "BBC 1 | Bargain Hunt")
+        self.assertEqual(data["description"], "A daytime antiques quiz.")
+        self.assertIn("TV_AUTO_SCHEDULER: true", data["location"])
+        self.assertIn("Rule: Bargain Hunt", data["location"])
+        self.assertIn("Source: sensor.epg_bbc1", data["location"])
+        self.assertIn("Programme: A daytime antiques quiz.", data["location"])
+
+    def test_create_calendar_event_can_put_debug_text_in_description(self) -> None:
+        hass = FakeHass({})
+        rule = self.scheduler.ScheduleRule(
+            enabled=True,
+            channel_pattern=r"BBC1",
+            programme="Bargain Hunt",
+            pre=False,
+            tv=True,
+        )
+        programme = self.scheduler.EpgProgramme(
+            channel_key="BBC1",
+            channel_name="BBC 1",
+            epg_entity="sensor.epg_bbc1",
+            title="Bargain Hunt",
+            description="A daytime antiques quiz.",
+            start="14:00",
+            end="15:00",
+            start_datetime=datetime(2026, 6, 8, 14, 0, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 8, 15, 0, tzinfo=timezone.utc),
+        )
+
+        import asyncio
+
+        asyncio.run(
+            self.scheduler.create_calendar_event(
+                hass,
+                "calendar.televisie",
+                rule,
+                programme,
+                calendar_description_mode="debug",
+            )
+        )
+
+        _, _, data, _, _ = hass.service_calls[0]
         self.assertIn("TV_AUTO_SCHEDULER: true", data["description"])
         self.assertIn("Rule: Bargain Hunt", data["description"])
         self.assertIn("Source: sensor.epg_bbc1", data["description"])
-        self.assertIn("Programme: A daytime antiques quiz.", data["description"])
 
     def test_build_change_log_path_uses_rules_directory(self) -> None:
         rules_file = "/config/tv_auto_scheduler/rules.csv"
@@ -802,6 +842,55 @@ class SchedulerTests(unittest.TestCase):
         self.assertIsNone(exact_match)
         self.assertEqual(len(shifted_matches), 1)
         self.assertEqual(shifted_matches[0].uid, "abc123")
+
+    def test_find_existing_auto_calendar_events_reads_marker_from_location(
+        self,
+    ) -> None:
+        hass = FakeHass({})
+        existing_event = FakeCalendarEvent(
+            uid="abc123",
+            summary="RTL 4 | Beste Kijkers",
+            description="Beste kijkers",
+            location=(
+                "TV_AUTO_SCHEDULER: true\n"
+                "Rule: Beste Kijkers\n"
+                "Source: sensor.woonkamer_epg_fmqn5gzdfv_rtl_4\n"
+            ),
+            start_datetime=datetime(2026, 6, 20, 21, 37, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 20, 22, 47, tzinfo=timezone.utc),
+        )
+        hass.data["calendar_component"] = FakeCalendarComponent(
+            {
+                "calendar.televisie": FakeCalendarEntity(
+                    [existing_event],
+                    supported_features=2,
+                )
+            }
+        )
+        programme = self.scheduler.EpgProgramme(
+            channel_key="rtl4",
+            channel_name="RTL 4",
+            epg_entity="sensor.woonkamer_epg_fmqn5gzdfv_rtl_4",
+            title="Beste Kijkers",
+            description="Beste kijkers",
+            start="21:37",
+            end="22:47",
+            start_datetime=datetime(2026, 6, 20, 21, 37, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 6, 20, 22, 47, tzinfo=timezone.utc),
+        )
+
+        import asyncio
+
+        exact_match, shifted_matches = asyncio.run(
+            self.scheduler.find_existing_auto_calendar_events(
+                hass,
+                "calendar.televisie",
+                programme,
+            )
+        )
+
+        self.assertIsNotNone(exact_match)
+        self.assertEqual(shifted_matches, [])
 
     def test_replace_calendar_event_deletes_stale_event_before_creating_new_one(self) -> None:
         hass = FakeHass({})

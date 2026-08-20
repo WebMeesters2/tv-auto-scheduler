@@ -18,6 +18,7 @@ CONF_TV_CALENDAR = "tv_calendar"
 CONF_SHOW_MISSING_EPG = "show_missing_epg"
 CONF_CHANGE_LOG = "change_log"
 CONF_CHANGE_LOG_FILE = "change_log_file"
+CONF_CALENDAR_DESCRIPTION_MODE = "calendar_description_mode"
 CONF_CANALPLUS_AUTHORIZATION = "canalplus_authorization"
 CONF_CANALPLUS_CHANNELS = "canalplus_channels"
 CONF_CHANNELS_FILE = "channels_file"
@@ -25,6 +26,13 @@ CONF_COMPARISON_REPORT_FILE = "comparison_report_file"
 CONF_OPEN_EPG_EXPORT_FILE = "open_epg_export_file"
 CONF_ONLY_SCHEDULED_PROGRAMMES = "only_scheduled_programmes"
 CONF_SHOW_MATCHING_PROGRAMMES = "show_matching_programmes"
+
+CALENDAR_DESCRIPTION_PROGRAMME = "programme"
+CALENDAR_DESCRIPTION_DEBUG = "debug"
+CALENDAR_DESCRIPTION_MODES = [
+    CALENDAR_DESCRIPTION_PROGRAMME,
+    CALENDAR_DESCRIPTION_DEBUG,
+]
 
 SERVICE_SCAN = "scan"
 SERVICE_COMPARE_CANALPLUS = "compare_canalplus"

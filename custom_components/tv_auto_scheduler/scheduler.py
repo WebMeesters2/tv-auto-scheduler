@@ -18,14 +18,18 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 from homeassistant.components.calendar.const import (
-    CalendarEntityFeature,
     DATA_COMPONENT as CALENDAR_COMPONENT,
+)
+from homeassistant.components.calendar.const import (
+    CalendarEntityFeature,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.util import dt as dt_util
 
 from .const import (
+    CALENDAR_DESCRIPTION_DEBUG,
+    CALENDAR_DESCRIPTION_PROGRAMME,
     CHANNEL_DATABASE_ENTITY,
     CSV_CHANNEL,
     CSV_DELETE_AFTER_USE,
@@ -586,29 +590,31 @@ async def create_calendar_event(
     calendar_entity: str,
     rule: ScheduleRule,
     programme: EpgProgramme,
+    calendar_description_mode: str = CALENDAR_DESCRIPTION_PROGRAMME,
 ) -> None:
     """Create one Home Assistant calendar event for a matched programme."""
     summary = build_event_summary(programme)
 
-    description = (
-        f"{AUTO_MARKER}\n"
-        f"Rule: {rule.programme}\n"
-        f"Source: {programme.epg_entity}\n"
+    debug_text = build_event_debug_text(rule, programme)
+    description = build_event_description(
+        programme,
+        debug_text,
+        calendar_description_mode,
     )
 
-    if programme.description:
-        description = f"{description}Programme: {programme.description}\n"
+    event_data = {
+        "entity_id": calendar_entity,
+        "summary": summary,
+        "description": description,
+        "location": debug_text,
+        "start_date_time": programme.start_datetime.isoformat(),
+        "end_date_time": programme.end_datetime.isoformat(),
+    }
 
     await hass.services.async_call(
         "calendar",
         "create_event",
-        {
-            "entity_id": calendar_entity,
-            "summary": summary,
-            "description": description,
-            "start_date_time": programme.start_datetime.isoformat(),
-            "end_date_time": programme.end_datetime.isoformat(),
-        },
+        event_data,
         blocking=True,
     )
 
@@ -681,12 +687,14 @@ async def find_existing_auto_calendar_events(
         existing_start = _clean(event.get("start"))
         existing_end = _clean(event.get("end"))
         existing_description = _clean(event.get("description"))
+        existing_location = _clean(event.get("location"))
+        existing_metadata = f"{existing_description}\n{existing_location}"
 
         if (
             existing_summary == summary
             and existing_start == programme.start_datetime.isoformat()
             and existing_end == programme.end_datetime.isoformat()
-            and AUTO_MARKER in existing_description
+            and AUTO_MARKER in existing_metadata
         ):
             return (
                 ExistingAutoCalendarEvent(
@@ -708,6 +716,7 @@ async def replace_calendar_event(
     rule: ScheduleRule,
     programme: EpgProgramme,
     stale_events: list[ExistingAutoCalendarEvent],
+    calendar_description_mode: str = CALENDAR_DESCRIPTION_PROGRAMME,
 ) -> int:
     """Delete stale matching calendar events, create the new event, and return deletions."""
     entity = _get_calendar_entity(hass, calendar_entity)
@@ -737,6 +746,7 @@ async def replace_calendar_event(
         calendar_entity,
         rule,
         programme,
+        calendar_description_mode=calendar_description_mode,
     )
 
     return removed
@@ -745,6 +755,30 @@ async def replace_calendar_event(
 def build_event_summary(programme: EpgProgramme) -> str:
     """Return the calendar summary text for a programme."""
     return f"{programme.channel_name} | {programme.title}"
+
+
+def build_event_debug_text(rule: ScheduleRule, programme: EpgProgramme) -> str:
+    """Return scheduler metadata for duplicate detection and debug views."""
+    lines = [
+        AUTO_MARKER,
+        f"Rule: {rule.programme}",
+        f"Source: {programme.epg_entity}",
+    ]
+    if programme.description:
+        lines.append(f"Programme: {programme.description}")
+    return "\n".join(lines)
+
+
+def build_event_description(
+    programme: EpgProgramme,
+    debug_text: str,
+    calendar_description_mode: str,
+) -> str:
+    """Return the calendar description shown by dashboard calendar cards."""
+    if calendar_description_mode == CALENDAR_DESCRIPTION_DEBUG:
+        return debug_text
+
+    return programme.description or programme.title
 
 
 def _extract_calendar_events_response(
@@ -823,11 +857,13 @@ def _normalize_existing_auto_calendar_event(
     """Convert a matching raw calendar event into the scheduler event shape."""
     summary = _clean(_existing_event_value(event, "summary"))
     description = _clean(_existing_event_value(event, "description"))
+    location = _clean(_existing_event_value(event, "location"))
+    metadata = f"{description}\n{location}"
 
     if summary != expected_summary:
         return None
 
-    if AUTO_MARKER not in description or expected_source_marker not in description:
+    if AUTO_MARKER not in metadata or expected_source_marker not in metadata:
         return None
 
     uid = _clean(_existing_event_value(event, "uid"))

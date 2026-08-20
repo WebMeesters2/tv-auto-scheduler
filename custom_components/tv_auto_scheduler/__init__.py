@@ -19,6 +19,9 @@ from .canalplus_compare import (
     write_open_epg_export_file,
 )
 from .const import (
+    CALENDAR_DESCRIPTION_MODES,
+    CALENDAR_DESCRIPTION_PROGRAMME,
+    CONF_CALENDAR_DESCRIPTION_MODE,
     CONF_CANALPLUS_AUTHORIZATION,
     CONF_CANALPLUS_CHANNELS,
     CONF_CHANGE_LOG,
@@ -28,8 +31,8 @@ from .const import (
     CONF_DRY_RUN,
     CONF_DRY_RUN_LOG,
     CONF_DRY_RUN_LOG_FILE,
-    CONF_OPEN_EPG_EXPORT_FILE,
     CONF_ONLY_SCHEDULED_PROGRAMMES,
+    CONF_OPEN_EPG_EXPORT_FILE,
     CONF_PRE_CALENDAR,
     CONF_RULES_FILE,
     CONF_SHOW_MATCHING_PROGRAMMES,
@@ -41,8 +44,8 @@ from .const import (
     DEFAULT_RULES_FILE,
     DEFAULT_TV_CALENDAR,
     DOMAIN,
-    SERVICE_EXPORT_OPEN_EPG,
     SERVICE_COMPARE_CANALPLUS,
+    SERVICE_EXPORT_OPEN_EPG,
     SERVICE_SCAN,
 )
 from .scheduler import (
@@ -100,6 +103,10 @@ SERVICE_SCAN_SCHEMA = vol.Schema(
         vol.Optional(CONF_SHOW_MISSING_EPG, default=False): cv.boolean,
         vol.Optional(CONF_CHANGE_LOG, default=False): cv.boolean,
         vol.Optional(CONF_CHANGE_LOG_FILE): cv.path,
+        vol.Optional(
+            CONF_CALENDAR_DESCRIPTION_MODE,
+            default=CALENDAR_DESCRIPTION_PROGRAMME,
+        ): vol.In(CALENDAR_DESCRIPTION_MODES),
     }
 )
 
@@ -141,12 +148,14 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 start = _event_datetime_text(event.get("start"))
                 end = _event_datetime_text(event.get("end"))
                 description = _event_value_text(event.get("description"))
+                location = _event_value_text(event.get("location"))
+                metadata = f"{description}\n{location}"
 
                 if (
                     not summary
                     or not start
                     or not end
-                    or AUTO_MARKER not in description
+                    or AUTO_MARKER not in metadata
                 ):
                     continue
 
@@ -167,6 +176,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         show_missing_epg = call.data[CONF_SHOW_MISSING_EPG]
         change_log = call.data[CONF_CHANGE_LOG]
         change_log_file = call.data.get(CONF_CHANGE_LOG_FILE)
+        calendar_description_mode = call.data[CONF_CALENDAR_DESCRIPTION_MODE]
         change_log_write_failed = False
         run_started_at = dt_util.now()
         _LOGGER.debug(
@@ -351,6 +361,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                     rule,
                                     programme,
                                     stale_events,
+                                    calendar_description_mode=calendar_description_mode,
                                 )
                             except Exception:
                                 _LOGGER.exception(
@@ -404,6 +415,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                             calendar_entity,
                             rule,
                             programme,
+                            calendar_description_mode=calendar_description_mode,
                         )
                         created += 1
                         created_for_match = True

@@ -1,3 +1,39 @@
+# Release v1.2.3
+
+This release keeps calendar-card descriptions clean by default while preserving scheduler metadata for duplicate and replacement detection.
+
+## :boom: Breaking changes
+
+* None.
+
+## :sparkles: Added
+
+* Added `calendar_description_mode` to `tv_auto_scheduler.scan` so verbose scheduler metadata can still be shown in calendar descriptions when debugging.
+
+## :arrows_counterclockwise: Changed
+
+* Calendar event descriptions now default to clean programme text only.
+* Scheduler metadata is stored in the calendar event location and remains usable for duplicate and replacement detection.
+
+## :memo: Documentation
+
+* Documented the calendar description behavior and the new scan service option.
+* Added a repo-specific `PROJECT.md` with architecture, documentation, workflow,
+  and validation notes.
+
+## :wrench: Maintenance
+
+* Added focused scheduler tests for clean descriptions, debug descriptions, and location-based metadata matching.
+
+## :white_check_mark: Validation
+
+* `.venv/bin/python -m compileall .`
+* `.venv/bin/python -m pytest tests/test_scheduler.py`
+
+## Upgrade notes
+
+No manual migration is required.
+
 # Release v1.2.2
 
 This documentation release plans the native Windows-to-Home Assistant MQTT

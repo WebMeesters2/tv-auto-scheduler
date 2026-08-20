@@ -58,6 +58,18 @@ scan:
       selector:
         text:
 
+    calendar_description_mode:
+      name: Calendar description mode
+      description: Use programme for a clean dashboard description and store scheduler metadata in location. Use debug to show scheduler metadata in the description.
+      required: false
+      default: programme
+      example: programme
+      selector:
+        select:
+          options:
+            - programme
+            - debug
+
 export_open_epg:
   name: Export Open EPG snapshot
   description: Write the current normalized Open EPG sensor data to a JSON file for external tools.
