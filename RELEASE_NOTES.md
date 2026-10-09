@@ -1,3 +1,31 @@
+# Release v1.3.0
+
+This release adds optional priorities for resolving overlapping programmes in the active TV calendar.
+
+## :boom: Breaking changes
+
+* None.
+
+## :sparkles: Added
+
+* Added the optional `priority` rules column with `high`, `low`, and blank behavior.
+* Added TV-only conflict planning with one-minute boundaries between adjusted events.
+
+## :memo: Documentation
+
+* Documented priority behavior, precedence, edge cases, and implementation areas.
+* Updated the example rules file with the new schema.
+
+## :white_check_mark: Validation
+
+* Focused scheduler and migration tests.
+* Complete test suite.
+* `python -m compileall .`
+
+## Upgrade notes
+
+Existing `rules.csv` files are migrated automatically. Blank priority values preserve existing unprioritized overlap behavior.
+
 # Release v1.2.3
 
 This release keeps calendar-card descriptions clean by default while preserving scheduler metadata for duplicate and replacement detection.

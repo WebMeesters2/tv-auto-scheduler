@@ -414,6 +414,7 @@ class SchedulerTests(unittest.TestCase):
                 "programme",
                 "pre",
                 "tv",
+                "priority",
                 "flag-delete-after-use",
                 "named-time-range",
                 "filter-start-day",
@@ -464,10 +465,118 @@ class SchedulerTests(unittest.TestCase):
         self.assertEqual(
             updated,
             [
-                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
-                "1,y,BBC[1-2],Impossible,y,y,,afternoon # readable comment",
+                "rule-id,enabled,channel,programme,pre,tv,priority,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "1,y,BBC[1-2],Impossible,y,y,,,afternoon # readable comment",
             ],
         )
+
+    def test_load_rules_parses_priority_case_insensitively(self) -> None:
+        csv_content = "\n".join(
+            [
+                "rule-id,enabled,channel,programme,pre,tv,priority",
+                "1,y,ARD,Gefragt - Gejagt,n,y,HIGH",
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = Path(temp_dir) / "rules.csv"
+            rules_file.write_text(csv_content, encoding="utf-8")
+            rules = self.scheduler.load_rules(str(rules_file))
+
+        self.assertEqual(rules[0].priority, "high")
+
+    def test_plan_tv_schedule_protects_high_priority_programme(self) -> None:
+        high_rule = self.scheduler.ScheduleRule(
+            enabled=True, channel_pattern="ARD", programme="Gefragt", pre=True,
+            tv=True, priority="high", rule_id=1,
+        )
+        normal_rule = self.scheduler.ScheduleRule(
+            enabled=True, channel_pattern="BBC1", programme="Crimewatch", pre=False,
+            tv=True, rule_id=2,
+        )
+        high_programme = self.scheduler.EpgProgramme(
+            channel_key="ARD", channel_name="ARD", epg_entity="sensor.ard",
+            title="Gefragt - Gejagt", description="", start="11:00", end="12:00",
+            start_datetime=datetime(2026, 10, 8, 11, 0, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 10, 8, 12, 0, tzinfo=timezone.utc),
+        )
+        normal_programme = self.scheduler.EpgProgramme(
+            channel_key="BBC1", channel_name="BBC1", epg_entity="sensor.bbc1",
+            title="Crimewatch UK", description="", start="11:45", end="12:30",
+            start_datetime=datetime(2026, 10, 8, 11, 45, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 10, 8, 12, 30, tzinfo=timezone.utc),
+        )
+
+        planned = self.scheduler.plan_tv_schedule(
+            [(high_rule, high_programme), (normal_rule, normal_programme)]
+        )
+
+        self.assertEqual(planned[(high_rule, high_programme)], high_programme)
+        self.assertEqual(
+            planned[(normal_rule, normal_programme)].start_datetime,
+            datetime(2026, 10, 8, 12, 1, tzinfo=timezone.utc),
+        )
+
+    def test_plan_tv_schedule_makes_low_priority_programme_yield(self) -> None:
+        low_rule = self.scheduler.ScheduleRule(
+            enabled=True, channel_pattern="ARD", programme="Gefragt", pre=False,
+            tv=True, priority="low", rule_id=1,
+        )
+        normal_rule = self.scheduler.ScheduleRule(
+            enabled=True, channel_pattern="BBC1", programme="Crimewatch", pre=False,
+            tv=True, rule_id=2,
+        )
+        low_programme = self.scheduler.EpgProgramme(
+            channel_key="ARD", channel_name="ARD", epg_entity="sensor.ard",
+            title="Gefragt - Gejagt", description="", start="11:00", end="12:00",
+            start_datetime=datetime(2026, 10, 8, 11, 0, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 10, 8, 12, 0, tzinfo=timezone.utc),
+        )
+        normal_programme = self.scheduler.EpgProgramme(
+            channel_key="BBC1", channel_name="BBC1", epg_entity="sensor.bbc1",
+            title="Crimewatch UK", description="", start="11:45", end="12:30",
+            start_datetime=datetime(2026, 10, 8, 11, 45, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 10, 8, 12, 30, tzinfo=timezone.utc),
+        )
+
+        planned = self.scheduler.plan_tv_schedule(
+            [(low_rule, low_programme), (normal_rule, normal_programme)]
+        )
+
+        self.assertEqual(
+            planned[(low_rule, low_programme)].end_datetime,
+            datetime(2026, 10, 8, 11, 44, tzinfo=timezone.utc),
+        )
+        self.assertEqual(planned[(normal_rule, normal_programme)], normal_programme)
+
+    def test_plan_tv_schedule_leaves_unprioritized_overlap_unchanged(self) -> None:
+        first_rule = self.scheduler.ScheduleRule(
+            enabled=True, channel_pattern="A", programme="First", pre=False,
+            tv=True, rule_id=1,
+        )
+        second_rule = self.scheduler.ScheduleRule(
+            enabled=True, channel_pattern="B", programme="Second", pre=False,
+            tv=True, rule_id=2,
+        )
+        first = self.scheduler.EpgProgramme(
+            channel_key="A", channel_name="A", epg_entity="sensor.a", title="First",
+            description="", start="11:00", end="12:00",
+            start_datetime=datetime(2026, 10, 8, 11, 0, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 10, 8, 12, 0, tzinfo=timezone.utc),
+        )
+        second = self.scheduler.EpgProgramme(
+            channel_key="B", channel_name="B", epg_entity="sensor.b", title="Second",
+            description="", start="11:45", end="12:30",
+            start_datetime=datetime(2026, 10, 8, 11, 45, tzinfo=timezone.utc),
+            end_datetime=datetime(2026, 10, 8, 12, 30, tzinfo=timezone.utc),
+        )
+
+        planned = self.scheduler.plan_tv_schedule(
+            [(first_rule, first), (second_rule, second)]
+        )
+
+        self.assertEqual(planned[(first_rule, first)], first)
+        self.assertEqual(planned[(second_rule, second)], second)
 
     def test_find_matches_applies_start_time_filter(self) -> None:
         rule = self.scheduler.ScheduleRule(

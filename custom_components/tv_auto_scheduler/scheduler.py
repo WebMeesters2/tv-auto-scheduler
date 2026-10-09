@@ -12,7 +12,7 @@ import csv
 import io
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, datetime, time, timedelta
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -39,6 +39,7 @@ from .const import (
     CSV_FILTER_START_TIME,
     CSV_NAMED_TIME_RANGE,
     CSV_PRE,
+    CSV_PRIORITY,
     CSV_PROGRAMME,
     CSV_RULE_ID,
     CSV_TV,
@@ -95,6 +96,7 @@ class ScheduleRule:
     programme: str
     pre: bool
     tv: bool
+    priority: str | None = None
     delete_after_use: bool = False
     filter_start_days: frozenset[int] | None = None
     filter_start_time: time | None = None
@@ -149,6 +151,7 @@ RULES_CSV_FIELD_ORDER = [
     CSV_PROGRAMME,
     CSV_PRE,
     CSV_TV,
+    CSV_PRIORITY,
     CSV_DELETE_AFTER_USE,
     CSV_NAMED_TIME_RANGE,
     CSV_FILTER_START_DAY,
@@ -164,6 +167,7 @@ RULES_CSV_FIELD_DEFAULTS = {
     CSV_PROGRAMME: "",
     CSV_PRE: "n",
     CSV_TV: "n",
+    CSV_PRIORITY: "",
     CSV_DELETE_AFTER_USE: "n",
     CSV_NAMED_TIME_RANGE: "",
     CSV_FILTER_START_DAY: "",
@@ -258,6 +262,7 @@ def load_rules(
                     programme=programme,
                     pre=_as_bool(row.get(CSV_PRE), default=False),
                     tv=_as_bool(row.get(CSV_TV), default=False),
+                    priority=_parse_priority(row.get(CSV_PRIORITY), row_number),
                     delete_after_use=_as_bool(
                         row.get(CSV_DELETE_AFTER_USE),
                         default=False,
@@ -960,6 +965,112 @@ def find_matches(
     return matches
 
 
+def plan_tv_schedule(
+    matches: list[tuple[ScheduleRule, EpgProgramme]],
+) -> dict[tuple[ScheduleRule, EpgProgramme], EpgProgramme]:
+    """Return adjusted live-calendar programmes keyed by their selected match."""
+    selected: dict[
+        tuple[str, str, datetime, datetime],
+        tuple[ScheduleRule, EpgProgramme],
+    ] = {}
+
+    for rule, programme in matches:
+        if not rule.tv:
+            continue
+
+        identity = (
+            programme.epg_entity,
+            programme.title,
+            programme.start_datetime,
+            programme.end_datetime,
+        )
+        current = selected.get(identity)
+        if current is None or _priority_rank(rule.priority) > _priority_rank(
+            current[0].priority
+        ):
+            selected[identity] = (rule, programme)
+
+    planned = sorted(
+        selected.values(),
+        key=lambda match: (
+            match[1].start_datetime,
+            match[1].end_datetime,
+            match[0].rule_id,
+        ),
+    )
+    adjusted = [programme for _, programme in planned]
+    one_minute = timedelta(minutes=1)
+
+    for left_index, (left_rule, _) in enumerate(planned):
+        for right_index in range(left_index + 1, len(planned)):
+            right_rule, _ = planned[right_index]
+            left = adjusted[left_index]
+            right = adjusted[right_index]
+
+            if not _time_ranges_overlap(
+                left.start_datetime,
+                left.end_datetime,
+                right.start_datetime,
+                right.end_datetime,
+            ):
+                continue
+
+            left_rank = _priority_rank(left_rule.priority)
+            right_rank = _priority_rank(right_rule.priority)
+
+            if left_rank == right_rank == _priority_rank(None):
+                continue
+            if left_rank == right_rank == _priority_rank("high"):
+                _LOGGER.warning(
+                    "TV Auto Scheduler: overlapping high-priority programmes kept: "
+                    "%s and %s",
+                    left.title,
+                    right.title,
+                )
+                continue
+
+            if left_rank >= right_rank:
+                new_start = left.end_datetime + one_minute
+                adjusted[right_index] = replace(
+                    right,
+                    start=new_start.strftime("%H:%M"),
+                    start_datetime=new_start,
+                )
+            else:
+                new_end = right.start_datetime - one_minute
+                adjusted[left_index] = replace(
+                    left,
+                    end=new_end.strftime("%H:%M"),
+                    end_datetime=new_end,
+                )
+
+    return {
+        match: programme
+        for match, programme in zip(planned, adjusted, strict=True)
+        if programme.start_datetime < programme.end_datetime
+    }
+
+
+def _priority_rank(priority: str | None) -> int:
+    """Return the live-schedule precedence for a normalized priority value."""
+    return {"low": 0, None: 1, "high": 2}[priority]
+
+
+def _parse_priority(value: object, row_number: int) -> str | None:
+    """Normalize a rules CSV priority, warning when a value is unsupported."""
+    priority = _clean(value).lower()
+    if not priority:
+        return None
+    if priority in {"high", "low"}:
+        return priority
+
+    _LOGGER.warning(
+        "Ignoring invalid priority on row %s: expected high, low, or blank",
+        row_number,
+    )
+    return None
+
+
 def log_matches(matches: list[tuple[ScheduleRule, EpgProgramme]]) -> None:
     """Write a concise log summary for matched rule/programme pairs."""
     if not matches:
@@ -1272,10 +1383,11 @@ def _normalize_rules_csv_row(
     if not _looks_like_shifted_rule_id_row(normalized_row):
         return normalized_row
 
-    ordered_values = [normalized_row.get(field, "") for field in RULES_CSV_FIELD_ORDER]
+    ordered_fields = [field for field in existing_fields if field]
+    ordered_values = [normalized_row.get(field, "") for field in ordered_fields]
     shifted_values = [""] + ordered_values[:-1]
 
-    for field, value in zip(RULES_CSV_FIELD_ORDER, shifted_values, strict=False):
+    for field, value in zip(ordered_fields, shifted_values, strict=False):
         normalized_row[field] = value
 
     return normalized_row

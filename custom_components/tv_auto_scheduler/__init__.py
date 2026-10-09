@@ -58,6 +58,7 @@ from .scheduler import (
     find_matches,
     load_rules,
     log_matches,
+    plan_tv_schedule,
     remove_rules_by_row_numbers,
     replace_calendar_event,
     resolve_change_log_path,
@@ -211,6 +212,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             _LOGGER.debug("Found %s EPG programmes", len(programmes))
 
             matches = find_matches(rules, programmes)
+            planned_tv_matches = plan_tv_schedule(matches)
 
             _LOGGER.debug("Found %s matches", len(matches))
 
@@ -232,18 +234,19 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     for rule, programme in matches:
                         targets = []
                         if rule.pre:
-                            targets.append(pre_calendar)
-                        if rule.tv:
-                            targets.append(tv_calendar)
+                            targets.append((pre_calendar, programme))
+                        planned_tv_programme = planned_tv_matches.get((rule, programme))
+                        if planned_tv_programme is not None:
+                            targets.append((tv_calendar, planned_tv_programme))
 
-                        for calendar_entity in targets:
+                        for calendar_entity, target_programme in targets:
                             (
                                 exact_match,
                                 stale_events,
                             ) = await find_existing_auto_calendar_events(
                                 hass,
                                 calendar_entity,
-                                programme,
+                                target_programme,
                             )
                             if exact_match is not None:
                                 continue
@@ -255,12 +258,12 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                             change_type="WouldDelete",
                                             run_datetime=run_started_at,
                                             calendar_entity=calendar_entity,
-                                            programme=programme.__class__(
-                                                channel_key=programme.channel_key,
-                                                channel_name=programme.channel_name,
-                                                epg_entity=programme.epg_entity,
-                                                title=programme.title,
-                                                description=programme.description,
+                                            programme=target_programme.__class__(
+                                                channel_key=target_programme.channel_key,
+                                                channel_name=target_programme.channel_name,
+                                                epg_entity=target_programme.epg_entity,
+                                                title=target_programme.title,
+                                                description=target_programme.description,
                                                 start=stale_event.start_datetime.strftime("%H:%M"),
                                                 end=stale_event.end_datetime.strftime("%H:%M"),
                                                 start_datetime=stale_event.start_datetime,
@@ -274,7 +277,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                         change_type="WouldAdd",
                                         run_datetime=run_started_at,
                                         calendar_entity=calendar_entity,
-                                        programme=programme,
+                                        programme=target_programme,
                                         rule=rule,
                                     )
                                 )
@@ -285,7 +288,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                     change_type="WouldAdd",
                                     run_datetime=run_started_at,
                                     calendar_entity=calendar_entity,
-                                    programme=programme,
+                                    programme=target_programme,
                                     rule=rule,
                                 )
                             )
@@ -328,19 +331,20 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     created_for_match = False
 
                     if rule.pre:
-                        targets.append(pre_calendar)
+                        targets.append((pre_calendar, programme))
 
-                    if rule.tv:
-                        targets.append(tv_calendar)
+                    planned_tv_programme = planned_tv_matches.get((rule, programme))
+                    if planned_tv_programme is not None:
+                        targets.append((tv_calendar, planned_tv_programme))
 
-                    for calendar_entity in targets:
+                    for calendar_entity, target_programme in targets:
                         (
                             exact_match,
                             stale_events,
                         ) = await find_existing_auto_calendar_events(
                             hass,
                             calendar_entity,
-                            programme,
+                            target_programme,
                         )
 
                         if exact_match is not None:
@@ -348,8 +352,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                             _LOGGER.debug(
                                 "Skipping existing event: %s | %s | %s",
                                 calendar_entity,
-                                programme.start_datetime,
-                                programme.title,
+                                target_programme.start_datetime,
+                                target_programme.title,
                             )
                             continue
 
@@ -359,7 +363,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                     hass,
                                     calendar_entity,
                                     rule,
-                                    programme,
+                                    target_programme,
                                     stale_events,
                                     calendar_description_mode=calendar_description_mode,
                                 )
@@ -368,8 +372,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                     "TV Auto Scheduler: failed to replace shifted "
                                     "event for %s | %s | %s",
                                     calendar_entity,
-                                    programme.start_datetime,
-                                    programme.title,
+                                    target_programme.start_datetime,
+                                    target_programme.title,
                                 )
                                 skipped += 1
                                 continue
@@ -385,12 +389,12 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                             change_type="Delete",
                                             run_datetime=run_started_at,
                                             calendar_entity=calendar_entity,
-                                            programme=programme.__class__(
-                                                channel_key=programme.channel_key,
-                                                channel_name=programme.channel_name,
-                                                epg_entity=programme.epg_entity,
-                                                title=programme.title,
-                                                description=programme.description,
+                                            programme=target_programme.__class__(
+                                                channel_key=target_programme.channel_key,
+                                                channel_name=target_programme.channel_name,
+                                                epg_entity=target_programme.epg_entity,
+                                                title=target_programme.title,
+                                                description=target_programme.description,
                                                 start=stale_event.start_datetime.strftime("%H:%M"),
                                                 end=stale_event.end_datetime.strftime("%H:%M"),
                                                 start_datetime=stale_event.start_datetime,
@@ -404,7 +408,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                         change_type="Add",
                                         run_datetime=run_started_at,
                                         calendar_entity=calendar_entity,
-                                        programme=programme,
+                                        programme=target_programme,
                                         rule=rule,
                                     )
                                 )
@@ -414,7 +418,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                             hass,
                             calendar_entity,
                             rule,
-                            programme,
+                            target_programme,
                             calendar_description_mode=calendar_description_mode,
                         )
                         created += 1
@@ -426,7 +430,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                     change_type="Add",
                                     run_datetime=run_started_at,
                                     calendar_entity=calendar_entity,
-                                    programme=programme,
+                                    programme=target_programme,
                                     rule=rule,
                                 )
                             )

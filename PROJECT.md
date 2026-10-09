@@ -14,6 +14,8 @@ for pre-selection or active TV scheduling.
 - The scheduler reads channel metadata from `sensor.tv_channel_database` and EPG
   entries from the configured channel EPG sensors.
 - Calendar events are created through Home Assistant calendar services.
+- Active-TV matches pass through a priority planner before calendar operations;
+  pre-selection matches retain their original EPG times.
 - Experimental Canal+ comparison support is report-only and does not modify
   calendars.
 

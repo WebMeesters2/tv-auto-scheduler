@@ -14,6 +14,7 @@ TARGET_FIELDS = [
     "programme",
     "pre",
     "tv",
+    "priority",
     "flag-delete-after-use",
     "named-time-range",
     "filter-start-day",
@@ -28,6 +29,7 @@ FIELD_DEFAULTS = {
     "programme": "",
     "pre": "n",
     "tv": "n",
+    "priority": "",
     "flag-delete-after-use": "n",
     "named-time-range": "",
     "filter-start-day": "",
@@ -211,10 +213,11 @@ def _normalize_rules_csv_row(
     if not _looks_like_shifted_rule_id_row(normalized_row):
         return normalized_row
 
-    ordered_values = [normalized_row.get(field, "") for field in TARGET_FIELDS]
+    ordered_fields = [field for field in existing_fields if field]
+    ordered_values = [normalized_row.get(field, "") for field in ordered_fields]
     shifted_values = [""] + ordered_values[:-1]
 
-    for field, value in zip(TARGET_FIELDS, shifted_values, strict=False):
+    for field, value in zip(ordered_fields, shifted_values, strict=False):
         normalized_row[field] = value
 
     return normalized_row

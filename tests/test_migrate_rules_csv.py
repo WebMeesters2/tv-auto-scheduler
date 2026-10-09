@@ -56,6 +56,7 @@ class MigrationScriptTests(unittest.TestCase):
                 "programme": "Bargain Hunt",
                 "pre": "n",
                 "tv": "y",
+                "priority": "",
                 "flag-delete-after-use": "n",
                 "named-time-range": "",
                 "filter-start-day": "",
@@ -105,7 +106,7 @@ class MigrationScriptTests(unittest.TestCase):
         self.assertEqual(
             issues,
             [
-                "Missing columns: rule-id, flag-delete-after-use, named-time-range, filter-start-day, filter-start-time, filter-end-time"
+                "Missing columns: rule-id, priority, flag-delete-after-use, named-time-range, filter-start-day, filter-start-time, filter-end-time"
             ],
         )
 
@@ -174,8 +175,8 @@ class MigrationScriptTests(unittest.TestCase):
         self.assertEqual(
             updated,
             [
-                "rule-id,enabled,channel,programme,pre,tv,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
-                "1,y,BBC[1-2],Impossible,y,y,,afternoon # readable comment",
+                "rule-id,enabled,channel,programme,pre,tv,priority,flag-delete-after-use,named-time-range,filter-start-day,filter-start-time,filter-end-time",
+                "1,y,BBC[1-2],Impossible,y,y,,,afternoon # readable comment",
             ],
         )
 
